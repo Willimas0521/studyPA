@@ -2462,48 +2462,37 @@ function EpubReader({url,title,onBack,embedded,onChapterChange}){
   const viewerRef = React.useRef(null);
   const bookRef = React.useRef(null);
   const renditionRef = React.useRef(null);
+  const initRef = React.useRef(false); /* Track if epub has been initialized */
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
   const [toc, setToc] = React.useState([]);
   const [tocOpen, setTocOpen] = React.useState(false);
   const [pageInfo, setPageInfo] = React.useState('');
   const [currentHref, setCurrentHref] = React.useState('');
-  const [dims, setDims] = React.useState({w:0,h:0});
 
-  /* Measure viewer container pixels so epub.js can size its iframe */
-  React.useEffect(()=>{
-    const viewerEl = viewerRef.current;
-    if(!viewerEl) return;
-    function measure(){
-      if(!viewerEl) return;
-      const r = viewerEl.getBoundingClientRect();
-      if(r.width>0 && r.height>0){
-        setDims({w:Math.floor(r.width),h:Math.floor(r.height)});
-        /* Also set explicit pixels on inner area so epub.js has dimensions */
-        if(areaRef.current){
-          areaRef.current.style.width = Math.floor(r.width)+'px';
-          areaRef.current.style.height = Math.floor(r.height)+'px';
-        }
-      }
-    }
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(viewerEl);
-    return ()=>ro.disconnect();
-  },[]);
-
-  /* Initialize epub once we have pixel dimensions */
+  /* Initialize epub once when component mounts and container has size */
   React.useEffect(() => {
-    if (!areaRef.current || !url || dims.w===0 || dims.h===0) return;
+    if (!areaRef.current || !viewerRef.current || !url || initRef.current) return;
+    initRef.current = true;
     let cancelled = false;
     setLoading(true);
     setError(null);
+
+    /* Get initial dimensions */
+    const viewerEl = viewerRef.current;
+    const rect = viewerEl.getBoundingClientRect();
+    const w = Math.floor(rect.width);
+    const h = Math.floor(rect.height);
+
+    /* Set explicit pixel dimensions on inner area */
+    areaRef.current.style.width = w + 'px';
+    areaRef.current.style.height = h + 'px';
 
     try {
       const book = ePub(url);
       bookRef.current = book;
       const rendition = book.renderTo(areaRef.current, {
-        width: dims.w+'px', height: dims.h+'px',
+        width: w+'px', height: h+'px',
         spread: 'none', flow: 'paginated'
       });
       renditionRef.current = rendition;
@@ -2553,8 +2542,8 @@ function EpubReader({url,title,onBack,embedded,onChapterChange}){
         if (onChapterChange) onChapterChange(href);
         /* Log chapter info for user to find href for notes mapping */
         const tocItem = window.__epubToc && window.__epubToc.find(t=>t.href===href);
-        const title = tocItem ? tocItem.label.trim() : '(未知章节)';
-        console.log('[EPUB] 当前章节:', href, '-', title);
+        const t = tocItem ? tocItem.label.trim() : '(未知章节)';
+        console.log('[EPUB] 当前章节:', href, '-', t);
       });
 
       /* Keyboard navigation */
@@ -2565,26 +2554,37 @@ function EpubReader({url,title,onBack,embedded,onChapterChange}){
       }
       window.addEventListener('keydown', handleKey);
 
+      /* ResizeObserver: only call rendition.resize(), never re-init */
+      const ro = new ResizeObserver(function(){
+        if(cancelled || !renditionRef.current || !viewerRef.current) return;
+        const r = viewerRef.current.getBoundingClientRect();
+        const nw = Math.floor(r.width);
+        const nh = Math.floor(r.height);
+        if(nw > 0 && nh > 0){
+          if(areaRef.current){
+            areaRef.current.style.width = nw+'px';
+            areaRef.current.style.height = nh+'px';
+          }
+          try{ renditionRef.current.resize(nw+'px', nh+'px'); }catch(e){}
+        }
+      });
+      ro.observe(viewerEl);
+
       return function cleanup(){
         cancelled = true;
+        ro.disconnect();
         window.removeEventListener('keydown', handleKey);
         if (renditionRef.current) { try{renditionRef.current.destroy();}catch(e){} }
         if (bookRef.current) { try{bookRef.current.destroy();}catch(e){} }
         bookRef.current = null;
         renditionRef.current = null;
+        initRef.current = false;
       };
     } catch(err) {
       setError('EPUB 初始化失败: '+err.message);
       setLoading(false);
     }
-  }, [url, dims.w, dims.h]);
-
-  /* Re-flow rendition when container resizes */
-  React.useEffect(()=>{
-    if(renditionRef.current && dims.w>0 && dims.h>0){
-      try{ renditionRef.current.resize(dims.w+'px', dims.h+'px'); }catch(e){}
-    }
-  },[dims.w, dims.h]);
+  }, [url]);
 
   function goPrev(){ if(renditionRef.current) renditionRef.current.prev(); }
   function goNext(){ if(renditionRef.current) renditionRef.current.next(); }

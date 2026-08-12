@@ -2521,11 +2521,17 @@ function EpubReader({url,title,onBack,embedded,onChapterChange}){
         window.__epubToc = flat; /* Share TOC with parent for chapter notes matching */
         /* Auto-map chapters to notes files */
         autoMapChaptersToNotes(flat);
+        /* Display first TOC chapter (skip default display() which may hang) */
+        if(flat.length > 0){
+          rendition.display(flat[0].href).catch(function(err){
+            console.log('[EPUB] First chapter display failed:', err.message);
+          });
+        }
       }).catch(function(err){
         if (!cancelled) setError('目录加载失败: '+err.message);
       });
 
-      /* Use relocated event to close loading (more reliable than display() promise) */
+      /* Use relocated event to close loading */
       let loadingClosed = false;
       function closeLoading(){
         if(loadingClosed) return;
@@ -2543,30 +2549,19 @@ function EpubReader({url,title,onBack,embedded,onChapterChange}){
         }
         if (onChapterChange) onChapterChange(href);
         closeLoading(); /* First relocated = content is visible */
-        /* Log chapter info for user to find href for notes mapping */
         const tocItem = window.__epubToc && window.__epubToc.find(t=>t.href===href);
         const t = tocItem ? tocItem.label.trim() : '(未知章节)';
         console.log('[EPUB] 当前章节:', href, '-', t);
       });
 
-      /* Try to display, but don't block on it - relocated will close loading */
-      rendition.display().catch(function(err){
-        console.log('[EPUB] display() failed:', err.message, '- will try TOC fallback');
-      });
-
-      /* Timeout fallback: if still loading after 8s, try first TOC chapter */
+      /* Safety timeout: if still loading after 10s, show error */
       setTimeout(function(){
         if(cancelled || loadingClosed) return;
-        console.log('[EPUB] Loading timeout, trying first TOC chapter...');
-        if(window.__epubToc && window.__epubToc.length > 0){
-          rendition.display(window.__epubToc[0].href).catch(function(e){
-            console.log('[EPUB] TOC fallback also failed:', e.message);
-            if(!loadingClosed){ setError('EPUB 加载超时，请尝试点击目录中的章节'); setLoading(false); loadingClosed = true; }
-          });
-        } else {
-          if(!loadingClosed){ setError('EPUB 加载超时'); setLoading(false); loadingClosed = true; }
-        }
-      }, 8000);
+        console.log('[EPUB] Loading timeout after 10s');
+        setError('EPUB 加载超时，请点击目录中的章节');
+        setLoading(false);
+        loadingClosed = true;
+      }, 10000);
 
       /* Keyboard navigation */
       function handleKey(e){

@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/epub.js/dist/epub.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -262,6 +263,33 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .book-divider:hover,.book-divider.dragging{background:rgba(0,240,255,.06)}
 .book-divider .divider-line{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:2px;height:36px;border-radius:1px;background:var(--border2);transition:all .25s}
 .book-divider:hover .divider-line,.book-divider.dragging .divider-line{background:var(--cyan);box-shadow:0 0 8px rgba(0,240,255,.3);height:56px}
+
+/* PDF Reader */
+.pdf-reader{display:flex;flex-direction:column;height:100%;width:100%}
+.pdf-toolbar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(10,10,18,.95);border-bottom:1px solid var(--border2);flex-shrink:0;flex-wrap:wrap}
+.pdf-toolbar button{background:none;border:1px solid var(--border2);color:var(--text2);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;transition:all .2s}
+.pdf-toolbar button:hover{border-color:var(--cyan);color:var(--cyan)}
+.pdf-toolbar .pdf-title{font-size:12px;color:var(--cyan);font-family:var(--pixel);flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pdf-toolbar .page-info{font-size:11px;color:var(--text2);font-family:var(--pixel)}
+.pdf-toolbar .zoom-info{font-size:11px;color:var(--text2);font-family:var(--pixel)}
+.pdf-canvas-wrap{flex:1;overflow:auto;background:#1a1a2e;display:flex;flex-direction:column;align-items:center;padding:16px 0}
+.pdf-canvas-wrap::-webkit-scrollbar{width:6px}
+.pdf-canvas-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+.pdf-canvas-wrap canvas{display:block;margin-bottom:8px;box-shadow:0 2px 16px rgba(0,0,0,.5)}
+.pdf-loading{text-align:center;padding:60px 20px;color:var(--text2);font-size:14px}
+.pdf-loading .spinner{width:32px;height:32px;border:2px solid var(--border2);border-top-color:var(--cyan);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px}
+.pdf-error{text-align:center;padding:40px 20px;color:var(--red);font-size:13px}
+
+/* TXT Reader */
+.txt-reader{display:flex;flex-direction:column;height:100%;width:100%}
+.txt-toolbar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(10,10,18,.95);border-bottom:1px solid var(--border2);flex-shrink:0;flex-wrap:wrap}
+.txt-toolbar button{background:none;border:1px solid var(--border2);color:var(--text2);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;transition:all .2s}
+.txt-toolbar button:hover{border-color:var(--cyan);color:var(--cyan)}
+.txt-toolbar .txt-title{font-size:12px;color:var(--cyan);font-family:var(--pixel);flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.txt-toolbar .font-size-label{font-size:11px;color:var(--text2);font-family:var(--pixel)}
+.txt-content{flex:1;overflow-y:auto;background:#1a1a2e;padding:28px 32px;color:#e0e0f0;line-height:1.9;white-space:pre-wrap;word-wrap:break-word;font-family:'Segoe UI',system-ui,sans-serif}
+.txt-content::-webkit-scrollbar{width:6px}
+.txt-content::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 
 /* Learning Hub */
 .learn-hub{padding:20px;width:100%;max-width:700px}
@@ -2154,7 +2182,7 @@ const LEARN_DATA = {
   books: [
     {id:'b1',icon:'📗',name:'日本蜡烛图技术',tag:'classic',tagText:'必读',
      sub:'Steve Nison 著 — 蜡烛图分析圣经',
-     epub:'books/japanese-candlestick-techniques.epub',
+     file:'books/japanese-candlestick-techniques.epub',
      content:`<h3>书籍简介</h3>
 <p>这本书是蜡烛图技术领域的开山之作，被全球交易者奉为必读经典。Steve Nison 在书中系统地介绍了超过65种蜡烛图形态，并讲解了如何将它们与西方技术分析工具结合使用。</p>
 <h3>核心内容</h3>
@@ -2172,7 +2200,7 @@ const LEARN_DATA = {
 <p>3. 确认信号（下一根K线的走势）比形态本身更重要</p>`},
     {id:'b2',icon:'📘',name:'金融市场技术分析',tag:'classic',tagText:'必读',
      sub:'John J. Murphy 著 — 技术分析百科全书',
-     epub:'books/technical-analysis-of-financial-markets.epub',
+     file:'books/technical-analysis-of-financial-markets.epub',
      content:`<h3>书籍简介</h3>
 <p>这本书被誉为技术分析的"圣经"，全面覆盖了技术分析的各个方面。虽然不专门讲蜡烛图，但它是理解整个技术分析框架的必备参考书。</p>
 <h3>核心内容</h3>
@@ -2191,7 +2219,7 @@ const LEARN_DATA = {
 <p>3. 成交量验证价格 — 量价配合是判断真假突破的关键</p>`},
     {id:'b3',icon:'📙',name:'Al Brooks 价格行为三部曲',tag:'adv',tagText:'进阶',
      sub:'Reading Price Charts / Trading Price Action Trends / Ranges & Reversals',
-     epub:'books/al-brooks-price-action-trilogy.epub',
+     file:'books/al-brooks-price-action-trilogy.epub',
      content:`<h3>书籍简介</h3>
 <p>这是价格行为领域最系统、最深入的一套著作，共三本。Al Brooks 用极其细致的方式分析了每一根K线背后的市场逻辑。学习曲线陡峭，但一旦掌握，会彻底改变你看盘的方式。</p>
 <h3>三本书概要</h3>
@@ -2207,7 +2235,7 @@ const LEARN_DATA = {
 <p>3. 80%的突破会失败 — 这个认知能帮你避免很多亏损交易</p>`},
     {id:'b4',icon:'📕',name:'交易心理分析',tag:'classic',tagText:'心理',
      sub:'Mark Douglas 著 — 驾驭内心游戏',
-     epub:'books/trading-in-the-zone.epub',
+     file:'books/trading-in-the-zone.epub',
      content:`<h3>书籍简介</h3>
 <p>交易中最难战胜的对手不是市场，而是你自己。Mark Douglas 的这本书深入探讨了交易者的心理问题，是交易心理学领域的经典之作。</p>
 <h3>核心内容</h3>
@@ -2251,7 +2279,7 @@ function LearningHub({onBack,onOpenItem}){
                   <div className="learn-item-sub">{item.sub}</div>
                 </div>
                 <span className={'learn-item-tag tag-'+item.tag}>{item.tagText}</span>
-                {item.epub && <span className="learn-item-tag" style={{borderColor:'var(--cyan)',color:'var(--cyan)',marginLeft:4}}>EPUB</span>}
+                {item.file && <span className="learn-item-tag" style={{borderColor:'var(--cyan)',color:'var(--cyan)',marginLeft:4}}>{item.file.split('.').pop().toUpperCase()}</span>}
               </div>
             ))}
           </div>
@@ -2429,6 +2457,196 @@ function EpubReader({url,title,onBack,embedded}){
   );
 }
 
+function PdfReader({url,title,onBack,embedded}){
+  const wrapRef = React.useRef(null);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(null);
+  const [pages, setPages] = React.useState([]);
+  const [totalPages, setTotalPages] = React.useState(0);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [scale, setScale] = React.useState(1.2);
+  const pdfDocRef = React.useRef(null);
+
+  React.useEffect(()=>{
+    if(!url) return;
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+
+    /* Set worker source */
+    if(window.pdfjsLib){
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+
+    window.pdfjsLib.getDocument(url).promise.then(function(pdf){
+      if(cancelled) return;
+      pdfDocRef.current = pdf;
+      setTotalPages(pdf.numPages);
+      /* Render all pages */
+      const canvasEls = [];
+      for(let i=1; i<=pdf.numPages; i++){
+        canvasEls.push(i);
+      }
+      setPages(canvasEls);
+      setLoading(false);
+      /* Render each page */
+      for(let i=1; i<=pdf.numPages; i++){
+        (function(num){
+          pdf.getPage(num).then(function(page){
+            if(cancelled) return;
+            const viewport = page.getViewport({scale: scale});
+            const canvas = document.getElementById('pdf-page-'+num);
+            if(!canvas) return;
+            const ctx = canvas.getContext('2d');
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            page.render({canvasContext: ctx, viewport: viewport});
+          });
+        })(i);
+      }
+    }).catch(function(err){
+      if(!cancelled){ setError('PDF 加载失败: '+err.message); setLoading(false); }
+    });
+
+    return function(){ cancelled = true; };
+  },[url]);
+
+  /* Re-render when scale changes */
+  React.useEffect(()=>{
+    const pdf = pdfDocRef.current;
+    if(!pdf || pages.length===0) return;
+    for(let i=1; i<=pages.length; i++){
+      (function(num){
+        pdf.getPage(num).then(function(page){
+          const viewport = page.getViewport({scale: scale});
+          const canvas = document.getElementById('pdf-page-'+num);
+          if(!canvas) return;
+          const ctx = canvas.getContext('2d');
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+          page.render({canvasContext: ctx, viewport: viewport});
+        });
+      })(i);
+    }
+  },[scale]);
+
+  /* Track scroll position for current page */
+  React.useEffect(()=>{
+    const wrap = wrapRef.current;
+    if(!wrap) return;
+    function onScroll(){
+      const canvases = wrap.querySelectorAll('canvas');
+      let best = 1;
+      for(let i=0; i<canvases.length; i++){
+        const rect = canvases[i].getBoundingClientRect();
+        if(rect.top < window.innerHeight * 0.5){
+          best = i+1;
+        }
+      }
+      setCurrentPage(best);
+    }
+    wrap.addEventListener('scroll', onScroll);
+    return ()=>{ wrap.removeEventListener('scroll', onScroll); };
+  },[pages.length]);
+
+  function zoomIn(){ setScale(s=>Math.min(3, s+0.2)); }
+  function zoomOut(){ setScale(s=>Math.max(0.4, s-0.2)); }
+  function scrollToPage(n){
+    const el = document.getElementById('pdf-page-'+n);
+    if(el && wrapRef.current) wrapRef.current.scrollTo({top: el.offsetTop - 8, behavior:'smooth'});
+  }
+
+  if(error) return (
+    <div className={embedded?'':'screen'}>
+      <div className="pdf-reader" style={embedded?{maxWidth:'none'}:{}}>
+        <div className="pdf-toolbar">
+          {!embedded && <button onClick={onBack}>← 返回</button>}
+          <span className="pdf-title">{title}</span>
+        </div>
+        <div className="pdf-error">
+          <p>⚠️ {error}</p>
+          <p style={{marginTop:12,fontSize:12,color:'var(--text2)'}}>请确认 PDF 文件已放在仓库的 books/ 目录下。</p>
+          {!embedded && <button onClick={onBack} style={{marginTop:16}}>← 返回</button>}
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className={embedded?'':'screen'} style={embedded?{}:{padding:0}}>
+      <div className="pdf-reader" style={embedded?{maxWidth:'none'}:{}}>
+        <div className="pdf-toolbar">
+          {!embedded && <button onClick={onBack}>← 返回</button>}
+          <button onClick={zoomOut}>−</button>
+          <span className="zoom-info">{Math.round(scale*100)+'%'}</span>
+          <button onClick={zoomIn}>+</button>
+          <span className="pdf-title">{title}</span>
+          <span className="page-info">{currentPage} / {totalPages}</span>
+          <button onClick={()=>scrollToPage(Math.max(1,currentPage-1))}>◀ 上页</button>
+          <button onClick={()=>scrollToPage(Math.min(totalPages,currentPage+1))}>下页 ▶</button>
+        </div>
+        <div className="pdf-canvas-wrap" ref={wrapRef}>
+          {loading && <div className="pdf-loading"><div className="spinner"></div><p>正在加载 PDF...</p></div>}
+          {pages.map(n=>(
+            <canvas key={n} id={'pdf-page-'+n}/>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TxtReader({url,title,onBack,embedded}){
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(null);
+  const [text, setText] = React.useState('');
+  const [fontSize, setFontSize] = React.useState(15);
+
+  React.useEffect(()=>{
+    if(!url) return;
+    let cancelled = false;
+    setLoading(true);
+    fetch(url)
+      .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.text();})
+      .then(t=>{if(!cancelled){setText(t);setLoading(false);}})
+      .catch(err=>{if(!cancelled){setError('文件加载失败: '+err.message);setLoading(false);}});
+    return ()=>{cancelled=true;};
+  },[url]);
+
+  if(error) return (
+    <div className={embedded?'':'screen'}>
+      <div className="txt-reader">
+        <div className="txt-toolbar">
+          {!embedded && <button onClick={onBack}>← 返回</button>}
+          <span className="txt-title">{title}</span>
+        </div>
+        <div className="pdf-error">
+          <p>⚠️ {error}</p>
+          <p style={{marginTop:12,fontSize:12,color:'var(--text2)'}}>请确认 TXT 文件已放在仓库的 books/ 目录下。</p>
+          {!embedded && <button onClick={onBack} style={{marginTop:16}}>← 返回</button>}
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className={embedded?'':'screen'} style={embedded?{}:{padding:0}}>
+      <div className="txt-reader">
+        <div className="txt-toolbar">
+          {!embedded && <button onClick={onBack}>← 返回</button>}
+          <button onClick={()=>setFontSize(s=>Math.max(11,s-1))}>A−</button>
+          <span className="font-size-label">{fontSize}px</span>
+          <button onClick={()=>setFontSize(s=>Math.min(28,s+1))}>A+</button>
+          <span className="txt-title">{title}</span>
+        </div>
+        <div className="txt-content" style={{fontSize:fontSize+'px'}}>
+          {loading ? '正在加载...' : text}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function LearningReader({item,onBack}){
   const [leftW, setLeftW] = React.useState(55);
   const [dragging, setDragging] = React.useState(false);
@@ -2456,12 +2674,29 @@ function LearningReader({item,onBack}){
     };
   },[dragging]);
 
-  if(item.epub){
+  function getFormat(file){
+    if(!file) return null;
+    const ext = file.split('.').pop().toLowerCase();
+    if(ext==='epub') return 'epub';
+    if(ext==='pdf') return 'pdf';
+    if(ext==='txt') return 'txt';
+    return null;
+  }
+
+  function renderReader(item){
+    const fmt = getFormat(item.file);
+    if(fmt==='epub') return <EpubReader url={item.file} title={item.name} embedded={true} onBack={onBack}/>;
+    if(fmt==='pdf') return <PdfReader url={item.file} title={item.name} embedded={true} onBack={onBack}/>;
+    if(fmt==='txt') return <TxtReader url={item.file} title={item.name} embedded={true} onBack={onBack}/>;
+    return null;
+  }
+
+  if(item.file){
     return (
       <div className="screen" style={{padding:0}}>
         <div className="book-split" ref={containerRef}>
           <div className="book-pane" style={{width:leftW+'%'}}>
-            <EpubReader url={item.epub} title={item.name} embedded={true} onBack={onBack}/>
+            {renderReader(item)}
           </div>
           <div className={'book-divider'+(dragging?' dragging':'')} onMouseDown={(e)=>{e.preventDefault();setDragging(true);}}>
             <div className="divider-line"/>

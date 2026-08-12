@@ -2493,7 +2493,7 @@ function EpubReader({url,title,onBack,embedded,onChapterChange}){
       bookRef.current = book;
       const rendition = book.renderTo(areaRef.current, {
         width: w+'px', height: h+'px',
-        spread: 'none', flow: 'paginated'
+        spread: 'none', flow: 'scrolled'
       });
       renditionRef.current = rendition;
 

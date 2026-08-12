@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>价格行为闯关 - Price Action Quest</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/epub.js/dist/epub.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -217,6 +219,26 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .cert-stats small{font-size:11px;color:var(--text2)}
 .cert-line{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:14px}
 .cert-date{font-size:11px;color:var(--text2);margin-bottom:20px}
+
+/* EPUB Reader */
+.epub-reader{display:flex;flex-direction:column;height:100%;width:100%;max-width:900px;margin:0 auto}
+.epub-toolbar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(10,10,18,.95);border-bottom:1px solid var(--border2);flex-shrink:0;flex-wrap:wrap}
+.epub-toolbar button{background:none;border:1px solid var(--border2);color:var(--text2);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;transition:all .2s}
+.epub-toolbar button:hover{border-color:var(--cyan);color:var(--cyan)}
+.epub-toolbar .epub-title{font-size:12px;color:var(--cyan);font-family:var(--pixel);flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.epub-toolbar .page-info{font-size:11px;color:var(--text2);font-family:var(--pixel)}
+.epub-viewer{flex:1;background:#1a1a2e;overflow:hidden;position:relative}
+.epub-viewer #epubArea{height:100%;width:100%}
+.epub-toc{position:absolute;top:0;left:0;width:280px;height:100%;background:rgba(10,10,18,.97);border-right:1px solid var(--border2);z-index:10;overflow-y:auto;transform:translateX(-100%);transition:transform .3s ease;padding:16px}
+.epub-toc.open{transform:translateX(0)}
+.epub-toc h3{font-family:var(--pixel);font-size:10px;color:var(--cyan);margin-bottom:12px;text-shadow:0 0 6px rgba(0,240,255,.2)}
+.epub-toc-item{display:block;padding:8px 10px;color:var(--text2);font-size:13px;cursor:pointer;border-radius:4px;transition:all .2s;border:1px solid transparent;margin-bottom:4px}
+.epub-toc-item:hover{background:rgba(0,240,255,.04);border-color:rgba(0,240,255,.1);color:var(--text)}
+.epub-toc-item.active{background:rgba(0,240,255,.06);border-color:rgba(0,240,255,.15);color:var(--cyan)}
+.epub-loading{text-align:center;padding:60px 20px;color:var(--text2);font-size:14px}
+.epub-loading .spinner{width:32px;height:32px;border:2px solid var(--border2);border-top-color:var(--cyan);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.epub-error{text-align:center;padding:40px 20px;color:var(--red);font-size:13px}
 
 /* Learning Hub */
 .learn-hub{padding:20px;width:100%;max-width:700px}
@@ -2109,6 +2131,7 @@ const LEARN_DATA = {
   books: [
     {id:'b1',icon:'📗',name:'日本蜡烛图技术',tag:'classic',tagText:'必读',
      sub:'Steve Nison 著 — 蜡烛图分析圣经',
+     epub:'books/japanese-candlestick-techniques.epub',
      content:`<h3>书籍简介</h3>
 <p>这本书是蜡烛图技术领域的开山之作，被全球交易者奉为必读经典。Steve Nison 在书中系统地介绍了超过65种蜡烛图形态，并讲解了如何将它们与西方技术分析工具结合使用。</p>
 <h3>核心内容</h3>
@@ -2126,6 +2149,7 @@ const LEARN_DATA = {
 <p>3. 确认信号（下一根K线的走势）比形态本身更重要</p>`},
     {id:'b2',icon:'📘',name:'金融市场技术分析',tag:'classic',tagText:'必读',
      sub:'John J. Murphy 著 — 技术分析百科全书',
+     epub:'books/technical-analysis-of-financial-markets.epub',
      content:`<h3>书籍简介</h3>
 <p>这本书被誉为技术分析的"圣经"，全面覆盖了技术分析的各个方面。虽然不专门讲蜡烛图，但它是理解整个技术分析框架的必备参考书。</p>
 <h3>核心内容</h3>
@@ -2144,6 +2168,7 @@ const LEARN_DATA = {
 <p>3. 成交量验证价格 — 量价配合是判断真假突破的关键</p>`},
     {id:'b3',icon:'📙',name:'Al Brooks 价格行为三部曲',tag:'adv',tagText:'进阶',
      sub:'Reading Price Charts / Trading Price Action Trends / Ranges & Reversals',
+     epub:'books/al-brooks-price-action-trilogy.epub',
      content:`<h3>书籍简介</h3>
 <p>这是价格行为领域最系统、最深入的一套著作，共三本。Al Brooks 用极其细致的方式分析了每一根K线背后的市场逻辑。学习曲线陡峭，但一旦掌握，会彻底改变你看盘的方式。</p>
 <h3>三本书概要</h3>
@@ -2159,6 +2184,7 @@ const LEARN_DATA = {
 <p>3. 80%的突破会失败 — 这个认知能帮你避免很多亏损交易</p>`},
     {id:'b4',icon:'📕',name:'交易心理分析',tag:'classic',tagText:'心理',
      sub:'Mark Douglas 著 — 驾驭内心游戏',
+     epub:'books/trading-in-the-zone.epub',
      content:`<h3>书籍简介</h3>
 <p>交易中最难战胜的对手不是市场，而是你自己。Mark Douglas 的这本书深入探讨了交易者的心理问题，是交易心理学领域的经典之作。</p>
 <h3>核心内容</h3>
@@ -2202,6 +2228,7 @@ function LearningHub({onBack,onOpenItem}){
                   <div className="learn-item-sub">{item.sub}</div>
                 </div>
                 <span className={'learn-item-tag tag-'+item.tag}>{item.tagText}</span>
+                {item.epub && <span className="learn-item-tag" style={{borderColor:'var(--cyan)',color:'var(--cyan)',marginLeft:4}}>EPUB</span>}
               </div>
             ))}
           </div>
@@ -2232,7 +2259,157 @@ function LearningHub({onBack,onOpenItem}){
   );
 }
 
+function EpubReader({url,title,onBack}){
+  const areaRef = React.useRef(null);
+  const bookRef = React.useRef(null);
+  const renditionRef = React.useRef(null);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(null);
+  const [toc, setToc] = React.useState([]);
+  const [tocOpen, setTocOpen] = React.useState(false);
+  const [pageInfo, setPageInfo] = React.useState('');
+  const [currentHref, setCurrentHref] = React.useState('');
+
+  React.useEffect(() => {
+    if (!areaRef.current || !url) return;
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+
+    try {
+      const book = ePub(url);
+      bookRef.current = book;
+      const rendition = book.renderTo(areaRef.current, {
+        width: '100%', height: '100%',
+        spread: 'none', flow: 'paginated'
+      });
+      renditionRef.current = rendition;
+
+      /* Apply dark theme to epub content */
+      rendition.themes.register('cyberpunk', {
+        'body': { background: '#1a1a2e !important', color: '#e0e0f0 !important' },
+        'a': { color: '#00f0ff !important' },
+        'p,li,h1,h2,h3,h4,h5,h6,span,div': { color: '#e0e0f0 !important' }
+      });
+      rendition.themes.select('cyberpunk');
+
+      book.ready.then(function(){
+        if (cancelled) return;
+        return book.loaded.navigation;
+      }).then(function(nav){
+        if (cancelled) return;
+        const flat = [];
+        (function walk(items){
+          items.forEach(function(item){
+            flat.push({label:item.label.trim(),href:item.href});
+            if (item.subitems) walk(item.subitems);
+          });
+        })(nav.toc);
+        setToc(flat);
+      }).catch(function(err){
+        if (!cancelled) setError('目录加载失败: '+err.message);
+      });
+
+      rendition.display().then(function(){
+        if (!cancelled) setLoading(false);
+      }).catch(function(err){
+        if (!cancelled){ setError('EPUB 加载失败: '+err.message); setLoading(false); }
+      });
+
+      rendition.on('relocated', function(location){
+        if (cancelled) return;
+        setCurrentHref(location.start.href);
+        const pct = location.start.percentage;
+        if (pct != null) {
+          setPageInfo(Math.round(pct * 100) + '%');
+        }
+      });
+
+      /* Keyboard navigation */
+      function handleKey(e){
+        if (e.key === 'ArrowLeft') rendition.prev();
+        else if (e.key === 'ArrowRight') rendition.next();
+        else if (e.key === 'Escape') onBack && onBack();
+      }
+      window.addEventListener('keydown', handleKey);
+
+      return function cleanup(){
+        cancelled = true;
+        window.removeEventListener('keydown', handleKey);
+        if (renditionRef.current) { try{renditionRef.current.destroy();}catch(e){} }
+        if (bookRef.current) { try{bookRef.current.destroy();}catch(e){} }
+        bookRef.current = null;
+        renditionRef.current = null;
+      };
+    } catch(err) {
+      setError('EPUB 初始化失败: '+err.message);
+      setLoading(false);
+    }
+  }, [url]);
+
+  function goPrev(){ if(renditionRef.current) renditionRef.current.prev(); }
+  function goNext(){ if(renditionRef.current) renditionRef.current.next(); }
+  function goToChapter(href){
+    if(renditionRef.current){
+      renditionRef.current.display(href);
+      setTocOpen(false);
+    }
+  }
+
+  if(error) return (
+    <div className="screen">
+      <div className="epub-reader">
+        <div className="epub-toolbar">
+          <button onClick={onBack}>← 返回</button>
+          <span className="epub-title">{title}</span>
+        </div>
+        <div className="epub-error">
+          <p>⚠️ {error}</p>
+          <p style={{marginTop:12,fontSize:12,color:'var(--text2)'}}>
+            请确认 EPUB 文件已放在仓库的 books/ 目录下，并已推送到 GitHub。
+          </p>
+          <button onClick={onBack} style={{marginTop:16}}>← 返回</button>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="screen" style={{padding:0}}>
+      <div className="epub-reader">
+        <div className="epub-toolbar">
+          <button onClick={onBack}>← 返回</button>
+          <button onClick={()=>setTocOpen(!tocOpen)}>☰ 目录</button>
+          <span className="epub-title">{title}</span>
+          <span className="page-info">{pageInfo}</span>
+          <button onClick={goPrev}>◀ 上一页</button>
+          <button onClick={goNext}>下一页 ▶</button>
+        </div>
+        <div className="epub-viewer" style={{position:'relative'}}>
+          {loading && <div className="epub-loading"><div className="spinner"></div><p>正在加载电子书...</p></div>}
+          <div ref={areaRef} id="epubArea" style={{visibility: loading?'hidden':'visible'}}/>
+          {tocOpen && toc.length>0 && (
+            <div className="epub-toc open">
+              <h3>📖 目录</h3>
+              {toc.map((ch,i)=>(
+                <div key={i}
+                  className={'epub-toc-item'+(ch.href===currentHref?' active':'')}
+                  onClick={()=>goToChapter(ch.href)}>
+                  {ch.label}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function LearningReader({item,onBack}){
+  if(item.epub){
+    return <EpubReader url={item.epub} title={item.name} onBack={onBack}/>;
+  }
   return (
     <div className="screen">
       <div className="learn-reader">

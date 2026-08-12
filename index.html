@@ -2396,6 +2396,67 @@ function LearningHub({onBack,onOpenItem}){
   );
 }
 
+/* ========== AUTO-MAP CHAPTERS TO NOTES ========== */
+/* Scan notes/ directory for .md files and map them to TOC hrefs in order */
+function autoMapChaptersToNotes(toc){
+  if(!toc || !toc.length) return;
+  /* Try to fetch the notes index for current book */
+  const bookId = window.__currentBookId;
+  if(!bookId) return;
+
+  fetch('notes/'+bookId+'/index.json')
+    .then(r=>r.ok?r.json():null)
+    .then(index=>{
+      if(!index) return;
+      /* Check if index has actual mappings (beyond cover) */
+      const keys = Object.keys(index).filter(k=>!k.startsWith('_') && k!=='cover.html');
+      if(keys.length > 1){
+        /* Index already has mappings, use as-is */
+        console.log('[Notes] 使用已有的 index.json 映射 ('+keys.length+' 个章节)');
+        return;
+      }
+      /* Auto-generate mappings: match .md files to TOC entries in order */
+      const mdFiles = [];
+      /* Try to fetch ch01.md through ch20.md to see which exist */
+      const promises = [];
+      for(let i=1; i<=20; i++){
+        const fname = 'ch'+String(i).padStart(2,'0')+'.md';
+        const p = fetch('notes/'+bookId+'/'+fname, {method:'HEAD'})
+          .then(r=>{ if(r.ok) mdFiles.push({idx:i, file:fname}); return null; })
+          .catch(()=>null);
+        promises.push(p);
+      }
+      return Promise.all(promises).then(()=>{
+        if(mdFiles.length === 0) return;
+        /* Sort by chapter number */
+        mdFiles.sort((a,b)=>a.idx-b.idx);
+        /* Filter TOC to only chapter-like entries (skip cover, toc, etc) */
+        const chapterTocs = toc.filter(t=>{
+          const h = t.href.toLowerCase();
+          return !h.includes('cover') && !h.includes('toc') && !h.includes('title') &&
+                 !h.includes('copyright') && !h.includes('dedication') &&
+                 (h.includes('chapter') || h.includes('ch') || h.includes('section') || h.includes('part'));
+        });
+        /* If no chapter-like entries found, use all TOC entries after cover */
+        const finalTocs = chapterTocs.length > 0 ? chapterTocs : toc.filter(t=>!t.href.toLowerCase().includes('cover'));
+        /* Map .md files to TOC entries in order */
+        const newIndex = {...index};
+        mdFiles.forEach((md, i)=>{
+          if(i < finalTocs.length){
+            newIndex[finalTocs[i].href] = md.file;
+          }
+        });
+        /* Update the index in memory */
+        window.__notesIndex = newIndex;
+        console.log('[Notes] 自动映射 '+mdFiles.length+' 个章节笔记到 EPUB 目录');
+        console.log('[Notes] 映射关系:', newIndex);
+      });
+    })
+    .catch(err=>{
+      console.log('[Notes] 自动映射失败:', err.message);
+    });
+}
+
 function EpubReader({url,title,onBack,embedded,onChapterChange}){
   const areaRef = React.useRef(null);
   const bookRef = React.useRef(null);
@@ -2461,6 +2522,8 @@ function EpubReader({url,title,onBack,embedded,onChapterChange}){
         })(nav.toc);
         setToc(flat);
         window.__epubToc = flat; /* Share TOC with parent for chapter notes matching */
+        /* Auto-map chapters to notes files */
+        autoMapChaptersToNotes(flat);
       }).catch(function(err){
         if (!cancelled) setError('目录加载失败: '+err.message);
       });
@@ -2777,6 +2840,7 @@ function LearningReader({item,onBack}){
   /* Fetch notes index for this book */
   React.useEffect(()=>{
     if(!item.id || !item.file) return;
+    window.__currentBookId = item.id; /* Set current book for auto-mapping */
     setLoadingNotes(true);
     fetch('notes/'+item.id+'/index.json')
       .then(r=>r.ok?r.json():null)
@@ -2792,13 +2856,20 @@ function LearningReader({item,onBack}){
 
   /* Fetch and render notes for current chapter */
   React.useEffect(()=>{
-    if(!currentChapter || !notesIndex){
-      if(!currentChapter) setNotesHtml(item.content || '');
+    if(!currentChapter){
+      setNotesHtml(item.content || '');
       return;
     }
-    const mdFile = notesIndex[currentChapter];
+    /* Use auto-mapped index if available, otherwise use fetched index */
+    const idx = window.__notesIndex || notesIndex;
+    if(!idx){
+      if(!notesIndex) return; /* Still loading */
+      setNotesHtml('<h3>📝 本章笔记</h3><p>本章笔记尚未编写。</p><p style="color:var(--text2);font-size:13px;margin-top:12px;">你可以在仓库的 <code>notes/'+item.id+'/</code> 目录下添加对应的 Markdown 文件。</p>');
+      return;
+    }
+    const mdFile = idx[currentChapter];
     if(!mdFile){
-      /* No mapping for this chapter, show default message */
+      /* No mapping for this chapter */
       setNotesHtml('<h3>📝 本章笔记</h3><p>本章笔记尚未编写。</p><p style="color:var(--text2);font-size:13px;margin-top:12px;">你可以在仓库的 <code>notes/'+item.id+'/</code> 目录下添加对应的 Markdown 文件。</p>');
       return;
     }

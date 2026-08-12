@@ -2626,7 +2626,7 @@ function EpubReader({url,title,onBack,embedded,onChapterChange}){
           <button onClick={goPrev}>◀ 上一页</button>
           <button onClick={goNext}>下一页 ▶</button>
         </div>
-        <div className="epub-viewer" ref={viewerRef} style={{position:'relative'}}>
+        <div className="epub-viewer" style={{position:'relative'}}>
           {loading && <div className="epub-loading"><div className="spinner"></div><p>正在加载电子书...</p></div>}
           <div ref={areaRef} id="epubArea" style={{visibility: loading?'hidden':'visible'}}/>
           {tocOpen && toc.length>0 && (

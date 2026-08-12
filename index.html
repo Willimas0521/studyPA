@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>价格行为闯关 - Price Action Quest</title>
+<title>认真交易 - Serious Trading</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
@@ -328,15 +328,15 @@ body::after{content:'';position:fixed;inset:0;background:linear-gradient(180deg,
 .learn-nav-btn.active{border-color:var(--blue);color:var(--blue);background:rgba(41,98,255,.04)}
 
 /* Sidebar */
-.sidebar{width:56px;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:4px;flex-shrink:0;overflow-y:auto;z-index:2}
+.sidebar{width:64px;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:6px;flex-shrink:0;overflow-y:auto;z-index:2}
 .sidebar::-webkit-scrollbar{width:0}
-.sidebar-btn{width:42px;height:42px;display:flex;align-items:center;justify-content:center;border-radius:8px;border:1px solid transparent;background:none;cursor:pointer;font-size:18px;transition:all .25s;position:relative;color:var(--text2)}
-.sidebar-btn:hover{background:rgba(41,98,255,.04);border-color:rgba(41,98,255,.12);color:var(--blue)}
-.sidebar-btn.active{background:rgba(41,98,255,.06);border-color:rgba(41,98,255,.15);color:var(--blue)}
+.sidebar-btn{width:48px;height:48px;display:flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid transparent;background:none;cursor:pointer;font-size:22px;transition:all .25s;position:relative;color:var(--text2)}
+.sidebar-btn:hover{background:rgba(41,98,255,.06);border-color:rgba(41,98,255,.15);color:var(--blue);transform:scale(1.08)}
+.sidebar-btn.active{background:rgba(41,98,255,.08);border-color:rgba(41,98,255,.2);color:var(--blue)}
 .sidebar-btn .badge-dot{position:absolute;top:4px;right:4px;width:8px;height:8px;border-radius:50%;background:var(--red)}
 .sidebar-btn .badge-num{position:absolute;top:2px;right:2px;font-family:var(--pixel);font-size:7px;color:var(--blue);background:rgba(41,98,255,.08);border:1px solid rgba(41,98,255,.2);border-radius:4px;padding:0 3px;line-height:1.4}
-.sidebar-divider{width:24px;height:1px;background:var(--border);margin:6px 0}
-.sidebar-label{font-family:var(--pixel);font-size:6px;color:var(--text2);text-align:center;margin-top:-2px;margin-bottom:2px;letter-spacing:.5px;opacity:.6}
+.sidebar-divider{width:28px;height:1px;background:var(--border);margin:6px 0}
+.sidebar-label{font-family:var(--pixel);font-size:7px;color:var(--text2);text-align:center;margin-top:-2px;margin-bottom:2px;letter-spacing:.5px;opacity:.7}
 
 /* Confetti canvas */
 .confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:60}
@@ -348,9 +348,9 @@ body::after{content:'';position:fixed;inset:0;background:linear-gradient(180deg,
   .level-node .circle{width:42px;height:42px;font-size:18px}
   .question-text{font-size:14px}
   .welcome h1{font-size:15px}
-  .sidebar{width:44px}
-  .sidebar-btn{width:34px;height:34px;font-size:15px}
-  .sidebar-label{font-size:5px}
+  .sidebar{width:52px}
+  .sidebar-btn{width:40px;height:40px;font-size:18px}
+  .sidebar-label{font-size:6px}
 }
 </style>
 </head>
@@ -1464,8 +1464,8 @@ function Welcome({onStart}){
     <div className="screen">
       <div className="welcome">
         <div className="candle-art">📊</div>
-        <h1>价格行为闯关</h1>
-        <div className="subtitle">PRICE ACTION QUEST</div>
+        <h1>认真交易</h1>
+        <div className="subtitle">SERIOUS TRADING</div>
         <p style={{color:'var(--text2)',marginBottom:24,maxWidth:380,lineHeight:1.8,fontSize:14}}>
           从K线基础到实战策略，6大章节{TOTAL_LEVELS}个关卡<br/>
           通过看图识别、判断、选择等多种题型<br/>
@@ -3008,7 +3008,7 @@ function App(){
     <div style={{display:'flex',flexDirection:'column',height:'100%'}}>
       {state.screen!=='welcome' && (
         <div className="header">
-          <h1>价格行为闯关</h1>
+          <h1>认真交易</h1>
           <div className="xp-bar">
             <span>XP {state.xp}</span>
             <div className="bar"><div className="fill" style={{width:Math.min(100,(state.xp%500)/5)+'%'}}></div></div>

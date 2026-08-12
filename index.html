@@ -2459,6 +2459,7 @@ function autoMapChaptersToNotes(toc){
 
 function EpubReader({url,title,onBack,embedded,onChapterChange}){
   const areaRef = React.useRef(null);
+  const viewerRef = React.useRef(null);
   const bookRef = React.useRef(null);
   const renditionRef = React.useRef(null);
   const [loading, setLoading] = React.useState(true);
@@ -2469,18 +2470,25 @@ function EpubReader({url,title,onBack,embedded,onChapterChange}){
   const [currentHref, setCurrentHref] = React.useState('');
   const [dims, setDims] = React.useState({w:0,h:0});
 
-  /* Measure container pixels so epub.js can size its iframe */
+  /* Measure viewer container pixels so epub.js can size its iframe */
   React.useEffect(()=>{
-    if(!areaRef.current) return;
+    const viewerEl = viewerRef.current;
+    if(!viewerEl) return;
     function measure(){
-      const el = areaRef.current;
-      if(!el) return;
-      const r = el.getBoundingClientRect();
-      if(r.width>0 && r.height>0) setDims({w:Math.floor(r.width),h:Math.floor(r.height)});
+      if(!viewerEl) return;
+      const r = viewerEl.getBoundingClientRect();
+      if(r.width>0 && r.height>0){
+        setDims({w:Math.floor(r.width),h:Math.floor(r.height)});
+        /* Also set explicit pixels on inner area so epub.js has dimensions */
+        if(areaRef.current){
+          areaRef.current.style.width = Math.floor(r.width)+'px';
+          areaRef.current.style.height = Math.floor(r.height)+'px';
+        }
+      }
     }
     measure();
     const ro = new ResizeObserver(measure);
-    ro.observe(areaRef.current);
+    ro.observe(viewerEl);
     return ()=>ro.disconnect();
   },[]);
 
@@ -2616,7 +2624,7 @@ function EpubReader({url,title,onBack,embedded,onChapterChange}){
           <button onClick={goPrev}>◀ 上一页</button>
           <button onClick={goNext}>下一页 ▶</button>
         </div>
-        <div className="epub-viewer" style={{position:'relative'}}>
+        <div className="epub-viewer" ref={viewerRef} style={{position:'relative'}}>
           {loading && <div className="epub-loading"><div className="spinner"></div><p>正在加载电子书...</p></div>}
           <div ref={areaRef} id="epubArea" style={{visibility: loading?'hidden':'visible'}}/>
           {tocOpen && toc.length>0 && (

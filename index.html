@@ -228,7 +228,7 @@ body::after{content:'';position:fixed;inset:0;background:linear-gradient(180deg,
 .epub-toolbar button:hover{border-color:var(--blue);color:var(--blue)}
 .epub-toolbar .epub-title{font-size:12px;color:var(--blue);font-family:var(--pixel);flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .epub-toolbar .page-info{font-size:11px;color:var(--text2);font-family:var(--pixel)}
-.epub-viewer{flex:1;background:#f8f9fb;overflow:hidden;position:relative}
+.epub-viewer{flex:1;background:#f8f9fb;overflow:hidden;position:relative;min-height:300px}
 .epub-viewer #epubArea{height:100%;width:100%}
 .epub-toc{position:absolute;top:0;left:0;width:280px;height:100%;background:#fff;border-right:1px solid var(--border);z-index:10;overflow-y:auto;transform:translateX(-100%);transition:transform .3s ease;padding:16px;box-shadow:2px 0 12px rgba(0,0,0,.05)}
 .epub-toc.open{transform:translateX(0)}
@@ -2035,6 +2035,55 @@ function LearningPath({state,onClose}){
 
 /* ========== MAIN APP ========== */
 /* ========== LEARNING ========== */
+/* ========== CHAPTER NOTES ==========
+ * 每本书的章节笔记，key = 书ID，value = { 章节href或匹配关键词: 笔记HTML }
+ * 匹配规则：优先精确匹配 href，否则用 includes 关键词匹配
+ * 用户可以随时编辑这些内容，写入自己的感悟和理解
+ */
+const CHAPTER_NOTES = {
+  b1: {
+    /* 日本蜡烛图技术 — 示例笔记，按章节关键词匹配 */
+    'cover': `<h3>📗 日本蜡烛图技术</h3><p>全书导读笔记（封面页）</p>`,
+    'preface': `<h3>前言 / 序言</h3><p>在这里写下你对本书前言的感悟...</p>`,
+    'chapter': `<h3>章节笔记</h3><p>当前章节的笔记尚未编写，请在代码中编辑 CHAPTER_NOTES.b1 添加对应章节内容。</p>
+<div class="highlight">💡 提示：可以用章节标题关键词匹配，也可以用完整 href 精确匹配。</div>`,
+    '_default': `<h3>📝 本章笔记</h3><p>本章笔记待完善，请在 CHAPTER_NOTES 中添加。</p>`
+  },
+  b2: {
+    '_default': `<h3>📘 本章笔记</h3><p>金融市场技术分析 — 本章笔记待完善。</p>`
+  },
+  b3: {
+    '_default': `<h3>📙 本章笔记</h3><p>Al Brooks 价格行为三部曲 — 本章笔记待完善。</p>`
+  },
+  b4: {
+    '_default': `<h3>📕 本章笔记</h3><p>交易心理分析 — 本章笔记待完善。</p>`
+  }
+};
+
+/* 根据当前章节 href 和目录，找到匹配的笔记 */
+function findChapterNotes(bookId, href, toc){
+  const notes = CHAPTER_NOTES[bookId];
+  if(!notes) return CHAPTER_NOTES[bookId] && CHAPTER_NOTES[bookId]['_default'] || '<p>暂无笔记</p>';
+  /* 精确匹配 href */
+  if(notes[href]) return notes[href];
+  /* 关键词匹配：href 包含 key */
+  const keys = Object.keys(notes).filter(k=>k!=='_default');
+  for(const k of keys){
+    if(href && href.toLowerCase().includes(k.toLowerCase())) return notes[k];
+  }
+  /* 目录标签匹配：找到当前 href 对应的 TOC label，再尝试匹配 */
+  if(toc && toc.length){
+    const ch = toc.find(t=>t.href===href);
+    if(ch){
+      const label = ch.label.trim();
+      for(const k of keys){
+        if(label.toLowerCase().includes(k.toLowerCase())) return notes[k];
+      }
+    }
+  }
+  return notes['_default'] || '<p>暂无笔记</p>';
+}
+
 const LEARN_DATA = {
   courses: [
     {id:'c1',icon:'📊',name:'K线基础入门',tag:'free',tagText:'免费',
@@ -2310,7 +2359,7 @@ function LearningHub({onBack,onOpenItem}){
   );
 }
 
-function EpubReader({url,title,onBack,embedded}){
+function EpubReader({url,title,onBack,embedded,onChapterChange}){
   const areaRef = React.useRef(null);
   const bookRef = React.useRef(null);
   const renditionRef = React.useRef(null);
@@ -2320,9 +2369,26 @@ function EpubReader({url,title,onBack,embedded}){
   const [tocOpen, setTocOpen] = React.useState(false);
   const [pageInfo, setPageInfo] = React.useState('');
   const [currentHref, setCurrentHref] = React.useState('');
+  const [dims, setDims] = React.useState({w:0,h:0});
 
+  /* Measure container pixels so epub.js can size its iframe */
+  React.useEffect(()=>{
+    if(!areaRef.current) return;
+    function measure(){
+      const el = areaRef.current;
+      if(!el) return;
+      const r = el.getBoundingClientRect();
+      if(r.width>0 && r.height>0) setDims({w:Math.floor(r.width),h:Math.floor(r.height)});
+    }
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(areaRef.current);
+    return ()=>ro.disconnect();
+  },[]);
+
+  /* Initialize epub once we have pixel dimensions */
   React.useEffect(() => {
-    if (!areaRef.current || !url) return;
+    if (!areaRef.current || !url || dims.w===0 || dims.h===0) return;
     let cancelled = false;
     setLoading(true);
     setError(null);
@@ -2331,7 +2397,7 @@ function EpubReader({url,title,onBack,embedded}){
       const book = ePub(url);
       bookRef.current = book;
       const rendition = book.renderTo(areaRef.current, {
-        width: '100%', height: '100%',
+        width: dims.w+'px', height: dims.h+'px',
         spread: 'none', flow: 'paginated'
       });
       renditionRef.current = rendition;
@@ -2357,6 +2423,7 @@ function EpubReader({url,title,onBack,embedded}){
           });
         })(nav.toc);
         setToc(flat);
+        window.__epubToc = flat; /* Share TOC with parent for chapter notes matching */
       }).catch(function(err){
         if (!cancelled) setError('目录加载失败: '+err.message);
       });
@@ -2369,11 +2436,13 @@ function EpubReader({url,title,onBack,embedded}){
 
       rendition.on('relocated', function(location){
         if (cancelled) return;
-        setCurrentHref(location.start.href);
+        const href = location.start.href;
+        setCurrentHref(href);
         const pct = location.start.percentage;
         if (pct != null) {
           setPageInfo(Math.round(pct * 100) + '%');
         }
+        if (onChapterChange) onChapterChange(href);
       });
 
       /* Keyboard navigation */
@@ -2396,7 +2465,14 @@ function EpubReader({url,title,onBack,embedded}){
       setError('EPUB 初始化失败: '+err.message);
       setLoading(false);
     }
-  }, [url]);
+  }, [url, dims.w, dims.h]);
+
+  /* Re-flow rendition when container resizes */
+  React.useEffect(()=>{
+    if(renditionRef.current && dims.w>0 && dims.h>0){
+      try{ renditionRef.current.resize(dims.w+'px', dims.h+'px'); }catch(e){}
+    }
+  },[dims.w, dims.h]);
 
   function goPrev(){ if(renditionRef.current) renditionRef.current.prev(); }
   function goNext(){ if(renditionRef.current) renditionRef.current.next(); }
@@ -2650,6 +2726,8 @@ function TxtReader({url,title,onBack,embedded}){
 function LearningReader({item,onBack}){
   const [leftW, setLeftW] = React.useState(55);
   const [dragging, setDragging] = React.useState(false);
+  const [currentChapter, setCurrentChapter] = React.useState('');
+  const [chapterTitle, setChapterTitle] = React.useState('');
   const containerRef = React.useRef(null);
 
   React.useEffect(()=>{
@@ -2683,15 +2761,34 @@ function LearningReader({item,onBack}){
     return null;
   }
 
+  function handleChapterChange(href){
+    setCurrentChapter(href);
+    /* Try to find TOC label for this href */
+    if(window.__epubToc && window.__epubToc.length){
+      const ch = window.__epubToc.find(t=>t.href===href);
+      if(ch) setChapterTitle(ch.label.trim());
+      else setChapterTitle('');
+    }
+  }
+
   function renderReader(item){
     const fmt = getFormat(item.file);
-    if(fmt==='epub') return <EpubReader url={item.file} title={item.name} embedded={true} onBack={onBack}/>;
+    if(fmt==='epub') return <EpubReader url={item.file} title={item.name} embedded={true} onBack={onBack} onChapterChange={handleChapterChange} />;
     if(fmt==='pdf') return <PdfReader url={item.file} title={item.name} embedded={true} onBack={onBack}/>;
     if(fmt==='txt') return <TxtReader url={item.file} title={item.name} embedded={true} onBack={onBack}/>;
     return null;
   }
 
+  /* Build notes content for current chapter */
+  function getNotesContent(){
+    if(!currentChapter) return item.content; /* Show book overview before any chapter loads */
+    const notes = findChapterNotes(item.id, currentChapter, window.__epubToc || []);
+    return notes;
+  }
+
   if(item.file){
+    const notesHtml = getNotesContent();
+    const isChapterMode = !!currentChapter;
     return (
       <div className="screen" style={{padding:0}}>
         <div className="book-split" ref={containerRef}>
@@ -2704,9 +2801,11 @@ function LearningReader({item,onBack}){
           <div className="book-pane book-pane-right" style={{width:(100-leftW)+'%'}}>
             <div className="learn-reader-head">
               <button className="back" onClick={onBack}>← 返回</button>
-              <span className="learn-reader-title">📝 知识要点</span>
+              <span className="learn-reader-title">
+                {isChapterMode ? '📖 ' + (chapterTitle || '本章笔记') : '📝 知识要点'}
+              </span>
             </div>
-            <div className="learn-reader-body" dangerouslySetInnerHTML={{__html:item.content}}/>
+            <div className="learn-reader-body" dangerouslySetInnerHTML={{__html:notesHtml}}/>
           </div>
         </div>
       </div>

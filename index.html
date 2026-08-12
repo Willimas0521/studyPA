@@ -228,8 +228,8 @@ body::after{content:'';position:fixed;inset:0;background:linear-gradient(180deg,
 .epub-toolbar button:hover{border-color:var(--blue);color:var(--blue)}
 .epub-toolbar .epub-title{font-size:12px;color:var(--blue);font-family:var(--pixel);flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .epub-toolbar .page-info{font-size:11px;color:var(--text2);font-family:var(--pixel)}
-.epub-viewer{flex:1;background:#f8f9fb;overflow:auto;position:relative;min-height:300px}
-.epub-viewer #epubArea{height:100%;width:100%;overflow:auto}
+.epub-viewer{flex:1;background:#f8f9fb;overflow:hidden;position:relative;min-height:400px}
+.epub-viewer #epubArea{height:100%;width:100%}
 .epub-toc{position:absolute;top:0;left:0;width:280px;height:100%;background:#fff;border-right:1px solid var(--border);z-index:10;overflow-y:auto;transform:translateX(-100%);transition:transform .3s ease;padding:16px;box-shadow:2px 0 12px rgba(0,0,0,.05)}
 .epub-toc.open{transform:translateX(0)}
 .epub-toc h3{font-family:var(--pixel);font-size:10px;color:var(--blue);margin-bottom:12px}
@@ -2459,10 +2459,8 @@ function autoMapChaptersToNotes(toc){
 
 function EpubReader({url,title,onBack,embedded,onChapterChange}){
   const areaRef = React.useRef(null);
-  const viewerRef = React.useRef(null);
   const bookRef = React.useRef(null);
   const renditionRef = React.useRef(null);
-  const initRef = React.useRef(false); /* Track if epub has been initialized */
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
   const [toc, setToc] = React.useState([]);
@@ -2470,34 +2468,30 @@ function EpubReader({url,title,onBack,embedded,onChapterChange}){
   const [pageInfo, setPageInfo] = React.useState('');
   const [currentHref, setCurrentHref] = React.useState('');
 
-  /* Initialize epub once when component mounts and container has size */
   React.useEffect(() => {
-    if (!areaRef.current || !viewerRef.current || !url || initRef.current) return;
-    initRef.current = true;
+    if (!areaRef.current || !url) return;
     let cancelled = false;
     setLoading(true);
     setError(null);
 
-    /* Get initial dimensions */
-    const viewerEl = viewerRef.current;
-    const rect = viewerEl.getBoundingClientRect();
-    const w = Math.floor(rect.width);
-    const h = Math.floor(rect.height);
-
-    /* Set explicit pixel dimensions on inner area */
-    areaRef.current.style.width = w + 'px';
-    areaRef.current.style.height = h + 'px';
+    console.log('[EPUB] Initializing with URL:', url);
 
     try {
+      /* Create book */
       const book = ePub(url);
       bookRef.current = book;
+
+      /* Render with fixed dimensions - let CSS handle the container size */
       const rendition = book.renderTo(areaRef.current, {
-        width: w+'px', height: h+'px',
-        spread: 'none', flow: 'scrolled'
+        width: '100%',
+        height: '100%',
+        spread: 'none',
+        flow: 'paginated',
+        allowScriptedContent: true
       });
       renditionRef.current = rendition;
 
-      /* Apply light theme to epub content */
+      /* Apply theme */
       rendition.themes.register('trading', {
         'body': { background: '#f8f9fb !important', color: '#131722 !important' },
         'a': { color: '#2962ff !important' },
@@ -2505,11 +2499,14 @@ function EpubReader({url,title,onBack,embedded,onChapterChange}){
       });
       rendition.themes.select('trading');
 
+      /* Load TOC */
       book.ready.then(function(){
         if (cancelled) return;
+        console.log('[EPUB] Book ready');
         return book.loaded.navigation;
       }).then(function(nav){
         if (cancelled) return;
+        console.log('[EPUB] Navigation loaded');
         const flat = [];
         (function walk(items){
           items.forEach(function(item){
@@ -2518,27 +2515,42 @@ function EpubReader({url,title,onBack,embedded,onChapterChange}){
           });
         })(nav.toc);
         setToc(flat);
-        window.__epubToc = flat; /* Share TOC with parent for chapter notes matching */
-        /* Auto-map chapters to notes files */
+        window.__epubToc = flat;
         autoMapChaptersToNotes(flat);
-        /* Display first TOC chapter (skip default display() which may hang) */
-        if(flat.length > 0){
-          rendition.display(flat[0].href).catch(function(err){
-            console.log('[EPUB] First chapter display failed:', err.message);
-          });
-        }
       }).catch(function(err){
-        if (!cancelled) setError('目录加载失败: '+err.message);
+        if (!cancelled) {
+          console.error('[EPUB] TOC error:', err);
+          setError('目录加载失败: '+err.message);
+        }
       });
 
-      /* Use relocated event to close loading */
-      let loadingClosed = false;
-      function closeLoading(){
-        if(loadingClosed) return;
-        loadingClosed = true;
-        setLoading(false);
-      }
+      /* Display first page */
+      rendition.display().then(function(){
+        if (!cancelled) {
+          console.log('[EPUB] First page displayed');
+          setLoading(false);
+        }
+      }).catch(function(err){
+        if (!cancelled) {
+          console.error('[EPUB] Display error:', err);
+          /* Try to display first TOC item as fallback */
+          if(window.__epubToc && window.__epubToc.length > 0){
+            rendition.display(window.__epubToc[0].href).then(function(){
+              if(!cancelled) setLoading(false);
+            }).catch(function(e2){
+              if(!cancelled) {
+                setError('EPUB 加载失败: '+e2.message);
+                setLoading(false);
+              }
+            });
+          } else {
+            setError('EPUB 加载失败: '+err.message);
+            setLoading(false);
+          }
+        }
+      });
 
+      /* Track page changes */
       rendition.on('relocated', function(location){
         if (cancelled) return;
         const href = location.start.href;
@@ -2548,22 +2560,12 @@ function EpubReader({url,title,onBack,embedded,onChapterChange}){
           setPageInfo(Math.round(pct * 100) + '%');
         }
         if (onChapterChange) onChapterChange(href);
-        closeLoading(); /* First relocated = content is visible */
         const tocItem = window.__epubToc && window.__epubToc.find(t=>t.href===href);
         const t = tocItem ? tocItem.label.trim() : '(未知章节)';
-        console.log('[EPUB] 当前章节:', href, '-', t);
+        console.log('[EPUB] Relocated:', href, '-', t);
       });
 
-      /* Safety timeout: if still loading after 10s, show error */
-      setTimeout(function(){
-        if(cancelled || loadingClosed) return;
-        console.log('[EPUB] Loading timeout after 10s');
-        setError('EPUB 加载超时，请点击目录中的章节');
-        setLoading(false);
-        loadingClosed = true;
-      }, 10000);
-
-      /* Keyboard navigation */
+      /* Keyboard nav */
       function handleKey(e){
         if (e.key === 'ArrowLeft') rendition.prev();
         else if (e.key === 'ArrowRight') rendition.next();
@@ -2571,33 +2573,16 @@ function EpubReader({url,title,onBack,embedded,onChapterChange}){
       }
       window.addEventListener('keydown', handleKey);
 
-      /* ResizeObserver: only call rendition.resize(), never re-init */
-      const ro = new ResizeObserver(function(){
-        if(cancelled || !renditionRef.current || !viewerRef.current) return;
-        const r = viewerRef.current.getBoundingClientRect();
-        const nw = Math.floor(r.width);
-        const nh = Math.floor(r.height);
-        if(nw > 0 && nh > 0){
-          if(areaRef.current){
-            areaRef.current.style.width = nw+'px';
-            areaRef.current.style.height = nh+'px';
-          }
-          try{ renditionRef.current.resize(nw+'px', nh+'px'); }catch(e){}
-        }
-      });
-      ro.observe(viewerEl);
-
       return function cleanup(){
         cancelled = true;
-        ro.disconnect();
         window.removeEventListener('keydown', handleKey);
         if (renditionRef.current) { try{renditionRef.current.destroy();}catch(e){} }
         if (bookRef.current) { try{bookRef.current.destroy();}catch(e){} }
         bookRef.current = null;
         renditionRef.current = null;
-        initRef.current = false;
       };
     } catch(err) {
+      console.error('[EPUB] Init error:', err);
       setError('EPUB 初始化失败: '+err.message);
       setLoading(false);
     }

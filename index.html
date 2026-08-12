@@ -2035,6 +2035,43 @@ function LearningPath({state,onClose}){
 
 /* ========== MAIN APP ========== */
 /* ========== LEARNING ========== */
+/* ========== SIMPLE MARKDOWN PARSER ========== */
+function mdToHtml(md){
+  if(!md) return '';
+  let html = md
+    /* Code blocks */
+    .replace(/```([\s\S]*?)```/g, (m,c)=>'<pre><code>'+c.replace(/</g,'&lt;')+'</code></pre>')
+    /* Inline code */
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    /* Headers */
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    /* Bold & italic */
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    /* Horizontal rule */
+    .replace(/^---+$/gm, '<hr/>')
+    /* Links */
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
+    /* Blockquote */
+    .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
+    /* Unordered list */
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    /* Ordered list */
+    .replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+  /* Wrap consecutive <li> in <ul> */
+  html = html.replace(/(<li>[\s\S]*?<\/li>)(?!\s*<li>)/g, '<ul>$1</ul>');
+  /* Paragraphs */
+  html = html.split(/\n\n+/).map(p=>{
+    p = p.trim();
+    if(!p) return '';
+    if(/^<(h[1-6]|ul|ol|pre|blockquote|hr)/.test(p)) return p;
+    return '<p>'+p+'</p>';
+  }).join('\n');
+  return html;
+}
+
 /* ========== CHAPTER NOTES ==========
  * 每本书的章节笔记，key = 书ID，value = { 章节href或匹配关键词: 笔记HTML }
  * 匹配规则：优先精确匹配 href，否则用 includes 关键词匹配
@@ -2443,6 +2480,10 @@ function EpubReader({url,title,onBack,embedded,onChapterChange}){
           setPageInfo(Math.round(pct * 100) + '%');
         }
         if (onChapterChange) onChapterChange(href);
+        /* Log chapter info for user to find href for notes mapping */
+        const tocItem = window.__epubToc && window.__epubToc.find(t=>t.href===href);
+        const title = tocItem ? tocItem.label.trim() : '(未知章节)';
+        console.log('[EPUB] 当前章节:', href, '-', title);
       });
 
       /* Keyboard navigation */
@@ -2728,7 +2769,55 @@ function LearningReader({item,onBack}){
   const [dragging, setDragging] = React.useState(false);
   const [currentChapter, setCurrentChapter] = React.useState('');
   const [chapterTitle, setChapterTitle] = React.useState('');
+  const [notesHtml, setNotesHtml] = React.useState(item.content || '');
+  const [notesIndex, setNotesIndex] = React.useState(null);
+  const [loadingNotes, setLoadingNotes] = React.useState(false);
   const containerRef = React.useRef(null);
+
+  /* Fetch notes index for this book */
+  React.useEffect(()=>{
+    if(!item.id || !item.file) return;
+    setLoadingNotes(true);
+    fetch('notes/'+item.id+'/index.json')
+      .then(r=>r.ok?r.json():null)
+      .then(data=>{
+        setNotesIndex(data);
+        setLoadingNotes(false);
+      })
+      .catch(()=>{
+        setNotesIndex(null);
+        setLoadingNotes(false);
+      });
+  },[item.id]);
+
+  /* Fetch and render notes for current chapter */
+  React.useEffect(()=>{
+    if(!currentChapter || !notesIndex){
+      if(!currentChapter) setNotesHtml(item.content || '');
+      return;
+    }
+    const mdFile = notesIndex[currentChapter];
+    if(!mdFile){
+      /* No mapping for this chapter, show default message */
+      setNotesHtml('<h3>📝 本章笔记</h3><p>本章笔记尚未编写。</p><p style="color:var(--text2);font-size:13px;margin-top:12px;">你可以在仓库的 <code>notes/'+item.id+'/</code> 目录下添加对应的 Markdown 文件。</p>');
+      return;
+    }
+    setLoadingNotes(true);
+    fetch('notes/'+item.id+'/'+mdFile)
+      .then(r=>r.ok?r.text():null)
+      .then(md=>{
+        if(md){
+          setNotesHtml(mdToHtml(md));
+        } else {
+          setNotesHtml('<h3>📝 本章笔记</h3><p>笔记文件加载失败: '+mdFile+'</p>');
+        }
+        setLoadingNotes(false);
+      })
+      .catch(()=>{
+        setNotesHtml('<h3>📝 本章笔记</h3><p>笔记文件加载失败。</p>');
+        setLoadingNotes(false);
+      });
+  },[currentChapter, notesIndex]);
 
   React.useEffect(()=>{
     if(!dragging) return;
@@ -2779,15 +2868,7 @@ function LearningReader({item,onBack}){
     return null;
   }
 
-  /* Build notes content for current chapter */
-  function getNotesContent(){
-    if(!currentChapter) return item.content; /* Show book overview before any chapter loads */
-    const notes = findChapterNotes(item.id, currentChapter, window.__epubToc || []);
-    return notes;
-  }
-
   if(item.file){
-    const notesHtml = getNotesContent();
     const isChapterMode = !!currentChapter;
     return (
       <div className="screen" style={{padding:0}}>
@@ -2804,6 +2885,7 @@ function LearningReader({item,onBack}){
               <span className="learn-reader-title">
                 {isChapterMode ? '📖 ' + (chapterTitle || '本章笔记') : '📝 知识要点'}
               </span>
+              {loadingNotes && <span style={{fontSize:11,color:'var(--text2)',marginLeft:8}}>加载中...</span>}
             </div>
             <div className="learn-reader-body" dangerouslySetInnerHTML={{__html:notesHtml}}/>
           </div>

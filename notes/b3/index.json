@@ -1,0 +1,14 @@
+{
+  "_comment": "Al Brooks 价格行为三部曲 - 章节映射表",
+  "cover.html": "cover.md",
+  "OEBPS/Text/chapter01.html": "ch01.md",
+  "OEBPS/Text/chapter02.html": "ch02.md",
+  "OEBPS/Text/chapter03.html": "ch03.md",
+  "OEBPS/Text/chapter04.html": "ch04.md",
+  "OEBPS/Text/chapter05.html": "ch05.md",
+  "OEBPS/Text/chapter06.html": "ch06.md",
+  "OEBPS/Text/chapter07.html": "ch07.md",
+  "OEBPS/Text/chapter08.html": "ch08.md",
+  "OEBPS/Text/chapter09.html": "ch09.md",
+  "OEBPS/Text/chapter10.html": "ch10.md"
+}

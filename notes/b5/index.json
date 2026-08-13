@@ -1,0 +1,7 @@
+{
+  "_comment": "专业投机原理 - 章节映射表",
+  "_usage": "key 是 PDF 页码（如 'page-1'），value 是对应的笔记文件名",
+  "cover": "cover.md",
+  "chapter-1": "ch01.md",
+  "chapter-2": "ch02.md"
+}

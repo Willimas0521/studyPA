@@ -15,7 +15,7 @@
 
 var NAV_ITEMS = [
   { divider: true, groupLabel: '\u5B66\u4E60' },
-  { id: 'course',  icon: '\uD83C\uDF93', label: '\u8BFE\u7A0B\u5B66\u4E60', href: 'learn.html' },
+  { id: 'course',  icon: '\uD83C\uDF93', label: '\u8BFE\u7A0B\u5B66\u4E60', href: 'courses.html' },
   { id: 'trader',  icon: '\uD83D\uDC51', label: '\u9876\u7EA7\u4EA4\u6613\u5458', href: '#' },
   { id: 'books',   icon: '\uD83D\uDCDA', label: '\u4E66\u7C4D\u5B66\u4E60',   href: '#' },
   { id: 'kline',   icon: '\uD83D\uDCC8', label: 'K\u7EBF\u5B66\u4E60',      href: '#' },

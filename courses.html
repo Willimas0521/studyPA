@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>课程学习 - 认真交易</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzI5NjJmZiIvPgogIDxyZWN0IHg9IjYiIHk9IjE0IiB3aWR0aD0iNCIgaGVpZ2h0PSIxMiIgcng9IjEiIGZpbGw9IiMyNmE2OWEiLz4KICA8cmVjdCB4PSIxMiIgeT0iOCIgd2lkdGg9IjQiIGhlaWdodD0iMTgiIHJ4PSIxIiBmaWxsPSIjMjZhNjlhIi8+CiAgPHJlY3QgeD0iMTgiIHk9IjE2IiB3aWR0aD0iNCIgaGVpZ2h0PSI4IiByeD0iMSIgZmlsbD0iI2VmNTM1MCIvPgogIDxyZWN0IHg9IjI0IiB5PSI2IiB3aWR0aD0iNCIgaGVpZ2h0PSIyMCIgcng9IjEiIGZpbGw9IiMyNmE2OWEiLz4KPC9zdmc+">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+<link rel="stylesheet" href="shared.css?v=4">
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+/* Course page specific styles */
+.courses-layout{display:flex;width:100%;height:100%;overflow:hidden}
+.courses-list{width:320px;flex-shrink:0;overflow-y:auto;padding:16px;border-right:1px solid var(--border);background:#fff}
+.courses-list::-webkit-scrollbar{width:4px}
+.courses-list::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.courses-player{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#f8f9fb}
+.courses-player-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text2);gap:12px}
+.courses-player-empty .empty-icon{font-size:64px;opacity:.3}
+.courses-player-empty .empty-text{font-size:14px}
+
+.course-teacher{margin-bottom:16px}
+.course-teacher-header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:#fafbfc;border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all .25s;user-select:none}
+.course-teacher-header:hover{border-color:var(--blue);background:rgba(41,98,255,.03)}
+.course-teacher-header.expanded{border-color:var(--blue);background:rgba(41,98,255,.05);border-bottom-left-radius:0;border-bottom-right-radius:0}
+.course-teacher-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.course-teacher-info{flex:1}
+.course-teacher-name{font-size:14px;font-weight:bold;color:var(--text);margin-bottom:2px}
+.course-teacher-count{font-size:11px;color:var(--text2)}
+.course-teacher-arrow{font-size:12px;color:var(--text2);transition:transform .25s}
+.course-teacher-header.expanded .course-teacher-arrow{transform:rotate(90deg)}
+.course-episodes{border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;overflow:hidden;max-height:0;transition:max-height .35s ease}
+.course-episodes.open{max-height:600px}
+.course-episode{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:all .2s;border-bottom:1px solid var(--border);font-size:13px;color:var(--text2)}
+.course-episode:last-child{border-bottom:none}
+.course-episode:hover{background:rgba(41,98,255,.04);color:var(--blue)}
+.course-episode.active{background:rgba(41,98,255,.06);color:var(--blue);font-weight:600}
+.course-episode-num{width:24px;height:24px;border-radius:50%;background:#eef1f5;display:flex;align-items:center;justify-content:center;font-family:var(--pixel);font-size:8px;color:var(--text2);flex-shrink:0}
+.course-episode.active .course-episode-num{background:var(--blue);color:#fff}
+.course-episode-title{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.course-episode-play{font-size:14px;opacity:.5}
+.course-episode:hover .course-episode-play{opacity:1}
+
+.player-wrapper{width:100%;height:100%;display:flex;flex-direction:column}
+.player-header{padding:12px 16px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.player-header .player-teacher{font-size:12px;color:var(--text2)}
+.player-header .player-title{font-family:var(--pixel);font-size:10px;color:var(--blue);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.player-frame-wrap{flex:1;position:relative;background:#000}
+.player-frame-wrap iframe{width:100%;height:100%;border:none;display:block}
+
+/* Responsive: stack on mobile */
+@media(max-width:768px){
+  .courses-layout{flex-direction:column}
+  .courses-list{width:100%;max-height:40vh;border-right:none;border-bottom:1px solid var(--border)}
+  .courses-player{min-height:60vh}
+}
+</style>
+</head>
+<body>
+<div id="nav-header"></div>
+<div id="root"></div>
+<div id="nav-sidebar"></div>
+
+<script type="text/babel">
+const { useState, useRef, useEffect } = React;
+
+/* ---- 课程数据 ---- */
+const COURSES = [
+  {
+    id: 'fangfangtu',
+    name: '方方土价格行为学',
+    avatar: '🎓',
+    color: '#2962ff',
+    episodes: [
+      {
+        title: '为什么稳定盈利应该是一件很轻松的事情？',
+        bvid: 'BV12WuP61Ej2'
+      }
+    ]
+  },
+  {
+    id: 'jingxin',
+    name: '静心方能就行',
+    avatar: '🧘',
+    color: '#26a69a',
+    episodes: []
+  },
+  {
+    id: 'bitlanglang',
+    name: 'bit浪浪',
+    avatar: '🌊',
+    color: '#7b1fa2',
+    episodes: []
+  }
+];
+
+/* ---- 从B站链接提取bvid ---- */
+function extractBvid(url) {
+  const m = url.match(/BV[\w]+/);
+  return m ? m[0] : null;
+}
+
+function App() {
+  const [expandedTeacher, setExpandedTeacher] = useState(null);
+  const [activeVideo, setActiveVideo] = useState(null); // { teacherName, title, bvid }
+
+  const toggleTeacher = (id) => {
+    setExpandedTeacher(prev => prev === id ? null : id);
+  };
+
+  const playVideo = (teacher, episode) => {
+    setActiveVideo({
+      teacherName: teacher.name,
+      title: episode.title,
+      bvid: episode.bvid
+    });
+  };
+
+  return (
+    <div className="screen" style={{padding:0,alignItems:'stretch'}}>
+      <div className="courses-layout">
+        {/* 左侧课程列表 */}
+        <div className="courses-list">
+          <div style={{fontFamily:'var(--pixel)',fontSize:'10px',color:'var(--blue)',marginBottom:'14px',padding:'0 2px'}}>
+            📚 课程列表
+          </div>
+          {COURSES.map(teacher => {
+            const isExpanded = expandedTeacher === teacher.id;
+            return (
+              <div className="course-teacher" key={teacher.id}>
+                <div
+                  className={'course-teacher-header' + (isExpanded ? ' expanded' : '')}
+                  onClick={() => toggleTeacher(teacher.id)}
+                >
+                  <div className="course-teacher-avatar" style={{background: teacher.color + '12', color: teacher.color}}>
+                    {teacher.avatar}
+                  </div>
+                  <div className="course-teacher-info">
+                    <div className="course-teacher-name">{teacher.name}</div>
+                    <div className="course-teacher-count">
+                      {teacher.episodes.length > 0 ? teacher.episodes.length + ' 集' : '待更新'}
+                    </div>
+                  </div>
+                  <span className="course-teacher-arrow">▶</span>
+                </div>
+                <div className={'course-episodes' + (isExpanded ? ' open' : '')}>
+                  {teacher.episodes.length === 0 ? (
+                    <div style={{padding:'12px 14px',fontSize:'12px',color:'var(--text2)',fontStyle:'italic'}}>
+                      课程即将上线...
+                    </div>
+                  ) : (
+                    teacher.episodes.map((ep, i) => {
+                      const isActive = activeVideo && activeVideo.bvid === ep.bvid;
+                      return (
+                        <div
+                          key={i}
+                          className={'course-episode' + (isActive ? ' active' : '')}
+                          onClick={() => playVideo(teacher, ep)}
+                        >
+                          <span className="course-episode-num">{String(i + 1).padStart(2, '0')}</span>
+                          <span className="course-episode-title">{ep.title}</span>
+                          <span className="course-episode-play">▶</span>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* 右侧播放器 */}
+        <div className="courses-player">
+          {activeVideo ? (
+            <div className="player-wrapper">
+              <div className="player-header">
+                <span className="player-teacher">{activeVideo.teacherName}</span>
+                <span className="player-title">{activeVideo.title}</span>
+              </div>
+              <div className="player-frame-wrap">
+                <iframe
+                  src={`//player.bilibili.com/player.html?bvid=${activeVideo.bvid}&high_quality=1&danmaku=0`}
+                  scrolling="no"
+                  border="0"
+                  frameBorder="no"
+                  framespacing="0"
+                  allowFullScreen="true"
+                  title={activeVideo.title}
+                />
+              </div>
+            </div>
+          ) : (
+            <div className="courses-player-empty">
+              <div className="empty-icon">🎬</div>
+              <div className="empty-text">从左侧选择一个课程开始学习</div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+<script src="shared-nav.js?v=4"></script>
+<script>renderPageNav()</script>
+</body>
+</html>

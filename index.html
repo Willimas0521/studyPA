@@ -2690,7 +2690,7 @@ function EpubReader({url,title,onBack,embedded,onChapterChange}){
   );
 }
 
-function PdfReader({url,title,onBack,embedded}){
+function PdfReader({url,title,onBack,embedded,onPageChange}){
   const wrapRef = React.useRef(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
@@ -2699,6 +2699,11 @@ function PdfReader({url,title,onBack,embedded}){
   const [currentPage, setCurrentPage] = React.useState(1);
   const [scale, setScale] = React.useState(1.2);
   const pdfDocRef = React.useRef(null);
+
+  /* Notify parent when current page changes */
+  React.useEffect(()=>{
+    if(onPageChange) onPageChange(currentPage);
+  },[currentPage]);
 
   React.useEffect(()=>{
     if(!url) return;
@@ -2920,7 +2925,40 @@ function LearningReader({item,onBack}){
       setNotesHtml('<h3>📝 本章笔记</h3><p>本章笔记尚未编写。</p><p style="color:var(--text2);font-size:13px;margin-top:12px;">你可以在仓库的 <code>notes/'+item.id+'/</code> 目录下添加对应的 Markdown 文件。</p>');
       return;
     }
-    const mdFile = idx[currentChapter];
+
+    let mdFile = null;
+
+    /* Check for PDF page range mapping */
+    if(idx.pages && currentChapter.startsWith('page-')){
+      const pageNum = parseInt(currentChapter.replace('page-',''));
+      /* Find matching page range */
+      for(const range of Object.keys(idx.pages)){
+        const match = range.match(/^(\d+)-(\d+)$/);
+        if(match){
+          const start = parseInt(match[1]);
+          const end = parseInt(match[2]);
+          if(pageNum >= start && pageNum <= end){
+            mdFile = idx.pages[range];
+            break;
+          }
+        }
+      }
+    }
+
+    /* Fallback: exact match or keyword match (for EPUB) */
+    if(!mdFile){
+      mdFile = idx[currentChapter];
+      if(!mdFile){
+        const keys = Object.keys(idx).filter(k=>k!=='_default' && k!=='pages');
+        for(const k of keys){
+          if(currentChapter.toLowerCase().includes(k.toLowerCase())){
+            mdFile = idx[k];
+            break;
+          }
+        }
+      }
+    }
+
     if(!mdFile){
       /* No mapping for this chapter */
       setNotesHtml('<h3>📝 本章笔记</h3><p>本章笔记尚未编写。</p><p style="color:var(--text2);font-size:13px;margin-top:12px;">你可以在仓库的 <code>notes/'+item.id+'/</code> 目录下添加对应的 Markdown 文件。</p>');
@@ -2984,10 +3022,16 @@ function LearningReader({item,onBack}){
     }
   }
 
+  function handlePageChange(pageNum){
+    /* For PDF: use page number as chapter key */
+    setCurrentChapter('page-'+pageNum);
+    setChapterTitle('第 '+pageNum+' 页');
+  }
+
   function renderReader(item){
     const fmt = getFormat(item.file);
     if(fmt==='epub') return <EpubReader url={item.file} title={item.name} embedded={true} onBack={onBack} onChapterChange={handleChapterChange} />;
-    if(fmt==='pdf') return <PdfReader url={item.file} title={item.name} embedded={true} onBack={onBack}/>;
+    if(fmt==='pdf') return <PdfReader url={item.file} title={item.name} embedded={true} onBack={onBack} onPageChange={handlePageChange}/>;
     if(fmt==='txt') return <TxtReader url={item.file} title={item.name} embedded={true} onBack={onBack}/>;
     return null;
   }

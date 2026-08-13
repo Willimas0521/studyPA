@@ -1,7 +1,15 @@
 {
-  "_comment": "专业投机原理 - 章节映射表",
-  "_usage": "key 是 PDF 页码（如 'page-1'），value 是对应的笔记文件名",
-  "cover": "cover.md",
-  "chapter-1": "ch01.md",
-  "chapter-2": "ch02.md"
+  "_comment": "专业投机原理 - 章节映射表（PDF 页码范围格式）",
+  "_usage": "pages 对象中 key 是页码范围 '起始页 - 结束页'，value 是对应的笔记文件名",
+  "_example": {
+    "pages": {
+      "1-30": "ch01.md",
+      "31-85": "ch02.md"
+    }
+  },
+  "pages": {
+    "1-10": "cover.md",
+    "11-50": "ch01.md",
+    "51-120": "ch02.md"
+  }
 }

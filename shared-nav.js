@@ -14,15 +14,13 @@
  */
 
 var NAV_ITEMS = [
-  { id: 'learn',  icon: '\uD83D\uDCD6', label: '\u5B66\u4E60',  href: 'learn.html' },
-  { divider: true, groupLabel: '\u529F\u80FD' },
-  { id: 'daily',  icon: '\uD83D\uDCC5', label: '\u6BCF\u65E5\u7EC3\u4E60',  href: 'daily.html' },
-  { id: 'codex',  icon: '\uD83D\uDCDA', label: '\u56FE\u9274',  href: 'codex.html' },
-  { id: 'path',   icon: '\uD83D\uDDFA\uFE0F', label: '\u5B66\u4E60\u8DEF\u5F84', href: 'path.html' },
-  { divider: true, groupLabel: '\u6211\u7684' },
-  { id: 'wrong',  icon: '\uD83D\uDCD5', label: '\u9519\u9898\u672C',  href: 'index.html?screen=wrong',  badge: 'wrong' },
-  { id: 'ach',    icon: '\uD83C\uDFC5', label: '\u6210\u5C31',  href: 'index.html?screen=ach' },
-  { id: 'cert',   icon: '\uD83C\uDFC6', label: '\u8BC1\u4E66',  href: 'index.html?screen=cert',  hiddenUnlessAllClear: true }
+  { divider: true, groupLabel: '\u5B66\u4E60' },
+  { id: 'course',  icon: '\uD83C\uDF93', label: '\u8BFE\u7A0B\u5B66\u4E60', href: 'learn.html' },
+  { id: 'trader',  icon: '\uD83D\uDC51', label: '\u9876\u7EA7\u4EA4\u6613\u5458', href: '#' },
+  { id: 'books',   icon: '\uD83D\uDCDA', label: '\u4E66\u7C4D\u5B66\u4E60',   href: '#' },
+  { id: 'kline',   icon: '\uD83D\uDCC8', label: 'K\u7EBF\u5B66\u4E60',      href: '#' },
+  { id: 'pattern', icon: '\uD83D\uDD37', label: '\u5F62\u6001\u5B66\u4E60',  href: 'codex.html' },
+  { id: 'strategy',icon: '\u2694\uFE0F', label: '\u6218\u6CD5\u5B66\u4E60',  href: '#' }
 ];
 
 var SAVE_KEY = 'pa_quest_save';

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>形态图鉴 - 认真交易</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzI5NjJmZiIvPgogIDxyZWN0IHg9IjYiIHk9IjE0IiB3aWR0aD0iNCIgaGVpZ2h0PSIxMiIgcng9IjEiIGZpbGw9IiMyNmE2OWEiLz4KICA8cmVjdCB4PSIxMiIgeT0iOCIgd2lkdGg9IjQiIGhlaWdodD0iMTgiIHJ4PSIxIiBmaWxsPSIjMjZhNjlhIi8+CiAgPHJlY3QgeD0iMTgiIHk9IjE2IiB3aWR0aD0iNCIgaGVpZ2h0PSI4IiByeD0iMSIgZmlsbD0iI2VmNTM1MCIvPgogIDxyZWN0IHg9IjI0IiB5PSI2IiB3aWR0aD0iNCIgaGVpZ2h0PSIyMCIgcng9IjEiIGZpbGw9IiMyNmE2OWEiLz4KPC9zdmc+">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+<link rel="stylesheet" href="shared.css">
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect,useRef,useCallback} = React;
+
+/* ========== GAME STATE ========== */
+const SAVE_KEY = 'pa_quest_save';
+function loadSave(){
+  try{const s=localStorage.getItem(SAVE_KEY);return s?JSON.parse(s):null}catch(e){return null}
+}
+function saveSave(d){try{localStorage.setItem(SAVE_KEY,JSON.stringify(d))}catch(e){}}
+
+/* ========== ACHIEVEMENTS ========== */
+const TOTAL_LEVELS = 30;
+
+const ACH_DEFS = [
+  {id:'first_clear',  icon:'🌱', name:'初出茅庐', desc:'完成你的第一关'},
+  {id:'ten_clear',    icon:'🌿', name:'渐入佳境', desc:'累计完成 10 关'},
+  {id:'half_clear',   icon:'🌳', name:'学有所成', desc:'完成半数以上关卡'},
+  {id:'all_clear',    icon:'👑', name:'价格行为大师', desc:'通关全部 '+TOTAL_LEVELS+' 关'},
+  {id:'first_perfect',icon:'⭐', name:'首战告捷', desc:'获得首个 3 星评价'},
+  {id:'all_perfect',  icon:'💎', name:'完美主义', desc:'全部关卡达成 3 星'},
+  {id:'combo5',       icon:'🔥', name:'火眼金睛', desc:'连续答对 5 题'},
+  {id:'combo10',      icon:'🌟', name:'明察秋毫', desc:'连续答对 10 题'},
+  {id:'review_first', icon:'📖', name:'温故知新', desc:'首次复习错题'},
+  {id:'comeback',     icon:'💪', name:'百折不挠', desc:'在错题本中改对一道错题'},
+  {id:'daily_first',  icon:'📅', name:'打卡新人', desc:'完成首次每日一练'},
+  {id:'daily7',       icon:'🔥', name:'持之以恒', desc:'每日一练连续打卡 7 天'},
+  {id:'chapter_cert', icon:'🎯', name:'章节认证', desc:'通过首个章节认证考'},
+  {id:'all_chapter_cert',icon:'🏛️', name:'全科认证', desc:'通过全部章节认证考'},
+  {id:'codex_view',   icon:'📚', name:'图鉴通鉴', desc:'浏览形态图鉴'},
+];
+
+function evalProgressAchievements(s){
+  const ach = {...s.achievements};
+  const newly = [];
+  const completed = Object.keys(s.stars).length;
+  const perfect = Object.values(s.stars).filter(v=>v===3).length;
+  const unlock = (id)=>{ if(!ach[id]){ ach[id]=Date.now(); newly.push(id); } };
+  if(completed>=1) unlock('first_clear');
+  if(completed>=10) unlock('ten_clear');
+  if(completed>=Math.ceil(TOTAL_LEVELS/2)) unlock('half_clear');
+  if(completed>=TOTAL_LEVELS) unlock('all_clear');
+  if(perfect>=1) unlock('first_perfect');
+  if(perfect>=TOTAL_LEVELS) unlock('all_perfect');
+  if(s.streak>=5) unlock('combo5');
+  if(s.streak>=10) unlock('combo10');
+  return {achievements:ach, newly};
+}
+
+/* ========== CANDLE DATA HELPERS ========== */
+const C=(o,c,h,l)=>({o,c,h,l});
+const trend=(s,n,inc=2)=>{let r=[];for(let i=0;i<n;i++){let o=s+i*inc,c=o+inc;r.push(C(o,c,c+1,o-1))}return r};
+const flat=(s,n)=>Array.from({length:n},(_,i)=>C(s+i%2,s+1+(i%2),s+2,s-1));
+
+/* Pattern generators */
+const P={
+  hammer:    (p=100)=>[C(102,100,103,94)],
+  invHammer: (p=100)=>[C(100,102,108,100)],
+  shStar:    (p=100)=>[C(100,98,108,100)],
+  marBull:   (p=100)=>[C(100,106,107,99)],
+  marBear:   (p=100)=>[C(106,100,107,99)],
+  doji:      (p=100)=>[C(103,103,107,99)],
+  longLegD:  (p=100)=>[C(103,103,110,96)],
+  dragFlyD:  (p=100)=>[C(103,103,104,95)],
+  gravestone:(p=100)=>[C(103,103,111,102)],
+  spinTop:   (p=100)=>[C(102,104,107,99)],
+  bullEngulf:(p=100)=>[C(104,100,105,99),C(99,106,107,98)],
+  bearEngulf:(p=100)=>[C(100,104,105,99),C(106,98,107,97)],
+  bullHarami:(p=100)=>[C(98,106,107,97),C(102,100,103,99)],
+  bearHarami:(p=100)=>[C(100,106,107,97),C(104,102,105,101)],
+  darkCloud: (p=100)=>[C(100,105,106,99),C(106,102,107,101)],
+  pierce:    (p=100)=>[C(104,100,105,99),C(99,103,104,98)],
+  tweezerT:  (p=100)=>[C(100,105,108,99),C(105,100,108,99)],
+  tweezerB:  (p=100)=>[C(104,100,105,97),C(100,104,105,97)],
+  mornStar:  (p=100)=>[C(104,100,105,99),C(100,97,101,96),C(98,104,105,97)],
+  eveStar:   (p=100)=>[C(100,104,105,99),C(104,107,108,103),C(106,100,107,99)],
+  threeWS:   (p=100)=>[C(100,103,104,99),C(103,106,107,102),C(106,109,110,105)],
+  threeBC:   (p=100)=>[C(106,103,107,102),C(103,100,104,99),C(100,97,101,96)],
+  morningDoi:(p=100)=>[C(104,100,105,99),C(100,100,101,99),C(99,104,105,98)],
+  eveningDoi:(p=100)=>[C(100,104,105,99),C(104,104,105,103),C(105,100,106,99)],
+  threeInside:(p=100,bull=true)=>bull?[C(104,100,105,99),C(101,103,104,100),C(102,106,107,101)]:[C(100,104,105,99),C(103,101,104,100),C(102,98,103,97)],
+  threeOutside:(p=100,bull=true)=>bull?[C(103,100,104,99),C(99,105,106,98),C(104,108,109,103)]:[C(101,104,105,100),C(105,99,106,98),C(100,97,101,96)],
+};
+
+/* ========== CHART RENDERER ========== */
+function drawChart(canvas, candles, opts={}){
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width, H=canvas.height;
+  const pad={t:16,b:16,l:8,r:42};
+  const cW=W-pad.l-pad.r, cH=H-pad.t-pad.b;
+
+  // Background with subtle gradient
+  const bgGrad=ctx.createLinearGradient(0,0,0,H);
+  bgGrad.addColorStop(0,'#ffffff');bgGrad.addColorStop(1,'#f8f9fb');
+  ctx.fillStyle=bgGrad;ctx.fillRect(0,0,W,H);
+
+  // Grid lines
+  ctx.strokeStyle='rgba(0,0,0,.06)';ctx.lineWidth=.5;
+  for(let i=0;i<=4;i++){let y=pad.t+cH*i/4;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke()}
+
+  if(!candles||!candles.length)return;
+  let allH=Math.max(...candles.map(c=>c.h));
+  let allL=Math.min(...candles.map(c=>c.l));
+  let range=allH-allL||1;
+  allH+=range*.1;allL-=range*.1;range=allH-allL;
+
+  const n=candles.length;
+  const gap=opts.gap||Math.max(4,cW/(n*2));
+  const bw=(cW-gap*(n+1))/n;
+
+  // Price labels on right axis
+  ctx.fillStyle='rgba(0,0,0,.35)';ctx.font='9px sans-serif';ctx.textAlign='left';
+  for(let i=0;i<=4;i++){
+    const price=allH-(range*i/4);
+    const y=pad.t+cH*i/4;
+    ctx.fillText(price.toFixed(1),W-pad.r+4,y+3);
+  }
+
+  candles.forEach((c,i)=>{
+    const x=pad.l+gap+i*(bw+gap);
+    const yH=pad.t+((allH-c.h)/range)*cH;
+    const yL=pad.t+((allH-c.l)/range)*cH;
+    const yO=pad.t+((allH-c.o)/range)*cH;
+    const yC=pad.t+((allH-c.c)/range)*cH;
+    const bull=c.c>=c.o;
+    const color=bull?'#26a69a':'#ef5350';
+    const top=Math.min(yO,yC);
+    const bH=Math.max(Math.abs(yO-yC),2);
+
+    // Shadow with glow
+    ctx.save();
+    ctx.shadowColor=color;ctx.shadowBlur=6;
+    ctx.strokeStyle=color;ctx.lineWidth=Math.max(1.5,bw*.12);
+    ctx.beginPath();ctx.moveTo(x+bw/2,yH);ctx.lineTo(x+bw/2,yL);ctx.stroke();
+    ctx.restore();
+
+    // Body with gradient
+    const bodyGrad=ctx.createLinearGradient(0,top,0,top+bH);
+    if(bull){
+      bodyGrad.addColorStop(0,'#26a69a');bodyGrad.addColorStop(1,'#1e8c82');
+    }else{
+      bodyGrad.addColorStop(0,'#ef5350');bodyGrad.addColorStop(1,'#d63d3a');
+    }
+    ctx.fillStyle=bodyGrad;
+    ctx.shadowColor=color;ctx.shadowBlur=3;
+    ctx.fillRect(x,top,bw,bH);
+    ctx.shadowBlur=0;
+
+    // Highlight glow
+    if(opts.highlight===i){
+      ctx.save();
+      ctx.shadowColor=color;ctx.shadowBlur=16;
+      ctx.strokeStyle=color;ctx.lineWidth=2;
+      ctx.strokeRect(x-3,top-3,bw+6,bH+6);
+      ctx.restore();
+    }
+  });
+}
+
+/* Pattern Codex dataset */
+const PATTERNS=[
+  {name:'大阳线',cat:'单根',signal:'bull',ch:0,candles:P.marBull(),desc:'实体很长、影线很短，买方从头到尾控制局面，收盘接近最高价。',location:'任何位置都代表强势，但出现在下跌末端更有反转意义。'},
+  {name:'大阴线',cat:'单根',signal:'bear',ch:0,candles:P.marBear(),desc:'实体很长，卖方完全控制，价格从开盘大幅下跌。',location:'出现在上涨末端往往是见顶信号。'},
+  {name:'锤子线',cat:'单根',signal:'bull',ch:1,candles:P.hammer(),desc:'小实体在顶部，长下影线（≥实体2倍），几乎无上影线。',location:'必须出现在下跌趋势末端才是看涨反转信号。'},
+  {name:'上吊线',cat:'单根',signal:'bear',ch:1,candles:P.hammer(),desc:'形态与锤子线完全相同，但出现在上涨顶部。',location:'出现在上涨末端是看跌警告，需后续K线确认。'},
+  {name:'流星线',cat:'单根',signal:'bear',ch:1,candles:P.shStar(),desc:'小实体在底部，长上影线（≥实体2倍），几乎无下影线。',location:'出现在上涨顶部，说明冲高被抛压打回。'},
+  {name:'倒锤子线',cat:'单根',signal:'bull',ch:1,candles:P.invHammer(),desc:'小实体+长上影线，出现在下跌底部。',location:'下跌末端潜在看涨反转，需下一根阳线确认。'},
+  {name:'十字星',cat:'单根',signal:'neutral',ch:1,candles:P.doji(),desc:'开盘≈收盘，实体极小呈一条线，多空完全平衡。',location:'趋势末端出现暗示动能衰竭、可能反转。'},
+  {name:'长腿十字星',cat:'单根',signal:'neutral',ch:1,candles:P.longLegD(),desc:'上下影线都很长，盘中多空激烈争夺后回到原点。',location:'波动率骤增，常出现在趋势转折点。'},
+  {name:'蜻蜓十字星',cat:'单根',signal:'bull',ch:1,candles:P.dragFlyD(),desc:'只有长下影线、无上影线，形似蜻蜓。',location:'下跌底部出现，类似锤子线的看涨含义。'},
+  {name:'墓碑十字星',cat:'单根',signal:'bear',ch:1,candles:P.gravestone(),desc:'只有长上影线、无下影线，形似墓碑。',location:'上涨顶部出现，冲高完全失败，非常看跌。'},
+  {name:'纺锤线',cat:'单根',signal:'neutral',ch:1,candles:P.spinTop(),desc:'小实体居中、上下影线相近，多空争夺方向不明。',location:'强势趋势中出现，暗示原有动能减弱。'},
+  {name:'看涨吞没',cat:'双根',signal:'bull',ch:2,candles:P.bullEngulf(),desc:'第一根阴线后，第二根大阳线完全包裹前一根实体。',location:'下跌末端出现，买方压倒性反攻。'},
+  {name:'看跌吞没',cat:'双根',signal:'bear',ch:2,candles:P.bearEngulf(),desc:'第一根阳线后，第二根大阴线完全包裹前一根实体。',location:'上涨末端出现，卖方全面接管。'},
+  {name:'看涨孕线',cat:'双根',signal:'bull',ch:2,candles:P.bullHarami(),desc:'大阳线后紧跟一根完全包含其中的小K线（实体在内）。',location:'上涨后的孕线常预示动能衰减、可能回调。'},
+  {name:'看跌孕线',cat:'双根',signal:'bear',ch:2,candles:P.bearHarami(),desc:'大阴线后紧跟一根完全包含其中的小K线。',location:'下跌后的孕线可能预示跌势暂歇。'},
+  {name:'乌云盖顶',cat:'双根',signal:'bear',ch:2,candles:P.darkCloud(),desc:'阳线后高开低走，收盘价切入前阳线实体下半。',location:'上涨末端出现，是强烈的看跌反转信号。'},
+  {name:'刺透形态',cat:'双根',signal:'bull',ch:2,candles:P.pierce(),desc:'阴线后低开高走，收盘价切入前阴线实体下半。',location:'下跌末端出现，是看涨反转信号。'},
+  {name:'平头底',cat:'双根',signal:'bull',ch:2,candles:P.tweezerB(),desc:'两根K线最低价持平，在支撑位形成双底。',location:'出现在支撑位附近，确认下方买盘。'},
+  {name:'平头顶',cat:'双根',signal:'bear',ch:2,candles:P.tweezerT(),desc:'两根K线最高价持平，在阻力位形成双顶。',location:'出现在阻力位附近，确认上方抛压。'},
+  {name:'启明星',cat:'三根',signal:'bull',ch:3,candles:P.mornStar(),desc:'大阴线+向下跳空小星线+大阳线，三步走完空转多。',location:'下跌末端出现，是最可靠的底部反转组合之一。'},
+  {name:'黄昏星',cat:'三根',signal:'bear',ch:3,candles:P.eveStar(),desc:'大阳线+向上跳空小星线+大阴线，多转空。',location:'上涨末端出现，是顶部反转组合。'},
+  {name:'晨星十字',cat:'三根',signal:'bull',ch:3,candles:P.morningDoi(),desc:'启明星变体，中间为十字星，反转意味更强。',location:'下跌末端出现，多空平衡后转多。'},
+  {name:'暮星十字',cat:'三根',signal:'bear',ch:3,candles:P.eveningDoi(),desc:'黄昏星变体，中间为十字星，顶部反转更强。',location:'上涨末端出现，多空平衡后转空。'},
+  {name:'红三兵',cat:'三根',signal:'bull',ch:3,candles:P.threeWS(),desc:'连续三根逐步抬高的小阳线，稳步上攻。',location:'上涨初期出现代表趋势健康延续。'},
+  {name:'黑三兵',cat:'三根',signal:'bear',ch:3,candles:P.threeBC(),desc:'连续三根逐步走低的阴线，恐慌抛售。',location:'下跌初期出现代表跌势延续。'},
+  {name:'上升三法',cat:'持续',signal:'bull',ch:3,candles:P.threeOutside(true),desc:'大阳线后夹着三根小回调K线，随后再出大阳线突破。',location:'上升趋势中的中继形态，涨势未完。'},
+  {name:'下降三法',cat:'持续',signal:'bear',ch:3,candles:P.threeOutside(false),desc:'大阴线后夹着三根小反弹K线，随后再出大阴线破位。',location:'下降趋势中的中继形态，跌势未完。'},
+];
+
+/* --- Pattern mini-chart (for codex) --- */
+function PatternChart({candles}){
+  const ref=useRef(null);
+  useEffect(()=>{
+    if(ref.current&&candles){
+      const c=ref.current;
+      c.width=320;c.height=110;
+      const ctx=c.getContext('2d');
+      ctx.setTransform(1,0,0,1,0,0);
+      drawChart(c,candles,{gap:8});
+    }
+  },[candles]);
+  return <canvas ref={ref} className="codex-chart"/>;
+}
+
+/* --- Pattern Codex --- */
+function PatternCodex(){
+  const [filter,setFilter]=useState('全部');
+  const cats=['全部','单根','双根','三根','持续'];
+  const list = filter==='全部'?PATTERNS:PATTERNS.filter(p=>p.cat===filter);
+  return (
+    <div className="screen">
+      <div className="level-screen">
+        <div className="level-header">
+          <a className="back-btn" href="index.html">← 返回</a>
+          <span className="level-name">📚 形态图鉴</span>
+          <span></span>
+        </div>
+        <p className="codex-tip">核心心法：<b>位置决定含义</b>。同一根K线，在<span style={{color:'var(--green)'}}>下跌末端</span>与<span style={{color:'var(--red)'}}>上涨顶部</span>信号可能完全相反——先看它出现在什么位置，再看形态本身。</p>
+        <div className="codex-filters">
+          {cats.map(c=>(
+            <button key={c} className={'filter-btn'+(filter===c?' active':'')} onClick={()=>setFilter(c)}>{c}</button>
+          ))}
+        </div>
+        <div className="codex-grid">
+          {list.map((p,i)=>(
+            <div className="codex-card" key={i}>
+              <div className="codex-card-head">
+                <span className="codex-name">{p.name}</span>
+                <span className={'codex-sig sig-'+p.signal}>{p.signal==='bull'?'看涨':p.signal==='bear'?'看跌':'中性'}</span>
+              </div>
+              <PatternChart candles={p.candles}/>
+              <div className="codex-cat">{p.cat} · 第{p.ch+1}章</div>
+              <div className="codex-desc">{p.desc}</div>
+              <div className="codex-loc">📍 {p.location}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ========== APP ========== */
+function App(){
+  const [xp, setXp] = useState(0);
+  const [toast, setToast] = useState(null);
+
+  useEffect(()=>{
+    const saved = loadSave();
+    if(saved){
+      setXp(saved.xp || 0);
+      // Unlock codex_view achievement on first visit
+      const ach = {...(saved.achievements || {})};
+      let newToast = null;
+      if(!ach['codex_view']){
+        ach['codex_view'] = Date.now();
+        newToast = 'codex_view';
+        saveSave({...saved, achievements: ach});
+      }
+      if(newToast) setToast(newToast);
+    }
+  },[]);
+
+  // Auto-dismiss toast
+  useEffect(()=>{
+    if(toast){
+      const t = setTimeout(()=>setToast(null), 3200);
+      return ()=>clearTimeout(t);
+    }
+  },[toast]);
+
+  const level = Math.floor(xp/500)+1;
+  const pct = Math.min(100, (xp%500)/5);
+
+  const toastDef = toast ? ACH_DEFS.find(a=>a.id===toast) : null;
+
+  return (
+    <div style={{display:'flex',flexDirection:'column',height:'100%'}}>
+      <div className="header">
+        <h1>认真交易</h1>
+        <div className="xp-bar">
+          <span>XP {xp}</span>
+          <div className="bar"><div className="fill" style={{width:pct+'%'}}></div></div>
+          <span>Lv.{level}</span>
+        </div>
+      </div>
+      <div style={{display:'flex',flex:1,overflow:'hidden'}}>
+        <div className="sidebar">
+          <a className="sidebar-btn" href="learn.html" title="学习中心">
+            📖
+          </a>
+          <div className="sidebar-label">学习</div>
+
+          <div className="sidebar-divider"></div>
+
+          <a className="sidebar-btn" href="daily.html" title="每日一练">
+            📅
+          </a>
+          <div className="sidebar-label">每日</div>
+
+          <a className="sidebar-btn active" href="codex.html" title="形态图鉴">
+            📚
+          </a>
+          <div className="sidebar-label">图鉴</div>
+
+          <a className="sidebar-btn" href="path.html" title="学习路径">
+            🗺️
+          </a>
+          <div className="sidebar-label">路径</div>
+
+          <div className="sidebar-divider"></div>
+
+          <a className="sidebar-btn" href="index.html?screen=wrong" title="错题本">
+            📕
+          </a>
+          <div className="sidebar-label">错题</div>
+
+          <a className="sidebar-btn" href="index.html?screen=ach" title="成就">
+            🏅
+          </a>
+          <div className="sidebar-label">成就</div>
+        </div>
+        <div style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden'}}>
+          <PatternCodex/>
+        </div>
+      </div>
+      {toastDef && (
+        <div className="toast">
+          {toastDef.icon} 成就解锁：{toastDef.name}
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

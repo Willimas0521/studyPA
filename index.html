@@ -3076,32 +3076,31 @@ function LearningReader({item,onBack}){
 }
 
 /* ========== SIDEBAR ========== */
-function Sidebar({state,onOpenDaily,onOpenCodex,onOpenPath,onOpenWrong,onOpenAch,onOpenCert,onOpenLearn}){
+function Sidebar({state,onOpenWrong,onOpenAch,onOpenCert}){
   const wrongCount = Object.keys(state.wrong).length;
-  const achCount = Object.keys(state.achievements).length;
   const allClear = Object.keys(state.stars).length>=TOTAL_LEVELS;
   return (
     <div className="sidebar">
-      <button className="sidebar-btn" onClick={onOpenLearn} title="学习中心" style={{borderColor:'rgba(0,240,255,.15)',color:'var(--cyan)'}}>
+      <a className="sidebar-btn" href="learn.html" title="学习中心" style={{borderColor:'rgba(0,240,255,.15)',color:'var(--cyan)'}}>
         📖
-      </button>
+      </a>
       <div className="sidebar-label">学习</div>
 
       <div className="sidebar-divider"></div>
 
-      <button className="sidebar-btn" onClick={onOpenDaily} title="每日一练">
+      <a className="sidebar-btn" href="daily.html" title="每日一练">
         📅
-      </button>
+      </a>
       <div className="sidebar-label">每日</div>
 
-      <button className="sidebar-btn" onClick={onOpenCodex} title="形态图鉴">
+      <a className="sidebar-btn" href="codex.html" title="形态图鉴">
         📚
-      </button>
+      </a>
       <div className="sidebar-label">图鉴</div>
 
-      <button className="sidebar-btn" onClick={onOpenPath} title="学习路径">
+      <a className="sidebar-btn" href="path.html" title="学习路径">
         🗺️
-      </button>
+      </a>
       <div className="sidebar-label">路径</div>
 
       <div className="sidebar-divider"></div>
@@ -3131,7 +3130,16 @@ function Sidebar({state,onOpenDaily,onOpenCodex,onOpenPath,onOpenWrong,onOpenAch
 }
 
 function App(){
-  const [state, setState] = useState(getInitialState);
+  const [state, setState] = useState(()=>{
+    const s = getInitialState();
+    /* Handle URL params for cross-page navigation */
+    const params = new URLSearchParams(window.location.search);
+    const screen = params.get('screen');
+    if(screen === 'wrong') s.screen = 'wrong';
+    else if(screen === 'ach') s.screen = 'ach';
+    else if(screen === 'cert') s.screen = 'cert';
+    return s;
+  });
 
   const persist = useCallback((s)=>{
     saveSave({xp:s.xp, stars:s.stars, unlocked:s.unlocked, wrong:s.wrong, achievements:s.achievements,
@@ -3369,13 +3377,9 @@ function App(){
       <div style={{display:'flex',flex:1,overflow:'hidden'}}>
         {state.screen!=='welcome' && (
           <Sidebar state={state}
-            onOpenDaily={handleOpenDaily}
-            onOpenCodex={handleOpenCodex}
-            onOpenPath={handleOpenPath}
             onOpenWrong={handleOpenWrong}
             onOpenAch={handleOpenAch}
-            onOpenCert={handleOpenCert}
-            onOpenLearn={handleOpenLearn}/>
+            onOpenCert={handleOpenCert}/>
         )}
         <div style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden'}}>
           {state.screen==='welcome' && <Welcome onStart={handleStart}/>}

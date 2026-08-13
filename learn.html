@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>学习中心 - 认真交易</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzI5NjJmZiIvPgogIDxyZWN0IHg9IjYiIHk9IjE0IiB3aWR0aD0iNCIgaGVpZ2h0PSIxMiIgcng9IjEiIGZpbGw9IiMyNmE2OWEiLz4KICA8cmVjdCB4PSIxMiIgeT0iOCIgd2lkdGg9IjQiIGhlaWdodD0iMTgiIHJ4PSIxIiBmaWxsPSIjMjZhNjlhIi8+CiAgPHJlY3QgeD0iMTgiIHk9IjE2IiB3aWR0aD0iNCIgaGVpZ2h0PSI4IiByeD0iMSIgZmlsbD0iI2VmNTM1MCIvPgogIDxyZWN0IHg9IjI0IiB5PSI2IiB3aWR0aD0iNCIgaGVpZ2h0PSIyMCIgcng9IjEiIGZpbGw9IiMyNmE2OWEiLz4KPC9zdmc+">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+<link rel="stylesheet" href="shared.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useRef, useEffect } = React;
+
+/* ========== GAME STATE (read-only) ========== */
+function loadSave() {
+  try {
+    const raw = localStorage.getItem('pa_quest_save');
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return { xp: 0 };
+}
+const saveData = loadSave();
+const xp = saveData.xp || 0;
+
+/* ========== mdToHtml ========== */
+function mdToHtml(md) {
+  if (!md) return '';
+  let html = md
+    .replace(/```([\s\S]*?)```/g, (m, c) => '<pre><code>' + c.replace(/</g, '&lt;') + '</code></pre>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/^---+$/gm, '<hr/>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
+    .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+  html = html.replace(/(<li>[\s\S]*?<\/li>)(?!\s*<li>)/g, '<ul>$1</ul>');
+  html = html.split(/\n\n+/).map(p => {
+    p = p.trim();
+    if (!p) return '';
+    if (/^<(h[1-6]|ul|ol|pre|blockquote|hr)/.test(p)) return p;
+    return '<p>' + p + '</p>';
+  }).join('\n');
+  return html;
+}
+
+/* ========== CHAPTER_NOTES ========== */
+const CHAPTER_NOTES = {
+  b1: {
+    'cover': '<h3>📗 日本蜡烛图技术</h3><p>全书导读笔记（封面页）</p>',
+    'preface': '<h3>前言 / 序言</h3><p>在这里写下你对本书前言的感悟...</p>',
+    'chapter': '<h3>章节笔记</h3><p>当前章节的笔记尚未编写，请在代码中编辑 CHAPTER_NOTES.b1 添加对应章节内容。</p><div class="highlight">💡 提示：可以用章节标题关键词匹配，也可以用完整 href 精确匹配。</div>',
+    '_default': '<h3>📝 本章笔记</h3><p>本章笔记待完善，请在 CHAPTER_NOTES 中添加。</p>'
+  },
+  b2: { '_default': '<h3>📘 本章笔记</h3><p>金融市场技术分析 — 本章笔记待完善。</p>' },
+  b3: { '_default': '<h3>📙 本章笔记</h3><p>Al Brooks 价格行为三部曲 — 本章笔记待完善。</p>' },
+  b4: { '_default': '<h3>📕 本章笔记</h3><p>交易心理分析 — 本章笔记待完善。</p>' },
+  b5: { '_default': '<h3>📗 本章笔记</h3><p>专业投机原理 — 本章笔记待完善。</p>' }
+};
+
+/* ========== findChapterNotes ========== */
+function findChapterNotes(bookId, href, toc) {
+  const notes = CHAPTER_NOTES[bookId];
+  if (!notes) return (CHAPTER_NOTES[bookId] && CHAPTER_NOTES[bookId]['_default']) || '<p>暂无笔记</p>';
+  if (notes[href]) return notes[href];
+  const keys = Object.keys(notes).filter(k => k !== '_default');
+  for (const k of keys) {
+    if (href && href.toLowerCase().includes(k.toLowerCase())) return notes[k];
+  }
+  if (toc && toc.length) {
+    const ch = toc.find(t => t.href === href);
+    if (ch) {
+      const label = ch.label.trim();
+      for (const k of keys) {
+        if (label.toLowerCase().includes(k.toLowerCase())) return notes[k];
+      }
+    }
+  }
+  return notes['_default'] || '<p>暂无笔记</p>';
+}
+
+/* ========== LEARN_DATA ========== */
+const LEARN_DATA = {
+  courses: [
+    {id:'c1',icon:'📊',name:'K线基础入门',tag:'free',tagText:'免费',
+     sub:'从零开始认识蜡烛图',
+     content:`<h3>第一课：什么是K线图</h3>
+<p>K线图（Candlestick Chart）最早起源于18世纪的日本，由本间宗久发明，最初用于米市交易。如今它已成为全球金融市场中最主流的价格展示方式。</p>
+<p>每一根K线代表一个时间段内的价格变动，包含四个关键数据：</p>
+<ul>
+<li><strong>开盘价（Open）</strong>— 该时段第一笔成交价格</li>
+<li><strong>收盘价（Close）</strong>— 该时段最后一笔成交价格</li>
+<li><strong>最高价（High）</strong>— 该时段内达到的最高价格</li>
+<li><strong>最低价（Low）</strong>— 该时段内达到的最低价格</li>
+</ul>
+<div class="highlight">核心要点：K线本质上是对一段时间内多空博弈结果的可视化记录。实体大小代表博弈的激烈程度，影线长度代表曾经的挣扎。</div>
+<h3>第二课：阳线 vs 阴线</h3>
+<p><strong>阳线（绿色/白色）：</strong>收盘价 > 开盘价，表示价格上涨。实体下端是开盘价，上端是收盘价。</p>
+<p><strong>阴线（红色/黑色）：</strong>收盘价 < 开盘价，表示价格下跌。实体上端是开盘价，下端是收盘价。</p>
+<p>记住：颜色的含义在不同市场可能不同。中国市场红涨绿跌，国际市场绿涨红跌。本应用采用国际惯例。</p>
+<h3>第三课：实体的语言</h3>
+<p>实体长度直接告诉你多空力量的对比：</p>
+<ul>
+<li><strong>大实体</strong>→ 一方完全主导，方向明确</li>
+<li><strong>小实体</strong>→ 双方势均力敌，市场犹豫</li>
+<li><strong>无实体（十字星）</strong>→ 完全平衡，可能变盘</li>
+</ul>
+<div class="highlight">实战提示：连续出现大实体K线时，说明趋势强劲；当大实体后突然出现小实体，往往是动能衰竭的第一个信号。</div>`},
+    {id:'c2',icon:'🔍',name:'价格行为核心逻辑',tag:'free',tagText:'免费',
+     sub:'理解价格为什么这样走',
+     content:`<h3>价格行为的本质</h3>
+<p>价格行为（Price Action）是一种纯粹基于价格走势本身来做交易决策的方法论。它不依赖滞后指标，而是直接阅读"市场语言"。</p>
+<p>核心思想：市场价格已经反映了所有已知信息。与其研究各种指标，不如直接观察价格本身在告诉你什么。</p>
+<h3>三要素框架</h3>
+<p>所有价格行为分析都可以归结为三个核心问题：</p>
+<ul>
+<li><strong>趋势（Trend）</strong>— 市场在往哪个方向走？</li>
+<li><strong>关键位（Key Level）</strong>— 价格在哪个位置？这个位置有什么意义？</li>
+<li><strong>信号（Signal）</strong>— K线形态在告诉你什么？</li>
+</ul>
+<div class="highlight">黄金法则：信号 + 位置 = 交易机会。一个锤子线本身没有意义，只有出现在关键支撑位的锤子线才是有效的交易信号。</div>
+<h3>趋势判断</h3>
+<p>趋势的定义很简单：</p>
+<ul>
+<li><strong>上升趋势</strong>：高点不断抬高（HH），低点不断抬高（HL）</li>
+<li><strong>下降趋势</strong>：高点不断降低（LH），低点不断降低（LL）</li>
+<li><strong>横盘震荡</strong>：高低点没有明确方向</li>
+</ul>
+<p>永远不要逆大趋势交易。在上升趋势中，优先寻找做多信号；在下降趋势中，优先寻找做空信号。</p>`},
+    {id:'c3',icon:'📐',name:'支撑阻力实战',tag:'classic',tagText:'经典',
+     sub:'学会找到关键价格位',
+     content:`<h3>什么是支撑和阻力</h3>
+<p><strong>支撑位（Support）：</strong>价格下跌到某一水平后反复反弹的区域，说明此处买盘强劲。</p>
+<p><strong>阻力位（Resistance）：</strong>价格上涨到某一水平后反复回落的区域，说明此处卖压沉重。</p>
+<div class="highlight">核心理解：支撑和阻力不是精确的价格线，而是一个"区域"。价格在这个区域内反复博弈，形成为市场记忆。</div>
+<h3>如何识别关键位</h3>
+<ul>
+<li><strong>历史高低点</strong>— 价格曾多次反转的位置</li>
+<li><strong>整数关口</strong>— 如100、1000等心理价位</li>
+<li><strong>趋势线</strong>— 连接多个低点或高点形成的斜线</li>
+<li><strong>前支撑变阻力</strong>— 被突破的支撑位会变成新的阻力位（角色互换）</li>
+</ul>
+<h3>实战应用</h3>
+<p>当价格接近关键位时，观察K线反应：</p>
+<ul>
+<li>出现反转K线形态（如锤子线、吞没）→ 可能在此反转</li>
+<li>大实体直接突破 → 可能开启新趋势</li>
+<li>突破后回踩确认 → 最安全的入场时机</li>
+</ul>`},
+    {id:'c4',icon:'🎯',name:'交易策略构建',tag:'adv',tagText:'进阶',
+     sub:'从分析到执行的完整系统',
+     content:`<h3>建立交易系统</h3>
+<p>一个完整的交易系统需要回答五个问题：</p>
+<ul>
+<li><strong>做什么品种？</strong>— 选择流动性好的市场</li>
+<li><strong>什么时间框架？</strong>— 大周期定方向，小周期找入场</li>
+<li><strong>在哪里入场？</strong>— 关键位 + K线信号</li>
+<li><strong>止损放哪里？</strong>— 信号失效的位置</li>
+<li><strong>目标在哪里？</strong>— 下一个关键位</li>
+</ul>
+<div class="highlight">风险管理第一原则：每笔交易的风险不超过总资金的1-2%。活着比赚钱更重要。</div>
+<h3>经典入场模式</h3>
+<p><strong>模式一：趋势回调入场</strong></p>
+<p>在上升趋势中，等价格回调到支撑位，出现看涨K线信号后做多。止损放在信号K线下方。</p>
+<p><strong>模式二：突破回踩入场</strong></p>
+<p>价格突破阻力位后，等回踩该位置确认支撑，出现看涨信号后做多。这是最安全的入场方式之一。</p>
+<p><strong>模式三：区间交易</strong></p>
+<p>在横盘区间中，在支撑位做多、阻力位做空。注意：一旦区间被突破，立即停止反向操作。</p>`}
+  ],
+  traders: [
+    {id:'t1',icon:'🏛️',name:'Jesse Livermore',tag:'classic',tagText:'传奇',
+     sub:'投机之王 (1877-1940)',
+     content:`<h3>人物简介</h3>
+<p>Jesse Livermore 被誉为华尔街最伟大的投机客。他从14岁在对赌行赚第一笔钱开始，到后来在1929年大崩盘中做空赚取1亿美元（相当于今天的数十亿美元），他的交易生涯跨越了近50年。</p>
+<h3>核心交易理念</h3>
+<ul>
+<li><strong>"市场永远不会错，只有观点会出错"</strong> — 永远尊重市场走势，不要和市场争论</li>
+<li><strong>"钱是坐着赚来的"</strong> — 耐心等待最佳时机，而不是频繁交易</li>
+<li><strong>关键点理论</strong> — 价格到达某些关键位置时，往往会有大动作</li>
+</ul>
+<div class="highlight">Livermore 名言："让我赚大钱的从来不是我的判断，而是我能坐得住。" 这句话道出了耐心在交易中的核心价值。</div>
+<h3>对价格行为的启示</h3>
+<p>Livermore 虽然那个年代没有K线图，但他对"价格行为"的理解极其深刻。他通过观察报价带的数字变化来判断市场情绪，本质上就是最原始的价格行为分析。</p>
+<p>他的"关键点"概念和今天的支撑阻力理论一脉相承。他教导我们：在关键位置等待确认信号，然后果断行动。</p>`},
+    {id:'t2',icon:'🦅',name:'Paul Tudor Jones',tag:'classic',tagText:'传奇',
+     sub:'宏观交易大师 (1954-)',
+     content:`<h3>人物简介</h3>
+<p>Paul Tudor Jones 是 Tudor Investment Corporation 的创始人，以1987年成功预测"黑色星期一"大崩盘而闻名。他管理的基金在30多年里从未有过亏损年份。</p>
+<h3>核心交易理念</h3>
+<ul>
+<li><strong>"最重要的是防守，不是进攻"</strong> — 风险管理永远是第一位的</li>
+<li><strong>200日均线法则</strong> — 价格在200日均线上方只做多，下方只做空</li>
+<li><strong>5:1回报比</strong> — 每笔交易的潜在回报至少是风险的5倍</li>
+</ul>
+<div class="highlight">PTJ 名言："我在每天都假设自己的所有头寸都是错误的前提下做交易。" 这种偏执的怀疑态度正是优秀交易员的特质。</div>
+<h3>对价格行为的启示</h3>
+<p>PTJ 非常注重价格结构。他会观察价格是否创出新高/新低来判断趋势健康度。如果价格无法创新高，即使还在上涨趋势中，他也会开始警惕。</p>
+<p>他的交易风格告诉我们：价格行为分析不只是看K线形态，更重要的是理解价格在更大结构中的位置。</p>`},
+    {id:'t3',icon:'📈',name:'Al Brooks',tag:'adv',tagText:'价格行为',
+     sub:'价格行为交易体系创始人',
+     content:`<h3>人物简介</h3>
+<p>Al Brooks 原本是一名眼科医生，后来转型为全职日内交易员，并成为了价格行为交易（Price Action Trading）领域最有影响力的教育者之一。他著有三部曲巨著，系统性地建立了基于K线的交易方法论。</p>
+<h3>核心交易理念</h3>
+<ul>
+<li><strong>每根K线都很重要</strong> — 不要只看形态，要理解每根K线背后的多空博弈</li>
+<li><strong>Always In</strong> — 如果被迫二选一，你现在做多还是做空？这决定了你的方向</li>
+<li><strong>80%法则</strong> — 大约80%的突破会失败回到区间内，大约80%的趋势反转尝试都会失败</li>
+</ul>
+<div class="highlight">Brooks 的核心观点：市场80%的时间处于区间震荡，只有20%的时间有明确趋势。大多数交易者的亏损来自于在震荡市中追趋势。</div>
+<h3>对价格行为的启示</h3>
+<p>Brooks 的方法极其注重细节。他认为每一根K线、每一个tick都有其含义。他的方法虽然学习曲线陡峭，但一旦掌握，能让你像阅读文章一样阅读市场。</p>
+<p>他特别强调"信号K线"和"入场K线"的概念：信号K线告诉你可能有机会，入场K线确认机会。这个框架非常实用。</p>`},
+    {id:'t4',icon:'🐉',name:'Steve Nison',tag:'classic',tagText:'蜡烛图之父',
+     sub:'将日本蜡烛图引入西方世界',
+     content:`<h3>人物简介</h3>
+<p>Steve Nison 是将日本蜡烛图技术介绍给西方金融世界的先驱。他在1980年代通过与日本交易员的交流，系统性地学习了蜡烛图技术，并在1991年出版了经典著作《日本蜡烛图技术》。</p>
+<h3>核心贡献</h3>
+<ul>
+<li><strong>系统化整理</strong> — 将散乱的日本蜡烛图知识整理成系统的分析方法</li>
+<li><strong>东西方融合</strong> — 将蜡烛图与西方技术分析（趋势线、移动平均等）结合</li>
+<li><strong>强调背景</strong> — 蜡烛图形态必须出现在正确的位置才有意义</li>
+</ul>
+<div class="highlight">Nison 的核心教导：不要孤立地看待蜡烛图形态。一个锤子线只有在下跌趋势中、在支撑位附近出现时，才是有意义的看涨信号。</div>
+<h3>对价格行为的启示</h3>
+<p>Nison 的工作奠定了现代价格行为分析的基础。他让我们理解到，K线形态是市场情绪的语言，而我们的工作就是学会"听懂"这个语言。</p>`}
+  ],
+  books: [
+    {id:'b1',icon:'📗',name:'日本蜡烛图技术',tag:'classic',tagText:'必读',
+     sub:'Steve Nison 著 — 蜡烛图分析圣经',
+     file:'books/japanese-candlestick-techniques.epub',
+     content:`<h3>书籍简介</h3>
+<p>这本书是蜡烛图技术领域的开山之作，被全球交易者奉为必读经典。Steve Nison 在书中系统地介绍了超过65种蜡烛图形态，并讲解了如何将它们与西方技术分析工具结合使用。</p>
+<h3>核心内容</h3>
+<ul>
+<li>单根K线形态：锤子线、流星线、十字星等</li>
+<li>双K线组合：吞没、孕线、乌云盖顶等</li>
+<li>三K线形态：早晨之星、黄昏之星、三白兵等</li>
+<li>蜡烛图与趋势线、支撑阻力的结合</li>
+<li>蜡烛图在不同市场（股票、期货、外汇）的应用</li>
+</ul>
+<div class="highlight">阅读建议：这本书值得反复阅读。第一遍了解形态，第二遍理解逻辑，第三遍结合自己的交易经验体会深层含义。</div>
+<h3>关键收获</h3>
+<p>1. 形态本身不重要，形态出现的位置才是关键</p>
+<p>2. 蜡烛图给出的是概率优势，不是确定性</p>
+<p>3. 确认信号（下一根K线的走势）比形态本身更重要</p>`},
+    {id:'b2',icon:'📘',name:'金融市场技术分析',tag:'classic',tagText:'必读',
+     sub:'John J. Murphy 著 — 技术分析百科全书',
+     file:'books/technical-analysis-of-financial-markets.epub',
+     content:`<h3>书籍简介</h3>
+<p>这本书被誉为技术分析的"圣经"，全面覆盖了技术分析的各个方面。虽然不专门讲蜡烛图，但它是理解整个技术分析框架的必备参考书。</p>
+<h3>核心内容</h3>
+<ul>
+<li>道氏理论与趋势分析基础</li>
+<li>图表形态：头肩顶、双顶、三角形、旗形等</li>
+<li>移动平均线与振荡指标</li>
+<li>成交量与持仓量分析</li>
+<li>日本蜡烛图（后续版本新增）</li>
+<li>资金管理与交易策略</li>
+</ul>
+<div class="highlight">这本书最大的价值在于帮你建立"全局观"。价格行为不是孤立的技术，它是整个技术分析体系中最灵敏的部分。</div>
+<h3>关键收获</h3>
+<p>1. 趋势是你的朋友 — 这句话怎么强调都不过分</p>
+<p>2. 支撑阻力是市场参与者集体记忆的体现</p>
+<p>3. 成交量验证价格 — 量价配合是判断真假突破的关键</p>`},
+    {id:'b3',icon:'📙',name:'Al Brooks 价格行为三部曲',tag:'adv',tagText:'进阶',
+     sub:'Reading Price Charts / Trading Price Action Trends / Ranges & Reversals',
+     file:'books/al-brooks-trading-ranges.epub',
+     content:`<h3>书籍简介</h3>
+<p>这是价格行为领域最系统、最深入的一套著作，共三本。Al Brooks 用极其细致的方式分析了每一根K线背后的市场逻辑。学习曲线陡峭，但一旦掌握，会彻底改变你看盘的方式。</p>
+<h3>三本书概要</h3>
+<ul>
+<li><strong>第一本：Reading Price Charts</strong> — 基础篇，建立价格行为的思维方式</li>
+<li><strong>第二本：Trading Price Action Trends</strong> — 趋势篇，如何在趋势中交易</li>
+<li><strong>第三本：Trading Price Action Trading Ranges & Reversals</strong> — 区间与反转篇</li>
+</ul>
+<div class="highlight">阅读建议：不要试图一次读懂。每次读几页，然后在实盘中观察对应的情形。这本书需要结合实践才能真正理解。</div>
+<h3>关键收获</h3>
+<p>1. 每根K线都是一个信号，告诉你多空双方的力量对比</p>
+<p>2. "Always In"思维：随时问自己，如果必须选边，你选多还是空？</p>
+<p>3. 80%的突破会失败 — 这个认知能帮你避免很多亏损交易</p>`},
+    {id:'b4',icon:'📕',name:'交易心理分析',tag:'classic',tagText:'心理',
+     sub:'Mark Douglas 著 — 驾驭内心游戏',
+     file:'books/trading-in-the-zone.epub',
+     content:`<h3>书籍简介</h3>
+<p>交易中最难战胜的对手不是市场，而是你自己。Mark Douglas 的这本书深入探讨了交易者的心理问题，是交易心理学领域的经典之作。</p>
+<h3>核心内容</h3>
+<ul>
+<li>概率思维：接受每笔交易的结果都是不确定的</li>
+<li>一致性框架：建立并坚持执行交易系统</li>
+<li>消除恐惧：恐惧是交易者最大的敌人</li>
+<li>"区间"状态：进入高效交易的心流状态</li>
+</ul>
+<div class="highlight">Douglas 的核心观点：成功的交易者不需要知道下一笔交易的结果。他们相信的是系统的长期概率优势，而不是单笔交易的预测。</div>
+<h3>关键收获</h3>
+<p>1. 你的交易结果反映的是你的心理状态，而不仅仅是你的分析能力</p>
+<p>2. 最好的交易往往让你感觉最不舒服 — 反人性是交易的常态</p>
+<p>3. 不要追求正确率，追求期望值为正的系统</p>`},
+    {id:'b5',icon:'📗',name:'专业投机原理',tag:'classic',tagText:'必读',
+     sub:'维克多·斯波朗迪 著 — 投机交易的圣经',
+     file:'books/Zhuan Ye Tou Ji Yuan Li (Zhen C - (Mei )Wei Ke_Tuo Si Bo Lang Di.pdf',
+     content:`<h3>书籍简介</h3>
+<p>这本书是投机交易领域的经典之作，作者维克多·斯波朗迪（Victor Sperandeo）用 18 年的华尔街经验，系统阐述了专业投机的原理和方法。</p>
+<h3>核心内容</h3>
+<ul>
+<li>趋势的定义与判断方法</li>
+<li>123 法则与 2B 法则 — 趋势反转的核心工具</li>
+<li>风险管理与资金管理</li>
+<li>经济学基础与市场分析</li>
+<li>交易心理与纪律</li>
+</ul>
+<div class="highlight">这本书最大的价值在于帮你建立"专业投机者"的思维方式，而不仅仅是技术分析方法。</div>
+<h3>关键收获</h3>
+<p>1. 保护资本是投机的第一要务</p>
+<p>2. 趋势是你的朋友，但要知道趋势何时结束</p>
+<p>3. 成功的投机 = 知识 + 纪律 + 资金管理</p>`}
+  ]
+};
+
+/* ========== autoMapChaptersToNotes ========== */
+function autoMapChaptersToNotes(toc) {
+  if (!toc || !toc.length) return;
+  const bookId = window.__currentBookId;
+  if (!bookId) return;
+  fetch('notes/' + bookId + '/index.json')
+    .then(r => r.ok ? r.json() : null)
+    .then(index => {
+      if (!index) return;
+      const keys = Object.keys(index).filter(k => !k.startsWith('_') && k !== 'cover.html');
+      if (keys.length > 1) {
+        console.log('[Notes] 使用已有的 index.json 映射 (' + keys.length + ' 个章节)');
+        return;
+      }
+      const mdFiles = [];
+      const promises = [];
+      for (let i = 1; i <= 20; i++) {
+        const fname = 'ch' + String(i).padStart(2, '0') + '.md';
+        const p = fetch('notes/' + bookId + '/' + fname, { method: 'HEAD' })
+          .then(r => { if (r.ok) mdFiles.push({ idx: i, file: fname }); return null; })
+          .catch(() => null);
+        promises.push(p);
+      }
+      return Promise.all(promises).then(() => {
+        if (mdFiles.length === 0) return;
+        mdFiles.sort((a, b) => a.idx - b.idx);
+        const chapterTocs = toc.filter(t => {
+          const h = t.href.toLowerCase();
+          return !h.includes('cover') && !h.includes('toc') && !h.includes('title') &&
+                 !h.includes('copyright') && !h.includes('dedication') &&
+                 (h.includes('chapter') || h.includes('ch') || h.includes('section') || h.includes('part'));
+        });
+        const finalTocs = chapterTocs.length > 0 ? chapterTocs : toc.filter(t => !t.href.toLowerCase().includes('cover'));
+        const newIndex = { ...index };
+        mdFiles.forEach((md, i) => {
+          if (i < finalTocs.length) { newIndex[finalTocs[i].href] = md.file; }
+        });
+        window.__notesIndex = newIndex;
+        console.log('[Notes] 自动映射 ' + mdFiles.length + ' 个章节笔记到 EPUB 目录');
+      });
+    })
+    .catch(err => { console.log('[Notes] 自动映射失败:', err.message); });
+}
+
+/* ========== EpubReader ========== */
+function EpubReader({ url, title, onBack, embedded, onChapterChange }) {
+  const areaRef = useRef(null);
+  const bookRef = useRef(null);
+  const renditionRef = useRef(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [toc, setToc] = useState([]);
+  const [tocOpen, setTocOpen] = useState(false);
+  const [pageInfo, setPageInfo] = useState('');
+  const [currentHref, setCurrentHref] = useState('');
+
+  useEffect(() => {
+    if (!areaRef.current || !url) return;
+    let cancelled = false;
+    setLoading(true); setError(null);
+    try {
+      const book = ePub(url);
+      bookRef.current = book;
+      const rendition = book.renderTo(areaRef.current, {
+        width: '100%', height: '100%', spread: 'none', flow: 'scrolled', allowScriptedContent: true
+      });
+      renditionRef.current = rendition;
+      rendition.hooks.content.register(function(contents) {
+        var doc = contents.document;
+        if (doc) {
+          if (doc.documentElement) { doc.documentElement.style.overflowY = 'auto'; doc.documentElement.style.height = 'auto'; }
+          if (doc.body) { doc.body.style.overflowY = 'auto'; doc.body.style.height = 'auto'; doc.body.style.minHeight = '100vh'; }
+          var style = doc.createElement('style');
+          style.textContent = 'html,body{overflow-y:auto !important; height:auto !important} ::-webkit-scrollbar{width:10px} ::-webkit-scrollbar-track{background:#f1f1f1} ::-webkit-scrollbar-thumb{background:#c1c1c1;border-radius:5px} ::-webkit-scrollbar-thumb:hover{background:#a1a1a1}';
+          doc.head.appendChild(style);
+        }
+      });
+      rendition.themes.register('trading', {
+        'body': { background: '#f8f9fb !important', color: '#131722 !important' },
+        'a': { color: '#2962ff !important' },
+        'p,li,h1,h2,h3,h4,h5,h6,span,div': { color: '#131722 !important' }
+      });
+      rendition.themes.select('trading');
+      book.ready.then(() => { if (cancelled) return; return book.loaded.navigation; })
+        .then(nav => {
+          if (cancelled) return;
+          const flat = [];
+          (function walk(items) { items.forEach(item => { flat.push({ label: item.label.trim(), href: item.href }); if (item.subitems) walk(item.subitems); }); })(nav.toc);
+          setToc(flat); window.__epubToc = flat; autoMapChaptersToNotes(flat);
+        }).catch(err => { if (!cancelled) setError('目录加载失败: ' + err.message); });
+      rendition.display().then(() => { if (!cancelled) setLoading(false); })
+        .catch(err => {
+          if (!cancelled) {
+            if (window.__epubToc && window.__epubToc.length > 0) {
+              rendition.display(window.__epubToc[0].href).then(() => { if (!cancelled) setLoading(false); })
+                .catch(e2 => { if (!cancelled) { setError('EPUB 加载失败: ' + e2.message); setLoading(false); } });
+            } else { setError('EPUB 加载失败: ' + err.message); setLoading(false); }
+          }
+        });
+      rendition.on('relocated', function(location) {
+        if (cancelled) return;
+        const href = location.start.href;
+        setCurrentHref(href);
+        if (location.start.percentage != null) setPageInfo(Math.round(location.start.percentage * 100) + '%');
+        if (onChapterChange) onChapterChange(href);
+      });
+      function handleKey(e) {
+        if (e.key === 'ArrowLeft') rendition.prev();
+        else if (e.key === 'ArrowRight') rendition.next();
+        else if (e.key === 'Escape') onBack && onBack();
+      }
+      window.addEventListener('keydown', handleKey);
+      return () => {
+        cancelled = true; window.removeEventListener('keydown', handleKey);
+        if (renditionRef.current) try { renditionRef.current.destroy(); } catch(e){}
+        if (bookRef.current) try { bookRef.current.destroy(); } catch(e){}
+        bookRef.current = null; renditionRef.current = null;
+      };
+    } catch(err) { setError('EPUB 初始化失败: ' + err.message); setLoading(false); }
+  }, [url]);
+
+  function goPrev() { if (renditionRef.current) renditionRef.current.prev(); }
+  function goNext() { if (renditionRef.current) renditionRef.current.next(); }
+  function goToChapter(href) { if (renditionRef.current) { renditionRef.current.display(href); setTocOpen(false); } }
+
+  if (error) return (
+    <div className={embedded ? '' : 'screen'}>
+      <div className="epub-reader" style={embedded ? { maxWidth: 'none' } : {}}>
+        <div className="epub-toolbar">
+          {!embedded && <button onClick={onBack}>← 返回</button>}
+          <span className="epub-title">{title}</span>
+        </div>
+        <div className="epub-error">
+          <p>⚠️ {error}</p>
+          <p style={{ marginTop: 12, fontSize: 12, color: 'var(--text2)' }}>请确认 EPUB 文件已放在仓库的 books/ 目录下。</p>
+          {!embedded && <button onClick={onBack} style={{ marginTop: 16 }}>← 返回</button>}
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className={embedded ? '' : 'screen'} style={embedded ? {} : { padding: 0 }}>
+      <div className="epub-reader" style={embedded ? { maxWidth: 'none' } : {}}>
+        <div className="epub-toolbar">
+          {!embedded && <button onClick={onBack}>← 返回</button>}
+          <button onClick={() => setTocOpen(!tocOpen)}>☰ 目录</button>
+          <span className="epub-title">{title}</span>
+          <span className="page-info">{pageInfo}</span>
+          <button onClick={goPrev}>◀ 上一页</button>
+          <button onClick={goNext}>下一页 ▶</button>
+        </div>
+        <div className="epub-viewer" style={{ position: 'relative' }}>
+          {loading && <div className="epub-loading"><div className="spinner"></div><p>正在加载电子书...</p></div>}
+          <div ref={areaRef} id="epubArea" style={{ visibility: loading ? 'hidden' : 'visible' }} />
+          {tocOpen && toc.length > 0 && (
+            <div className="epub-toc open">
+              <h3>📖 目录</h3>
+              {toc.map((ch, i) => (
+                <div key={i} className={'epub-toc-item' + (ch.href === currentHref ? ' active' : '')} onClick={() => goToChapter(ch.href)}>{ch.label}</div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ========== PdfReader ========== */
+function PdfReader({ url, title, onBack, embedded, onPageChange }) {
+  const wrapRef = useRef(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [pages, setPages] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [scale, setScale] = useState(1.2);
+  const pdfDocRef = useRef(null);
+
+  useEffect(() => { if (onPageChange) onPageChange(currentPage); }, [currentPage]);
+
+  useEffect(() => {
+    if (!url) return;
+    let cancelled = false;
+    setLoading(true); setError(null);
+    if (window.pdfjsLib) window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    window.pdfjsLib.getDocument(url).promise.then(function(pdf) {
+      if (cancelled) return;
+      pdfDocRef.current = pdf; setTotalPages(pdf.numPages);
+      const canvasEls = []; for (let i = 1; i <= pdf.numPages; i++) canvasEls.push(i);
+      setPages(canvasEls); setLoading(false);
+      for (let i = 1; i <= pdf.numPages; i++) {
+        (function(num) {
+          pdf.getPage(num).then(function(page) {
+            if (cancelled) return;
+            const viewport = page.getViewport({ scale: scale });
+            const canvas = document.getElementById('pdf-page-' + num);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            canvas.width = viewport.width; canvas.height = viewport.height;
+            page.render({ canvasContext: ctx, viewport: viewport });
+          });
+        })(i);
+      }
+    }).catch(err => { if (!cancelled) { setError('PDF 加载失败: ' + err.message); setLoading(false); } });
+    return () => { cancelled = true; };
+  }, [url]);
+
+  useEffect(() => {
+    const pdf = pdfDocRef.current;
+    if (!pdf || pages.length === 0) return;
+    for (let i = 1; i <= pages.length; i++) {
+      (function(num) {
+        pdf.getPage(num).then(function(page) {
+          const viewport = page.getViewport({ scale: scale });
+          const canvas = document.getElementById('pdf-page-' + num);
+          if (!canvas) return;
+          const ctx = canvas.getContext('2d');
+          canvas.width = viewport.width; canvas.height = viewport.height;
+          page.render({ canvasContext: ctx, viewport: viewport });
+        });
+      })(i);
+    }
+  }, [scale]);
+
+  useEffect(() => {
+    const wrap = wrapRef.current; if (!wrap) return;
+    function onScroll() {
+      const canvases = wrap.querySelectorAll('canvas'); let best = 1;
+      for (let i = 0; i < canvases.length; i++) { if (canvases[i].getBoundingClientRect().top < window.innerHeight * 0.5) best = i + 1; }
+      setCurrentPage(best);
+    }
+    wrap.addEventListener('scroll', onScroll);
+    return () => { wrap.removeEventListener('scroll', onScroll); };
+  }, [pages.length]);
+
+  function zoomIn() { setScale(s => Math.min(3, s + 0.2)); }
+  function zoomOut() { setScale(s => Math.max(0.4, s - 0.2)); }
+  function scrollToPage(n) { const el = document.getElementById('pdf-page-' + n); if (el && wrapRef.current) wrapRef.current.scrollTo({ top: el.offsetTop - 8, behavior: 'smooth' }); }
+
+  if (error) return (
+    <div style={embedded ? { height: '100%', display: 'flex', flexDirection: 'column' } : {}}>
+      <div className="pdf-reader" style={embedded ? { maxWidth: 'none' } : {}}>
+        <div className="pdf-toolbar">{!embedded && <button onClick={onBack}>← 返回</button>}<span className="pdf-title">{title}</span></div>
+        <div className="pdf-error"><p>⚠️ {error}</p><p style={{ marginTop: 12, fontSize: 12, color: 'var(--text2)' }}>请确认 PDF 文件已放在仓库的 books/ 目录下。</p>{!embedded && <button onClick={onBack} style={{ marginTop: 16 }}>← 返回</button>}</div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div style={embedded ? { height: '100%', display: 'flex', flexDirection: 'column' } : { padding: 0 }}>
+      <div className="pdf-reader" style={embedded ? { maxWidth: 'none' } : {}}>
+        <div className="pdf-toolbar">
+          {!embedded && <button onClick={onBack}>← 返回</button>}
+          <button onClick={zoomOut}>−</button><span className="zoom-info">{Math.round(scale * 100) + '%'}</span><button onClick={zoomIn}>+</button>
+          <span className="pdf-title">{title}</span><span className="page-info">{currentPage} / {totalPages}</span>
+          <button onClick={() => scrollToPage(Math.max(1, currentPage - 1))}>◀ 上页</button>
+          <button onClick={() => scrollToPage(Math.min(totalPages, currentPage + 1))}>下页 ▶</button>
+        </div>
+        <div className="pdf-canvas-wrap" ref={wrapRef}>
+          {loading && <div className="pdf-loading"><div className="spinner"></div><p>正在加载 PDF...</p></div>}
+          {pages.map(n => <canvas key={n} id={'pdf-page-' + n} />)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ========== TxtReader ========== */
+function TxtReader({ url, title, onBack, embedded }) {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [text, setText] = useState('');
+  const [fontSize, setFontSize] = useState(15);
+
+  useEffect(() => {
+    if (!url) return;
+    let cancelled = false; setLoading(true);
+    fetch(url).then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+      .then(t => { if (!cancelled) { setText(t); setLoading(false); } })
+      .catch(err => { if (!cancelled) { setError('文件加载失败: ' + err.message); setLoading(false); } });
+    return () => { cancelled = true; };
+  }, [url]);
+
+  if (error) return (
+    <div className={embedded ? '' : 'screen'}>
+      <div className="txt-reader">
+        <div className="txt-toolbar">{!embedded && <button onClick={onBack}>← 返回</button>}<span className="txt-title">{title}</span></div>
+        <div className="pdf-error"><p>⚠️ {error}</p><p style={{ marginTop: 12, fontSize: 12, color: 'var(--text2)' }}>请确认 TXT 文件已放在仓库的 books/ 目录下。</p>{!embedded && <button onClick={onBack} style={{ marginTop: 16 }}>← 返回</button>}</div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className={embedded ? '' : 'screen'} style={embedded ? {} : { padding: 0 }}>
+      <div className="txt-reader">
+        <div className="txt-toolbar">
+          {!embedded && <button onClick={onBack}>← 返回</button>}
+          <button onClick={() => setFontSize(s => Math.max(11, s - 1))}>A−</button>
+          <span className="font-size-label">{fontSize}px</span>
+          <button onClick={() => setFontSize(s => Math.min(28, s + 1))}>A+</button>
+          <span className="txt-title">{title}</span>
+        </div>
+        <div className="txt-content" style={{ fontSize: fontSize + 'px' }}>{loading ? '正在加载...' : text}</div>
+      </div>
+    </div>
+  );
+}
+
+/* ========== LearningReader ========== */
+function LearningReader({ item, onBack }) {
+  const [leftW, setLeftW] = useState(55);
+  const [dragging, setDragging] = useState(false);
+  const [currentChapter, setCurrentChapter] = useState('');
+  const [chapterTitle, setChapterTitle] = useState('');
+  const [notesHtml, setNotesHtml] = useState(item.content || '');
+  const [notesIndex, setNotesIndex] = useState(null);
+  const [loadingNotes, setLoadingNotes] = useState(false);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    if (!item.id || !item.file) return;
+    window.__currentBookId = item.id;
+    setLoadingNotes(true);
+    fetch('notes/' + item.id + '/index.json')
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { setNotesIndex(data); setLoadingNotes(false); })
+      .catch(() => { setNotesIndex(null); setLoadingNotes(false); });
+  }, [item.id]);
+
+  useEffect(() => {
+    if (!currentChapter) { setNotesHtml(item.content || ''); return; }
+    const idx = window.__notesIndex || notesIndex;
+    if (!idx) {
+      if (!notesIndex) return;
+      setNotesHtml('<h3>📝 本章笔记</h3><p>本章笔记尚未编写。</p><p style="color:var(--text2);font-size:13px;margin-top:12px;">你可以在仓库的 <code>notes/' + item.id + '/</code> 目录下添加对应的 Markdown 文件。</p>');
+      return;
+    }
+    let mdFile = null;
+    if (idx.pages && currentChapter.startsWith('page-')) {
+      const pageNum = parseInt(currentChapter.replace('page-', ''));
+      for (const range of Object.keys(idx.pages)) {
+        const match = range.match(/^(\d+)-(\d+)$/);
+        if (match) { const s = parseInt(match[1]), e = parseInt(match[2]); if (pageNum >= s && pageNum <= e) { mdFile = idx.pages[range]; break; } }
+      }
+    }
+    if (!mdFile) {
+      mdFile = idx[currentChapter];
+      if (!mdFile) {
+        const keys = Object.keys(idx).filter(k => k !== '_default' && k !== 'pages');
+        for (const k of keys) { if (currentChapter.toLowerCase().includes(k.toLowerCase())) { mdFile = idx[k]; break; } }
+      }
+    }
+    if (!mdFile) {
+      setNotesHtml('<h3>📝 本章笔记</h3><p>本章笔记尚未编写。</p><p style="color:var(--text2);font-size:13px;margin-top:12px;">你可以在仓库的 <code>notes/' + item.id + '/</code> 目录下添加对应的 Markdown 文件。</p>');
+      return;
+    }
+    setLoadingNotes(true);
+    fetch('notes/' + item.id + '/' + mdFile)
+      .then(r => r.ok ? r.text() : null)
+      .then(md => { if (md) setNotesHtml(mdToHtml(md)); else setNotesHtml('<h3>📝 本章笔记</h3><p>笔记文件加载失败: ' + mdFile + '</p>'); setLoadingNotes(false); })
+      .catch(() => { setNotesHtml('<h3>📝 本章笔记</h3><p>笔记文件加载失败。</p>'); setLoadingNotes(false); });
+  }, [currentChapter, notesIndex]);
+
+  useEffect(() => {
+    if (!dragging) return;
+    function onMove(e) {
+      const el = containerRef.current; if (!el) return;
+      const rect = el.getBoundingClientRect();
+      setLeftW(Math.min(80, Math.max(25, ((e.clientX - rect.left) / rect.width) * 100)));
+    }
+    function onUp() { setDragging(false); }
+    window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
+    document.body.style.userSelect = 'none'; document.body.style.cursor = 'col-resize';
+    return () => {
+      window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp);
+      document.body.style.userSelect = ''; document.body.style.cursor = '';
+    };
+  }, [dragging]);
+
+  function getFormat(file) {
+    if (!file) return null;
+    const ext = file.split('.').pop().toLowerCase();
+    if (ext === 'epub') return 'epub'; if (ext === 'pdf') return 'pdf'; if (ext === 'txt') return 'txt'; return null;
+  }
+  function handleChapterChange(href) {
+    setCurrentChapter(href);
+    if (window.__epubToc && window.__epubToc.length) {
+      const ch = window.__epubToc.find(t => t.href === href);
+      setChapterTitle(ch ? ch.label.trim() : '');
+    }
+  }
+  function handlePageChange(pageNum) { setCurrentChapter('page-' + pageNum); setChapterTitle('第 ' + pageNum + ' 页'); }
+
+  function renderReader(item) {
+    const fmt = getFormat(item.file);
+    if (fmt === 'epub') return <EpubReader url={item.file} title={item.name} embedded={true} onBack={onBack} onChapterChange={handleChapterChange} />;
+    if (fmt === 'pdf') return <PdfReader url={item.file} title={item.name} embedded={true} onBack={onBack} onPageChange={handlePageChange} />;
+    if (fmt === 'txt') return <TxtReader url={item.file} title={item.name} embedded={true} onBack={onBack} />;
+    return null;
+  }
+
+  if (item.file) {
+    const isChapterMode = !!currentChapter;
+    return (
+      <div style={{ height: '100vh', overflow: 'hidden' }}>
+        <div className="book-split" ref={containerRef}>
+          <div className="book-pane" style={{ width: leftW + '%' }}>{renderReader(item)}</div>
+          <div className={'book-divider' + (dragging ? ' dragging' : '')} onMouseDown={e => { e.preventDefault(); setDragging(true); }}>
+            <div className="divider-line" />
+          </div>
+          <div className="book-pane book-pane-right" style={{ width: (100 - leftW) + '%' }}>
+            <div className="learn-reader-head">
+              <button className="back" onClick={onBack}>← 返回</button>
+              <span className="learn-reader-title">{isChapterMode ? '📖 ' + (chapterTitle || '本章笔记') : '📝 知识要点'}</span>
+              {loadingNotes && <span style={{ fontSize: 11, color: 'var(--text2)', marginLeft: 8 }}>加载中...</span>}
+            </div>
+            <div className="learn-reader-body" dangerouslySetInnerHTML={{ __html: notesHtml }} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="screen">
+      <div className="learn-reader">
+        <div className="learn-reader-head">
+          <button className="back" onClick={onBack}>← 返回</button>
+          <span className="learn-reader-title">{item.icon} {item.name}</span>
+        </div>
+        <div className="learn-reader-body" dangerouslySetInnerHTML={{ __html: item.content }} />
+      </div>
+    </div>
+  );
+}
+
+/* ========== LearningHub ========== */
+function LearningHub({ onBack, onOpenItem }) {
+  const [cat, setCat] = useState(null);
+  const cats = [
+    { key: 'courses', icon: '🎓', name: '课程学习', desc: '系统化学习价格行为知识体系', data: LEARN_DATA.courses },
+    { key: 'traders', icon: '👑', name: '顶级交易员', desc: '学习传奇交易员的核心理念', data: LEARN_DATA.traders },
+    { key: 'books', icon: '📚', name: '书籍学习', desc: '经典交易书籍精华导读', data: LEARN_DATA.books },
+  ];
+
+  if (cat) {
+    const catInfo = cats.find(c => c.key === cat);
+    return (
+      <div className="screen">
+        <div className="learn-hub">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+            <button className="learn-reader-head" style={{ background: 'none', border: '1px solid var(--border2)', color: 'var(--text2)', padding: '6px 14px', borderRadius: 4, cursor: 'pointer', fontSize: 13 }} onClick={() => setCat(null)}>← 返回</button>
+            <span style={{ fontFamily: 'var(--pixel)', fontSize: 11, color: 'var(--cyan)' }}>{catInfo.icon} {catInfo.name}</span>
+          </div>
+          <div className="learn-list">
+            {catInfo.data.map(item => (
+              <div className="learn-item" key={item.id} onClick={() => onOpenItem(item)}>
+                <div className="learn-item-icon">{item.icon}</div>
+                <div className="learn-item-info">
+                  <div className="learn-item-name">{item.name}</div>
+                  <div className="learn-item-sub">{item.sub}</div>
+                </div>
+                <span className={'learn-item-tag tag-' + item.tag}>{item.tagText}</span>
+                {item.file && <span className="learn-item-tag" style={{ borderColor: 'var(--cyan)', color: 'var(--cyan)', marginLeft: 4 }}>{item.file.split('.').pop().toUpperCase()}</span>}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="screen">
+      <div className="learn-hub">
+        <div style={{ textAlign: 'center', marginBottom: 24 }}>
+          <div style={{ fontFamily: 'var(--pixel)', fontSize: 13, color: 'var(--cyan)', marginBottom: 6, textShadow: '0 0 10px rgba(0,240,255,.3)' }}>📖 学习中心</div>
+          <div style={{ fontSize: 12, color: 'var(--text2)' }}>系统学习价格行为，从理论到实战</div>
+        </div>
+        <div className="learn-cats">
+          {cats.map(c => (
+            <div className="learn-cat" key={c.key} onClick={() => setCat(c.key)}>
+              <div className="learn-cat-icon">{c.icon}</div>
+              <div className="learn-cat-name">{c.name}</div>
+              <div className="learn-cat-desc">{c.desc}</div>
+              <div className="learn-cat-cnt">{c.data.length} 个内容</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ========== App ========== */
+function App() {
+  const [readerItem, setReaderItem] = useState(null);
+
+  function handleOpenItem(item) { setReaderItem(item); }
+  function handleBackFromReader() { setReaderItem(null); }
+
+  /* Full-viewport reader mode (no header/sidebar) */
+  if (readerItem && readerItem.file) {
+    return <LearningReader item={readerItem} onBack={handleBackFromReader} />;
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+      {/* Header */}
+      <div className="header">
+        <h1>认真交易</h1>
+        <div className="xp-bar">
+          <span>XP {xp}</span>
+          <div className="bar"><div className="fill" style={{ width: Math.min(100, (xp % 100)) + '%' }} /></div>
+        </div>
+      </div>
+      {/* Body: sidebar + main */}
+      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+        {/* Sidebar */}
+        <div className="sidebar">
+          <a href="learn.html" className="sidebar-btn active" title="学习">📖</a>
+          <div className="sidebar-divider" />
+          <a href="daily.html" className="sidebar-btn" title="每日">📅</a>
+          <a href="codex.html" className="sidebar-btn" title="图鉴">📚</a>
+          <a href="path.html" className="sidebar-btn" title="路径">🗺️</a>
+          <div className="sidebar-divider" />
+          <a href="index.html?screen=wrong" className="sidebar-btn" title="错题">📕</a>
+          <a href="index.html?screen=ach" className="sidebar-btn" title="成就">🏅</a>
+        </div>
+        {/* Main content */}
+        <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+          {readerItem ? (
+            <LearningReader item={readerItem} onBack={handleBackFromReader} />
+          ) : (
+            <LearningHub onBack={() => {}} onOpenItem={handleOpenItem} />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

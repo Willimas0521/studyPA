@@ -26,7 +26,7 @@ body::before{content:'';position:fixed;inset:0;background:
   linear-gradient(90deg,transparent 96%,rgba(41,98,255,.04) 100%);
   background-size:24px 24px;z-index:0;pointer-events:none}
 body::after{content:'';position:fixed;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(41,98,255,.01) 100%);z-index:0;pointer-events:none}
-#root{height:calc(100% - 44px);margin-top:44px;margin-left:64px;display:flex;flex-direction:column;position:relative;z-index:1}
+#root{height:calc(100% - 50px);margin-top:50px;margin-left:180px;display:flex;flex-direction:column;position:relative;z-index:1}
 body.nav-fullscreen #nav-header,
 body.nav-fullscreen #nav-sidebar{display:none!important}
 body.nav-fullscreen #root{margin-top:0;margin-left:0;height:100%}
@@ -35,12 +35,29 @@ body.nav-fullscreen #root{margin-top:0;margin-left:0;height:100%}
 .screen::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 .screen::-webkit-scrollbar-track{background:transparent}
 
-/* Header */
-.header{background:#fff;border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-.header h1{font-family:var(--pixel);font-size:11px;color:var(--blue);letter-spacing:2px}
-.xp-bar{display:flex;align-items:center;gap:8px;font-family:var(--pixel);font-size:9px;color:var(--blue)}
-.xp-bar .bar{width:100px;height:6px;background:#e8ecf1;border-radius:3px;overflow:hidden}
-.xp-bar .fill{height:100%;background:linear-gradient(90deg,var(--blue),#42a5f5);transition:width .6s cubic-bezier(.4,0,.2,1);border-radius:3px}
+/* Nav Header */
+.nav-header{position:fixed;top:0;left:0;right:0;height:50px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:20;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.nav-header-left{display:flex;align-items:center;gap:10px}
+.nav-logo{font-size:22px}
+.nav-title{font-family:var(--pixel);font-size:12px;color:var(--blue);letter-spacing:2px}
+.nav-header-right{display:flex;align-items:center}
+.nav-xp-badge{display:flex;align-items:center;gap:8px;background:rgba(41,98,255,.04);border:1px solid rgba(41,98,255,.12);border-radius:20px;padding:4px 14px 4px 10px}
+.nav-xp-level{font-family:var(--pixel);font-size:10px;color:var(--blue);white-space:nowrap}
+.nav-xp-bar{width:80px;height:6px;background:#e8ecf1;border-radius:3px;overflow:hidden}
+.nav-xp-fill{height:100%;background:linear-gradient(90deg,var(--blue),#42a5f5);transition:width .6s cubic-bezier(.4,0,.2,1);border-radius:3px}
+.nav-xp-num{font-family:var(--pixel);font-size:9px;color:var(--blue);white-space:nowrap}
+
+/* Nav Sidebar (list style) */
+.nav-sidebar{position:fixed;top:50px;left:0;bottom:0;width:180px;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;padding:12px 10px;gap:2px;overflow-y:auto;z-index:20}
+.nav-sidebar::-webkit-scrollbar{width:0}
+.nav-group-label{font-family:var(--pixel);font-size:8px;color:var(--text2);letter-spacing:2px;text-transform:uppercase;padding:14px 12px 6px;opacity:.6}
+.nav-divider{height:1px;background:var(--border);margin:8px 12px}
+.nav-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;border:1px solid transparent;background:none;cursor:pointer;font-size:15px;color:var(--text2);transition:all .2s;text-decoration:none;width:100%;text-align:left;position:relative;font-family:'Inter','Segoe UI',system-ui,sans-serif}
+.nav-item:hover{background:rgba(41,98,255,.05);border-color:rgba(41,98,255,.1);color:var(--blue)}
+.nav-item.active{background:rgba(41,98,255,.08);border-color:rgba(41,98,255,.18);color:var(--blue);font-weight:600}
+.nav-item-icon{font-size:20px;flex-shrink:0;width:28px;text-align:center}
+.nav-item-label{font-size:15px;flex:1;white-space:nowrap}
+.nav-badge{font-family:var(--pixel);font-size:9px;color:var(--blue);background:rgba(41,98,255,.08);border:1px solid rgba(41,98,255,.2);border-radius:10px;padding:1px 7px;line-height:1.5;position:absolute;right:10px;top:50%;transform:translateY(-50%)}
 
 /* Map */
 .map-container{width:100%;max-width:600px;padding:20px 0}
@@ -333,30 +350,23 @@ body.nav-fullscreen #root{margin-top:0;margin-left:0;height:100%}
 .learn-nav-btn:hover{border-color:var(--blue);color:var(--blue)}
 .learn-nav-btn.active{border-color:var(--blue);color:var(--blue);background:rgba(41,98,255,.04)}
 
-/* Sidebar */
-.sidebar{width:64px;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:6px;flex-shrink:0;overflow-y:auto;z-index:2}
-.sidebar::-webkit-scrollbar{width:0}
-.sidebar-btn{width:48px;height:48px;display:flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid transparent;background:none;cursor:pointer;font-size:22px;transition:all .25s;position:relative;color:var(--text2)}
-.sidebar-btn:hover{background:rgba(41,98,255,.06);border-color:rgba(41,98,255,.15);color:var(--blue);transform:scale(1.08)}
-.sidebar-btn.active{background:rgba(41,98,255,.08);border-color:rgba(41,98,255,.2);color:var(--blue)}
-.sidebar-btn .badge-dot{position:absolute;top:4px;right:4px;width:8px;height:8px;border-radius:50%;background:var(--red)}
-.sidebar-btn .badge-num{position:absolute;top:2px;right:2px;font-family:var(--pixel);font-size:7px;color:var(--blue);background:rgba(41,98,255,.08);border:1px solid rgba(41,98,255,.2);border-radius:4px;padding:0 3px;line-height:1.4}
-.sidebar-divider{width:28px;height:1px;background:var(--border);margin:6px 0}
-.sidebar-label{font-family:var(--pixel);font-size:7px;color:var(--text2);text-align:center;margin-top:-2px;margin-bottom:2px;letter-spacing:.5px;opacity:.7}
-
 /* Confetti canvas */
 .confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:60}
 
 /* Responsive */
-@media(max-width:480px){
-  .header h1{font-size:9px}
+@media(max-width:600px){
+  .nav-sidebar{width:56px;padding:8px 4px}
+  .nav-item{padding:10px 8px;gap:0;justify-content:center}
+  .nav-item-label{display:none}
+  .nav-badge{right:2px;top:2px;transform:none;font-size:7px;padding:0 4px}
+  .nav-group-label{font-size:6px;text-align:center;padding:10px 4px 4px}
+  #root{margin-left:56px}
+  .nav-title{font-size:10px}
+  .nav-xp-bar{width:50px}
   .chapter-title{font-size:8px}
   .level-node .circle{width:42px;height:42px;font-size:18px}
   .question-text{font-size:14px}
   .welcome h1{font-size:15px}
-  .sidebar{width:52px}
-  .sidebar-btn{width:40px;height:40px;font-size:18px}
-  .sidebar-label{font-size:6px}
 }
 </style>
 </head>

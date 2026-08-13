@@ -15,7 +15,9 @@
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body>
+<div id="nav-header"></div>
 <div id="root"></div>
+<div id="nav-sidebar"></div>
 <script type="text/babel">
 const { useState, useRef, useEffect } = React;
 
@@ -828,51 +830,30 @@ function LearningHub({ onBack, onOpenItem }) {
 function App() {
   const [readerItem, setReaderItem] = useState(null);
 
+  useEffect(() => {
+    if (readerItem && readerItem.file) {
+      document.body.classList.add('nav-fullscreen');
+    } else {
+      document.body.classList.remove('nav-fullscreen');
+    }
+    return () => { document.body.classList.remove('nav-fullscreen'); };
+  }, [readerItem]);
+
   function handleOpenItem(item) { setReaderItem(item); }
   function handleBackFromReader() { setReaderItem(null); }
 
-  /* Full-viewport reader mode (no header/sidebar) */
-  if (readerItem && readerItem.file) {
+  if (readerItem) {
     return <LearningReader item={readerItem} onBack={handleBackFromReader} />;
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-      {/* Header */}
-      <div className="header">
-        <h1>认真交易</h1>
-        <div className="xp-bar">
-          <span>XP {xp}</span>
-          <div className="bar"><div className="fill" style={{ width: Math.min(100, (xp % 100)) + '%' }} /></div>
-        </div>
-      </div>
-      {/* Body: sidebar + main */}
-      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-        {/* Sidebar */}
-        <div className="sidebar">
-          <a href="learn.html" className="sidebar-btn active" title="学习">📖</a>
-          <div className="sidebar-divider" />
-          <a href="daily.html" className="sidebar-btn" title="每日">📅</a>
-          <a href="codex.html" className="sidebar-btn" title="图鉴">📚</a>
-          <a href="path.html" className="sidebar-btn" title="路径">🗺️</a>
-          <div className="sidebar-divider" />
-          <a href="index.html?screen=wrong" className="sidebar-btn" title="错题">📕</a>
-          <a href="index.html?screen=ach" className="sidebar-btn" title="成就">🏅</a>
-        </div>
-        {/* Main content */}
-        <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-          {readerItem ? (
-            <LearningReader item={readerItem} onBack={handleBackFromReader} />
-          ) : (
-            <LearningHub onBack={() => {}} onOpenItem={handleOpenItem} />
-          )}
-        </div>
-      </div>
-    </div>
+    <LearningHub onBack={() => {}} onOpenItem={handleOpenItem} />
   );
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 </script>
+<script src="shared-nav.js"></script>
+<script>renderPageNav()</script>
 </body>
 </html>

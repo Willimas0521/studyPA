@@ -9,7 +9,9 @@
 <link rel="stylesheet" href="shared.css">
 </head>
 <body>
+<div id="nav-header"></div>
 <div id="root"></div>
+<div id="nav-sidebar"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
@@ -53,38 +55,8 @@ function App() {
   const overallPct = Math.round(completedCount / TOTAL_LEVELS * 100);
 
   return (
-    <>
-      {/* Header */}
-      <div className="header">
-        <h1>认真交易</h1>
-        <div className="xp-bar">
-          <span>XP {xp}</span>
-          <div className="bar">
-            <div className="fill" style={{width: Math.min(overallPct, 100) + '%'}} />
-          </div>
-        </div>
-      </div>
-
-      {/* Body: sidebar + main */}
-      <div style={{display:'flex',flex:1,overflow:'hidden'}}>
-        {/* Sidebar */}
-        <div className="sidebar">
-          <a className="sidebar-btn" href="learn.html" title="学习">&#x1F4D6;</a>
-          <span className="sidebar-label">学习</span>
-          <div className="sidebar-divider" />
-          <a className="sidebar-btn" href="daily.html" title="每日">&#x1F4C5;</a>
-          <span className="sidebar-label">每日</span>
-          <a className="sidebar-btn" href="codex.html" title="图鉴">&#x1F4DA;</a>
-          <span className="sidebar-label">图鉴</span>
-          <a className="sidebar-btn active" href="path.html" title="路径">&#x1F5FA;&#xFE0F;</a>
-          <span className="sidebar-label">路径</span>
-          <div className="sidebar-divider" />
-          <a className="sidebar-btn" href="index.html?screen=wrong" title="错题">&#x1F4D5;</a>
-          <span className="sidebar-label">错题</span>
-          <a className="sidebar-btn" href="index.html?screen=ach" title="成就">&#x1F3C5;</a>
-          <span className="sidebar-label">成就</span>
-        </div>
-
+    <div style={{display:'flex',flex:1,overflow:'hidden'}}>
+      <div style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden'}}>
         {/* Main content */}
         <div className="screen">
           <div className="level-screen">
@@ -128,11 +100,13 @@ function App() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 </script>
+<script src="shared-nav.js"></script>
+<script>renderPageNav()</script>
 </body>
 </html>

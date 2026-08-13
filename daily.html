@@ -12,7 +12,9 @@
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body>
+<div id="nav-header"></div>
 <div id="root"></div>
+<div id="nav-sidebar"></div>
 <script type="text/babel">
 const {useState, useEffect, useRef, useCallback} = React;
 
@@ -1140,55 +1142,9 @@ function App(){
   const achToast = toast ? ACH_DEFS.find(a=>a.id===toast) : null;
 
   return (
-    <div style={{display:'flex',flexDirection:'column',height:'100%'}}>
-      <div className="header">
-        <h1>认真交易</h1>
-        <div className="xp-bar">
-          <span>XP {xp}</span>
-          <div className="bar"><div className="fill" style={{width:Math.min(100,(xp%500)/5)+'%'}}></div></div>
-          <span>Lv.{Math.floor(xp/500)+1}</span>
-        </div>
-      </div>
-      <div style={{display:'flex',flex:1,overflow:'hidden'}}>
-        <div className="sidebar">
-          <a href="learn.html" className="sidebar-btn" title="学习中心" style={{borderColor:'rgba(0,240,255,.15)',color:'var(--cyan)'}}>
-            📖
-          </a>
-          <div className="sidebar-label">学习</div>
-
-          <div className="sidebar-divider"></div>
-
-          <a href="daily.html" className="sidebar-btn active" title="每日一练">
-            📅
-          </a>
-          <div className="sidebar-label">每日</div>
-
-          <a href="codex.html" className="sidebar-btn" title="形态图鉴">
-            📚
-          </a>
-          <div className="sidebar-label">图鉴</div>
-
-          <a href="path.html" className="sidebar-btn" title="学习路径">
-            🗺️
-          </a>
-          <div className="sidebar-label">路径</div>
-
-          <div className="sidebar-divider"></div>
-
-          <a href="index.html?screen=wrong" className="sidebar-btn" title="错题本">
-            📕
-            {wrongCount>0 && <span className="badge-num">{wrongCount}</span>}
-          </a>
-          <div className="sidebar-label">错题</div>
-
-          <a href="index.html?screen=ach" className="sidebar-btn" title="成就">
-            🏅
-          </a>
-          <div className="sidebar-label">成就</div>
-        </div>
-        <div style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden'}}>
-          <DailyDrill state={state} onAnswer={handleAnswer} onNext={handleNext} />
-        </div>
+    <div style={{display:'flex',flex:1,overflow:'hidden'}}>
+      <div style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden'}}>
+        <DailyDrill state={state} onAnswer={handleAnswer} onNext={handleNext} />
       </div>
       {achToast && (
         <div className="toast">
@@ -1201,5 +1157,7 @@ function App(){
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
 </script>
+<script src="shared-nav.js"></script>
+<script>renderPageNav()</script>
 </body>
 </html>

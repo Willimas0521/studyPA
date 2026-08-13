@@ -26,7 +26,10 @@ body::before{content:'';position:fixed;inset:0;background:
   linear-gradient(90deg,transparent 96%,rgba(41,98,255,.04) 100%);
   background-size:24px 24px;z-index:0;pointer-events:none}
 body::after{content:'';position:fixed;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(41,98,255,.01) 100%);z-index:0;pointer-events:none}
-#root{height:100%;display:flex;flex-direction:column;position:relative;z-index:1}
+#root{height:calc(100% - 44px);margin-top:44px;margin-left:64px;display:flex;flex-direction:column;position:relative;z-index:1}
+body.nav-fullscreen #nav-header,
+body.nav-fullscreen #nav-sidebar{display:none!important}
+body.nav-fullscreen #root{margin-top:0;margin-left:0;height:100%}
 .screen{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;align-items:center}
 .screen::-webkit-scrollbar{width:5px}
 .screen::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
@@ -358,7 +361,9 @@ body::after{content:'';position:fixed;inset:0;background:linear-gradient(180deg,
 </style>
 </head>
 <body>
+<div id="nav-header"></div>
 <div id="root"></div>
+<div id="nav-sidebar"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.6/babel.min.js"></script>
@@ -3075,60 +3080,6 @@ function LearningReader({item,onBack}){
   );
 }
 
-/* ========== SIDEBAR ========== */
-function Sidebar({state,onOpenWrong,onOpenAch,onOpenCert}){
-  const wrongCount = Object.keys(state.wrong).length;
-  const allClear = Object.keys(state.stars).length>=TOTAL_LEVELS;
-  return (
-    <div className="sidebar">
-      <a className="sidebar-btn" href="learn.html" title="学习中心" style={{borderColor:'rgba(0,240,255,.15)',color:'var(--cyan)'}}>
-        📖
-      </a>
-      <div className="sidebar-label">学习</div>
-
-      <div className="sidebar-divider"></div>
-
-      <a className="sidebar-btn" href="daily.html" title="每日一练">
-        📅
-      </a>
-      <div className="sidebar-label">每日</div>
-
-      <a className="sidebar-btn" href="codex.html" title="形态图鉴">
-        📚
-      </a>
-      <div className="sidebar-label">图鉴</div>
-
-      <a className="sidebar-btn" href="path.html" title="学习路径">
-        🗺️
-      </a>
-      <div className="sidebar-label">路径</div>
-
-      <div className="sidebar-divider"></div>
-
-      <button className="sidebar-btn" onClick={onOpenWrong} title="错题本">
-        📕
-        {wrongCount>0 && <span className="badge-num">{wrongCount}</span>}
-      </button>
-      <div className="sidebar-label">错题</div>
-
-      <button className="sidebar-btn" onClick={onOpenAch} title="成就">
-        🏅
-      </button>
-      <div className="sidebar-label">成就</div>
-
-      {allClear && (
-        <>
-          <div className="sidebar-divider"></div>
-          <button className="sidebar-btn" onClick={onOpenCert} title="通关证书" style={{borderColor:'rgba(0,240,255,.2)',color:'var(--cyan)'}}>
-            🏆
-          </button>
-          <div className="sidebar-label">证书</div>
-        </>
-      )}
-    </div>
-  );
-}
-
 function App(){
   const [state, setState] = useState(()=>{
     const s = getInitialState();
@@ -3153,6 +3104,22 @@ function App(){
       return ()=>clearTimeout(t);
     }
   },[state.toast]);
+
+  // Toggle nav visibility: hide on welcome/reader screens
+  useEffect(()=>{
+    if(state.screen==='welcome'||state.screen==='learnReader') document.body.classList.add('nav-fullscreen');
+    else document.body.classList.remove('nav-fullscreen');
+  },[state.screen]);
+
+  // Sync XP to shared nav
+  useEffect(()=>{
+    if(typeof updateNavXP==='function') updateNavXP(state.xp);
+  },[state.xp]);
+
+  // Sync wrong badge count to shared nav
+  useEffect(()=>{
+    if(typeof updateNavWrongBadge==='function') updateNavWrongBadge(Object.keys(state.wrong).length);
+  },[Object.keys(state.wrong).length]);
 
   const handleStart = ()=>{
     setState(s=>({...s, screen:'map'}));
@@ -3236,6 +3203,11 @@ function App(){
   const handleOpenAch = ()=> setState(s=>({...s, screen:'ach'}));
   const handleOpenCert = ()=> setState(s=>({...s, screen:'cert'}));
   const handleCloseModal = ()=> setState(s=>({...s, screen:'map'}));
+
+  /* Expose handlers for shared-nav.js */
+  window.__openWrong = handleOpenWrong;
+  window.__openAch = handleOpenAch;
+  window.__openCert = handleOpenCert;
 
   const handlePracticeWrong = (k)=>{
     setState(s=>{
@@ -3363,24 +3335,6 @@ function App(){
   const handleBackToLearn = ()=> setState(s=>({...s, screen:'learn', learnItem:null}));
 
   return (
-    <div style={{display:'flex',flexDirection:'column',height:'100%'}}>
-      {state.screen!=='welcome' && (
-        <div className="header">
-          <h1>认真交易</h1>
-          <div className="xp-bar">
-            <span>XP {state.xp}</span>
-            <div className="bar"><div className="fill" style={{width:Math.min(100,(state.xp%500)/5)+'%'}}></div></div>
-            <span>Lv.{Math.floor(state.xp/500)+1}</span>
-          </div>
-        </div>
-      )}
-      <div style={{display:'flex',flex:1,overflow:'hidden'}}>
-        {state.screen!=='welcome' && (
-          <Sidebar state={state}
-            onOpenWrong={handleOpenWrong}
-            onOpenAch={handleOpenAch}
-            onOpenCert={handleOpenCert}/>
-        )}
         <div style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden'}}>
           {state.screen==='welcome' && <Welcome onStart={handleStart}/>}
           {['map','wrong','ach'].includes(state.screen) && (
@@ -3408,11 +3362,21 @@ function App(){
       {state.screen==='checkpoint' && <ChapterCheckpoint state={state} onAnswer={handleCheckpointAnswer} onNext={handleCheckpointNext} onExit={handleCloseModal} onRetry={()=>handleOpenCheckpoint(state.cp.ci)}/>}
       {state.toast && <Toast ach={state.toast}/>}
         </div>
-      </div>
-    </div>
   );}
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+<script src="shared-nav.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  renderPageNav({
+    callbacks: {
+      wrong: function(){ if(window.__openWrong) window.__openWrong(); },
+      ach: function(){ if(window.__openAch) window.__openAch(); },
+      cert: function(){ if(window.__openCert) window.__openCert(); }
+    }
+  });
+});
 </script>
 </body>
 </html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>交易理论图谱 · 价格行为学 / ICT / SMC / 威科夫 / 波浪理论</title>
+<meta name="description" content="把价格行为学、ICT、SMC、威科夫操盘法、波浪理论放在同一张价格图上对照学习。含五体系图层交互图、术语速查与学习路径。">
+<meta name="theme-color" content="#0f172a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f172a'/%3E%3Cpath d='M6 22 L12 13 L17 18 L26 7' stroke='%2338bdf8' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/style.css">
+<script>
+/* 在首次绘制前定好主题：避免闪白，也避免主题在渲染后才翻转导致的计算值失效 */
+(function () {
+  try {
+    var t = localStorage.getItem('pa-atlas-theme');
+    if (t !== 'light' && t !== 'dark') {
+      t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+    }
+    document.documentElement.setAttribute('data-theme', t);
+  } catch (e) { /* localStorage 不可用时保持默认 */ }
+})();
+</script>
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+
+<header class="topbar">
+  <button class="icon-btn menu-btn" id="menuBtn" aria-label="打开导航" aria-expanded="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </button>
+
+  <a class="brand" href="#/overview">
+    <span class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="currentColor" opacity=".12"/><path d="M6 22 L12 13 L17 18 L26 7" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+    <span class="brand-text">
+      <strong>交易理论图谱</strong>
+      <em>Price Action · ICT · SMC · Wyckoff · Elliott</em>
+    </span>
+  </a>
+
+  <div class="topbar-tools">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+      <input type="search" id="searchInput" placeholder="搜索概念 / 术语…" autocomplete="off" aria-label="搜索概念或术语">
+      <kbd class="search-kbd">/</kbd>
+      <div class="search-results" id="searchResults" hidden></div>
+    </div>
+    <button class="icon-btn" id="themeBtn" aria-label="切换主题">
+      <svg class="ico-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.9 1.9M16.8 16.8l1.9 1.9M18.7 5.3l-1.9 1.9M7.2 16.8l-1.9 1.9"/></svg>
+      <svg class="ico-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.2 8.2 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <nav class="nav" id="nav" aria-label="站点导航"></nav>
+    <div class="sidebar-foot">
+      <p class="disclaimer-mini">仅供学习研究 · 不构成投资建议</p>
+    </div>
+  </aside>
+
+  <div class="scrim" id="scrim" hidden></div>
+
+  <main class="main" id="main" tabindex="-1">
+    <article class="content" id="content"></article>
+    <footer class="footer">
+      <p><strong>交易理论图谱</strong> —— 把五套体系放在同一张价格图上对照。</p>
+      <p class="muted">本站内容为交易理论的整理与教学演示，所有图表均为示意，<b>不构成任何投资建议</b>。市场有风险，交易需自行判断并承担后果。</p>
+      <p class="muted small">图表数据为合成的教学样例 · 涨为红、跌为绿（国内习惯）</p>
+    </footer>
+  </main>
+</div>
+
+<button class="to-top" id="toTop" aria-label="回到顶部" hidden>
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V6M6 12l6-6 6 6"/></svg>
+</button>
+
+<script src="data/theories.js"></script>
+<script src="data/glossary.js"></script>
+<script src="assets/chart.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

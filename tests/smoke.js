@@ -43,9 +43,17 @@ const content = doc.getElementById('content');
 if (content && content.innerHTML.length > 500) ok('#content 已渲染 (' + content.innerHTML.length + ' 字符)');
 else fail('#content 未渲染');
 
-const navLinks = doc.querySelectorAll('#nav .nav-link');
-if (navLinks.length >= 11) ok('侧边栏生成 ' + navLinks.length + ' 个导航项');
-else fail('导航项偏少: ' + navLinks.length);
+/* 主导航已并入细纲：组数应覆盖 10 个页面（概览 / 五体系 / 对比 / 图层图 / 术语 / 路径） */
+const railGroups = doc.querySelectorAll('#railBody .rail-group-head');
+if (railGroups.length >= 10) ok('细纲导航生成 ' + railGroups.length + ' 个组，已接管主导航');
+else fail('细纲组数偏少: ' + railGroups.length);
+
+if (!doc.getElementById('sidebar') && !doc.getElementById('nav')) ok('旧侧边栏已移除');
+else fail('侧边栏残留');
+
+const ghLink = doc.querySelector('.rail-ext[href*="github.com"]');
+if (ghLink) ok('细纲底部保留 GitHub 入口: ' + ghLink.textContent.trim());
+else fail('GitHub 入口丢失');
 
 if (doc.querySelectorAll('#overviewCards .card').length === 5) ok('概览页 5 张体系卡片已生成');
 else fail('概览页卡片数异常: ' + doc.querySelectorAll('#overviewCards .card').length);
@@ -294,7 +302,7 @@ ok('所有引用的文件均存在');
 
 const css = read('assets/style.css');
 ['.hero', '.concept', '.callout', '.step', '.table-wrap', '.gl-item', '.layer-btn',
- '.cw-canvas', '.nav-link', '.sr-item', '.toc', '.card', '.rail', '.rail-group-head',
+ '.cw-canvas', '.sr-item', '.toc', '.card', '.rail', '.rail-group-head', '.rail-foot',
  '.rail-chap', '[data-theme="dark"]', '@media print']
   .forEach((sel) => { if (!css.includes(sel)) note('CSS 缺少选择器 ' + sel); });
 ok('CSS 关键选择器检查完成');

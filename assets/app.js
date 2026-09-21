@@ -10,14 +10,11 @@
   var GLOSSARY = window.GLOSSARY || [];
   var CHART = window.ChartModule;
 
-  var elNav = document.getElementById('nav');
   var elContent = document.getElementById('content');
   var elMain = document.getElementById('main');
   var elSearch = document.getElementById('searchInput');
   var elResults = document.getElementById('searchResults');
-  var elSidebar = document.getElementById('sidebar');
   var elScrim = document.getElementById('scrim');
-  var elMenuBtn = document.getElementById('menuBtn');
   var elRail = document.getElementById('rail');
   var elRailBody = document.getElementById('railBody');
   var elRailPage = document.getElementById('railPage');
@@ -70,31 +67,6 @@
       span.className = 'callout-icon';
       span.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' + ICONS[kind] + '</svg>';
       c.insertBefore(span, c.firstChild);
-    });
-  }
-
-  /* ------------------------------------------------------------ 侧边栏 */
-
-  function buildNav() {
-    var html = '';
-    SITE.nav.forEach(function (g) {
-      html += '<div class="nav-group-label">' + esc(g.group) + '</div>';
-      g.items.forEach(function (id) {
-        var p = PAGE_BY_ID[id];
-        if (!p) return;
-        html += '<a class="nav-link" href="#/' + esc(id) + '" data-id="' + esc(id) + '">' +
-          '<span class="nav-dot"></span><span>' + esc(p.navLabel || p.title) + '</span></a>';
-      });
-    });
-    html += '<div class="nav-group-label">外部</div>' +
-      '<a class="nav-link" href="https://github.com/Willimas0521/studyPA" target="_blank" rel="noopener">' +
-      '<span class="nav-dot"></span><span>GitHub 仓库</span></a>';
-    elNav.innerHTML = html;
-  }
-
-  function markActive(id) {
-    Array.prototype.forEach.call(elNav.querySelectorAll('.nav-link'), function (a) {
-      a.classList.toggle('active', a.getAttribute('data-id') === id);
     });
   }
 
@@ -181,7 +153,6 @@
     document.title = (p.id === 'overview')
       ? '交易理论图谱 · 价格行为学 / ICT / SMC / 威科夫 / 波浪理论'
       : p.title + ' · 交易理论图谱';
-    markActive(p.id);
     renderRail(p.id);
   }
 
@@ -313,7 +284,7 @@
 
       var a = e.target.closest('.rail-chap');
       if (!a) return;
-      closeDrawer();
+      closeRail();
 
       /* 同页内锚点跳转不触发 hashchange，这里自己接管平滑滚动 */
       var anchor = a.getAttribute('data-anchor');
@@ -328,7 +299,6 @@
 
   function openRail() {
     if (!elRail) return;
-    closeDrawer();                        /* 两个左抽屉不同时展开 */
     elRail.classList.add('open');
     elScrim.hidden = false;
     if (elRailBtn) elRailBtn.setAttribute('aria-expanded', 'true');
@@ -336,7 +306,7 @@
 
   if (elRailBtn) {
     elRailBtn.addEventListener('click', function () {
-      if (elRail && elRail.classList.contains('open')) closeDrawer(); else openRail();
+      if (elRail && elRail.classList.contains('open')) closeRail(); else openRail();
     });
   }
 
@@ -352,7 +322,7 @@
     var r = currentRoute();
     var p = PAGE_BY_ID[r.id] || SITE.overview;
     renderPage(p);
-    closeDrawer();
+    closeRail();
 
     if (r.anchor) {
       var target = document.getElementById(r.anchor);
@@ -514,28 +484,15 @@
     applyTheme(cur === 'dark' ? 'light' : 'dark');
   });
 
-  /* ------------------------------------------------------------ 抽屉 / 回到顶部 */
+  /* ------------------------------------------------------------ 细纲抽屉 / 回到顶部 */
 
-  function openDrawer() {
-    elSidebar.classList.add('open');
-    elScrim.hidden = false;
-    elMenuBtn.setAttribute('aria-expanded', 'true');
-  }
-  function closeDrawer() {
-    elSidebar.classList.remove('open');
+  function closeRail() {
     if (elRail) elRail.classList.remove('open');
     if (elRailBtn) elRailBtn.setAttribute('aria-expanded', 'false');
     elScrim.hidden = true;
-    elMenuBtn.setAttribute('aria-expanded', 'false');
   }
 
-  elMenuBtn.addEventListener('click', function () {
-    if (elSidebar.classList.contains('open')) closeDrawer(); else openDrawer();
-  });
-  elScrim.addEventListener('click', closeDrawer);
-  elNav.addEventListener('click', function (e) {
-    if (e.target.closest('.nav-link')) closeDrawer();
-  });
+  elScrim.addEventListener('click', closeRail);
 
   window.addEventListener('scroll', function () {
     elToTop.hidden = window.scrollY < 620;
@@ -548,7 +505,6 @@
   /* ------------------------------------------------------------ 启动 */
 
   initTheme();
-  buildNav();
   buildIndex();
   route();
 })();

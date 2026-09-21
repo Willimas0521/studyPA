@@ -203,6 +203,85 @@ const cards = doc.querySelectorAll('#overviewCards .card');
 if (cards.length === 5 && cards[0].getAttribute('href') === '#/price-action') ok('概览卡片链接正确');
 else fail('概览卡片链接异常');
 
+/* ---------- 细纲导航（rail）---------- */
+console.log('\n【细纲导航】');
+
+const railBody = doc.getElementById('railBody');
+const railPage = doc.getElementById('railPage');
+
+if (railBody && doc.getElementById('rail')) ok('细纲容器 #rail 已就位');
+else fail('细纲容器 #rail / #railBody 缺失');
+
+/* 当前体系：组头高亮 + 默认展开 + 章节数与元数据一致 */
+go('wyckoff');
+const curHead = doc.querySelector('#railBody .rail-group-head.current');
+const wyckoffChaps = SITE.theories.filter((t) => t.id === 'wyckoff')[0].chapters.length;
+const curChapLinks = doc.querySelectorAll('#railBody .rail-group-head.current + .rail-chaps .rail-chap');
+
+if (curHead && curHead.getAttribute('data-page') === 'wyckoff') ok('当前体系组头已高亮');
+else fail('当前体系组头未高亮');
+
+if (curChapLinks.length === wyckoffChaps) ok('当前体系展开 ' + curChapLinks.length + ' 节，与 chapters 元数据一致');
+else fail('当前体系章节数 ' + curChapLinks.length + ' ≠ ' + wyckoffChaps);
+
+if (doc.querySelectorAll('#railBody .rail-group-head.open').length === 1) ok('默认只展开当前所在体系');
+else fail('默认展开数异常: ' + doc.querySelectorAll('#railBody .rail-group-head.open').length);
+
+if (railPage && railPage.textContent.indexOf('威科夫') !== -1) ok('细纲页头同步: ' + railPage.textContent);
+else fail('细纲页头未同步: ' + (railPage && railPage.textContent));
+
+/* 章节链接格式必须能跨页定位： #/page#anchor （anchor 含中文组名，如术语页 g-流动性） */
+const badHref = Array.prototype.filter.call(
+  doc.querySelectorAll('#railBody .rail-chap'),
+  (a) => !/^#\/[a-z-]+#[^#]+$/.test(a.getAttribute('href'))
+);
+if (!badHref.length) ok('全部 ' + doc.querySelectorAll('#railBody .rail-chap').length + ' 个章节链接格式正确');
+else fail('章节链接格式异常: ' + badHref.length + ' 个');
+
+/* 每套体系的章节锚点在各自页面都能定位（跨页点进去不会落空） */
+const dangling = [];
+SITE.theories.forEach((t) => {
+  const live = {};
+  go(t.id);
+  doc.querySelectorAll('#railBody .rail-group-head.current + .rail-chaps .rail-chap').forEach((a) => {
+    const id = a.getAttribute('data-anchor');
+    if (!doc.getElementById(id)) live[id] = 1;
+  });
+  Object.keys(live).forEach((id) => dangling.push(t.id + '#' + id));
+});
+if (!dangling.length) ok('五套体系的细纲锚点在各自页面全部可定位');
+else fail('细纲锚点落空: ' + dangling.join(', '));
+
+/* 点其它体系的组头 → 切页并自动展开 */
+go('wyckoff');
+const ictHead = Array.prototype.filter.call(
+  doc.querySelectorAll('#railBody .rail-group-head'),
+  (h) => h.getAttribute('data-page') === 'ict'
+)[0];
+ictHead.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+window.dispatchEvent(new window.Event('hashchange'));
+const nowHead = doc.querySelector('#railBody .rail-group-head.current');
+if (nowHead && nowHead.getAttribute('data-page') === 'ict' && doc.getElementById('content').querySelector('h1').textContent.trim() === 'ICT') {
+  ok('点其它体系组头 → 切页并展开该体系');
+} else fail('点组头切页失败');
+
+/* 再点当前体系的组头 → 只做折叠 */
+nowHead.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+if (!nowHead.classList.contains('open') && doc.querySelector('#content').querySelector('h1').textContent.trim() === 'ICT') {
+  ok('点当前体系组头 → 折叠，且不跳页');
+} else fail('当前体系组头折叠行为异常');
+
+/* 顶栏的细纲开关（窄屏抽屉入口） */
+const railBtn = doc.getElementById('railBtn');
+if (railBtn) {
+  railBtn.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+  const opened = doc.getElementById('rail').classList.contains('open');
+  railBtn.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+  const closed = !doc.getElementById('rail').classList.contains('open');
+  if (opened && closed) ok('窄屏细纲抽屉可开可关');
+  else fail('细纲抽屉开关异常: open=' + opened + ' close=' + closed);
+} else fail('#railBtn 缺失');
+
 /* ---------- 资源引用检查 ---------- */
 console.log('\n【资源引用】');
 const htmlSrc = read('index.html');
@@ -215,7 +294,8 @@ ok('所有引用的文件均存在');
 
 const css = read('assets/style.css');
 ['.hero', '.concept', '.callout', '.step', '.table-wrap', '.gl-item', '.layer-btn',
- '.cw-canvas', '.nav-link', '.sr-item', '.toc', '.card', '[data-theme="dark"]', '@media print']
+ '.cw-canvas', '.nav-link', '.sr-item', '.toc', '.card', '.rail', '.rail-group-head',
+ '.rail-chap', '[data-theme="dark"]', '@media print']
   .forEach((sel) => { if (!css.includes(sel)) note('CSS 缺少选择器 ' + sel); });
 ok('CSS 关键选择器检查完成');
 

@@ -18,6 +18,10 @@
   var elSidebar = document.getElementById('sidebar');
   var elScrim = document.getElementById('scrim');
   var elMenuBtn = document.getElementById('menuBtn');
+  var elRail = document.getElementById('rail');
+  var elRailBody = document.getElementById('railBody');
+  var elRailPage = document.getElementById('railPage');
+  var elRailBtn = document.getElementById('railBtn');
   var elThemeBtn = document.getElementById('themeBtn');
   var elToTop = document.getElementById('toTop');
 
@@ -178,11 +182,162 @@
       ? '交易理论图谱 · 价格行为学 / ICT / SMC / 威科夫 / 波浪理论'
       : p.title + ' · 交易理论图谱';
     markActive(p.id);
+    renderRail(p.id);
   }
 
   /* 由强调色生成浅底（用于卡片/导航高亮），保持与主题无关的柔和效果 */
   function hexSoft(hex) {
     return 'color-mix(in srgb, ' + hex + ' 12%, transparent)';
+  }
+
+  /* ------------------------------------------------------------ 细纲导航 */
+  /* 主导航右侧的第二栏：把每套体系的具体章节摊开。
+     当前所在体系默认展开，其余折叠；滚动时高亮当前小节。 */
+
+  var RAIL_OPEN = {};   /* 用户手动展开过的体系：pageId -> true */
+
+  function outlineChapters(p) {
+    if (p.chapters && p.chapters.length) return p.chapters;
+    if (p.id === 'glossary') {
+      return GLOSSARY.map(function (g) { return { id: 'g-' + g.group, label: g.group }; });
+    }
+    /* 没写 chapters 的页面（概览 / 对比 / 图层图 / 学习路径）从正文 h2 现抽 */
+    var out = [];
+    var re = /<h2[^>]*\bid="([^"]+)"[^>]*>([\s\S]*?)<\/h2>/g;
+    var m;
+    while ((m = re.exec(p.body || ''))) out.push({ id: m[1], label: stripTags(m[2]) });
+    return out;
+  }
+
+  var OUTLINE = SITE.pages.map(function (p) {
+    return { page: p, chapters: outlineChapters(p) };
+  }).filter(function (g) { return g.chapters.length; });
+
+  function renderRail(pageId) {
+    if (!elRailBody) return;
+
+    var html = '';
+    OUTLINE.forEach(function (g) {
+      var p = g.page;
+      var cur = p.id === pageId;
+      var open = cur || !!RAIL_OPEN[p.id];
+
+      html += '<button type="button" class="rail-group-head' + (cur ? ' current' : '') + (open ? ' open' : '') +
+          '" data-page="' + esc(p.id) + '" style="--rc:' + esc(p.accent || '#64748b') + '"' +
+          ' aria-expanded="' + (open ? 'true' : 'false') + '" aria-controls="rail-chaps-' + esc(p.id) + '">' +
+          '<span class="rail-dot"></span>' +
+          '<span class="rail-name">' + esc(p.navLabel || p.title) + '</span>' +
+          '<span class="rail-count">' + g.chapters.length + '</span>' +
+          '<svg class="rail-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>' +
+        '</button>' +
+        '<div class="rail-chaps" id="rail-chaps-' + esc(p.id) + '">' +
+          g.chapters.map(function (c) {
+            return '<a class="rail-chap" href="#/' + esc(p.id) + '#' + esc(c.id) +
+              '" data-anchor="' + esc(c.id) + '">' + esc(c.label) + '</a>';
+          }).join('') +
+        '</div>';
+    });
+    elRailBody.innerHTML = html;
+
+    if (elRailPage) {
+      var cur2 = PAGE_BY_ID[pageId];
+      elRailPage.textContent = cur2 ? (cur2.navLabel || cur2.title) : '细纲';
+    }
+    collectSpy(pageId);
+  }
+
+  /* --------- 滚动同步：高亮当前所在的小节 --------- */
+
+  var spyTargets = [];
+
+  function collectSpy(pageId) {
+    spyTargets = [];
+    OUTLINE.forEach(function (g) {
+      if (g.page.id !== pageId) return;
+      g.chapters.forEach(function (c) {
+        var node = document.getElementById(c.id);
+        if (node) spyTargets.push({ id: c.id, el: node });
+      });
+    });
+    markRailAnchor('');
+  }
+
+  function markRailAnchor(id) {
+    if (!elRailBody) return;
+    Array.prototype.forEach.call(elRailBody.querySelectorAll('.rail-chap'), function (a) {
+      var on = !!id && a.getAttribute('data-anchor') === id;
+      a.classList.toggle('active', on);
+      if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+    });
+  }
+
+  var spyQueued = false;
+  function syncSpy() {
+    if (spyQueued || !spyTargets.length) return;
+    spyQueued = true;
+    requestAnimationFrame(function () {
+      spyQueued = false;
+      /* 以顶栏下方 28px 为判定线：最后一个越过该线的标题即当前节 */
+      var line = (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--topbar-h')) || 60) + 28;
+      var cur = '';
+      for (var i = 0; i < spyTargets.length; i++) {
+        if (spyTargets[i].el.getBoundingClientRect().top <= line) cur = spyTargets[i].id;
+        else break;
+      }
+      markRailAnchor(cur);
+    });
+  }
+
+  window.addEventListener('scroll', syncSpy, { passive: true });
+
+  /* --------- 细纲交互 --------- */
+
+  if (elRailBody) {
+    elRailBody.addEventListener('click', function (e) {
+      var head = e.target.closest('.rail-group-head');
+
+      if (head) {
+        var pid = head.getAttribute('data-page');
+        if (pid === currentRoute().id) {
+          /* 已经是当前体系：这一下只做展开 / 收起 */
+          var open = !head.classList.contains('open');
+          head.classList.toggle('open', open);
+          head.setAttribute('aria-expanded', open ? 'true' : 'false');
+          RAIL_OPEN[pid] = open;
+        } else {
+          RAIL_OPEN[pid] = true;
+          location.hash = '#/' + pid;
+        }
+        return;
+      }
+
+      var a = e.target.closest('.rail-chap');
+      if (!a) return;
+      closeDrawer();
+
+      /* 同页内锚点跳转不触发 hashchange，这里自己接管平滑滚动 */
+      var anchor = a.getAttribute('data-anchor');
+      if (a.getAttribute('href').indexOf('#/' + currentRoute().id + '#') !== 0) return;
+      var target = document.getElementById(anchor);
+      if (!target) return;
+      e.preventDefault();
+      history.replaceState(null, '', '#/' + currentRoute().id + '#' + anchor);
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
+  function openRail() {
+    if (!elRail) return;
+    closeDrawer();                        /* 两个左抽屉不同时展开 */
+    elRail.classList.add('open');
+    elScrim.hidden = false;
+    if (elRailBtn) elRailBtn.setAttribute('aria-expanded', 'true');
+  }
+
+  if (elRailBtn) {
+    elRailBtn.addEventListener('click', function () {
+      if (elRail && elRail.classList.contains('open')) closeDrawer(); else openRail();
+    });
   }
 
   /* ------------------------------------------------------------ 路由 */
@@ -368,6 +523,8 @@
   }
   function closeDrawer() {
     elSidebar.classList.remove('open');
+    if (elRail) elRail.classList.remove('open');
+    if (elRailBtn) elRailBtn.setAttribute('aria-expanded', 'false');
     elScrim.hidden = true;
     elMenuBtn.setAttribute('aria-expanded', 'false');
   }

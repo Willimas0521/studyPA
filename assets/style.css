@@ -706,6 +706,9 @@ th.rowhead { text-align: left; background: var(--surface-2); font-weight: 660; c
 .card p { margin: 0; font-size: 13.8px; color: var(--text-2); line-height: 1.65; }
 
 /* ---------- 图表组件 ---------- */
+/* 正文里的示意图占位；填充由 chart.js 的 mountDiagrams 负责 */
+.diagram { margin: 22px 0 28px; }
+
 .chart-widget {
   margin: 22px 0 28px; border: 1px solid var(--border); border-radius: var(--radius-lg);
   background: var(--surface); overflow: hidden; box-shadow: var(--shadow-sm);

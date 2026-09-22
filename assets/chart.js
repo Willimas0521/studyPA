@@ -726,9 +726,202 @@ window.ChartModule = (function () {
     return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="艾略特波浪 5-3 基本结构示意图">' + s + '</svg>';
   }
 
+  /* ------------------------------------------------------------------
+     趋势相关示意图
+     同样是合成数据：影线走固定函数、不用随机数，每次渲染结果完全一致。
+     蜡烛配色跟随站点约定（涨红、跌绿）。
+     ------------------------------------------------------------------ */
+
+  function r1(v) { return Math.round(v * 10) / 10; }
+
+  /* 由收盘价序列推出 OHLC */
+  function synthBars(closes, amp) {
+    var out = [];
+    for (var i = 0; i < closes.length; i++) {
+      var c = closes[i];
+      var o = i === 0 ? c : closes[i - 1];
+      out.push({
+        o: o,
+        c: c,
+        h: Math.max(o, c) + amp * (0.45 + 0.55 * Math.abs(Math.sin(i * 1.7))),
+        l: Math.min(o, c) - amp * (0.45 + 0.55 * Math.abs(Math.cos(i * 1.3)))
+      });
+    }
+    return out;
+  }
+
+  function barsSVG(bars, cx, bw, Y) {
+    var s = '';
+    bars.forEach(function (d, i) {
+      var color = d.c >= d.o ? 'var(--up)' : 'var(--down)';
+      var x = cx(i);
+      var yO = Y(d.o), yC = Y(d.c);
+      var top = Math.min(yO, yC);
+      var hgt = Math.max(1.6, Math.abs(yC - yO));
+      s += '<line x1="' + r1(x) + '" y1="' + r1(Y(d.h)) + '" x2="' + r1(x) + '" y2="' + r1(Y(d.l)) +
+        '" stroke="' + color + '" stroke-width="1.3"/>';
+      s += '<rect x="' + r1(x - bw / 2) + '" y="' + r1(top) + '" width="' + bw + '" height="' + r1(hgt) +
+        '" fill="' + color + '" rx="1"/>';
+    });
+    return s;
+  }
+
+  function dashLine(x1, y1, x2, y2, color) {
+    return '<line x1="' + r1(x1) + '" y1="' + r1(y1) + '" x2="' + r1(x2) + '" y2="' + r1(y2) +
+      '" stroke="' + color + '" stroke-width="1.3" stroke-dasharray="6 5" opacity=".9"/>';
+  }
+
+  function ringDot(x, y, color, label, ly) {
+    var s = '<circle cx="' + r1(x) + '" cy="' + r1(y) + '" r="4" fill="var(--surface)" ' +
+      'stroke="' + color + '" stroke-width="1.8"/>';
+    if (label) {
+      s += '<text x="' + r1(x) + '" y="' + r1(ly) + '" text-anchor="middle" font-size="10.5" ' +
+        'font-weight="700" fill="' + color + '">' + label + '</text>';
+    }
+    return s;
+  }
+
+  function note(x, y, str, color, anchor, size) {
+    return '<text x="' + r1(x) + '" y="' + r1(y) + '" text-anchor="' + (anchor || 'middle') +
+      '" font-size="' + (size || 11) + '" font-weight="600" fill="' + color + '">' + str + '</text>';
+  }
+
+  /* 1. 上涨趋势：高点抬高 + 低点抬高 */
+  function trendUpDiagram() {
+    var w = 900, h = 320;
+    var x0 = 54, barW = 23, bw = 12;
+    var pTop = 64, pBot = 266, pMin = 94, pMax = 180;
+
+    var bars = synthBars([
+      100, 104, 108, 112, 116, 119, 122,
+      118, 114, 111, 113,
+      117, 122, 127, 132, 137,
+      133, 129, 126, 128,
+      133, 139, 145, 151, 156,
+      152, 148, 145, 147,
+      153, 160, 167, 174
+    ], 2.4);
+
+    function X(i) { return x0 + i * barW; }
+    function Y(p) { return pTop + (pMax - p) / (pMax - pMin) * (pBot - pTop); }
+
+    var s = '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="var(--surface)"/>';
+    s += barsSVG(bars, X, bw, Y);
+
+    /* 高点与低点各自连成上升虚线 */
+    s += dashLine(X(6), Y(122), X(24), Y(156), 'var(--d-blue)');
+    s += dashLine(X(10), Y(111), X(27), Y(145), 'var(--d-cyan)');
+
+    s += ringDot(X(6), Y(122), 'var(--d-blue)', 'HH', Y(122) - 13);
+    s += ringDot(X(15), Y(137), 'var(--d-blue)', 'HH', Y(137) - 13);
+    s += ringDot(X(10), Y(111), 'var(--d-cyan)', 'HL', Y(111) + 22);
+    s += ringDot(X(19), Y(126), 'var(--d-cyan)', 'HL', Y(126) + 22);
+
+    s += note(878, 40, '高点持续抬高 · 低点持续抬高', 'var(--d-neutral)', 'end', 11.5);
+
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" ' +
+      'aria-label="上涨趋势示意图：高点与低点同时抬高">' + s + '</svg>';
+  }
+
+  /* 2. 通道式趋势：价格沿两条平行线推进，回踩给出进场点 */
+  function trendChannelDiagram() {
+    var w = 900, h = 330;
+    var x0 = 54, barW = 23, bw = 12;
+    var pTop = 58, pBot = 276, pMin = 100, pMax = 192;
+
+    var bars = synthBars([
+      112, 118, 124, 130, 136, 141,
+      133, 125, 118,
+      123, 132, 141, 149, 155,
+      147, 137, 129,
+      135, 145, 155, 163, 169,
+      161, 152, 145,
+      152, 163, 172, 179
+    ], 2.6);
+
+    function X(i) { return x0 + i * barW; }
+    function Y(p) { return pTop + (pMax - p) / (pMax - pMin) * (pBot - pTop); }
+
+    var s = '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="var(--surface)"/>';
+
+    /* 通道：下沿（趋势线）与平行的上沿 */
+    s += '<line x1="' + r1(X(1)) + '" y1="' + r1(Y(114)) + '" x2="' + r1(X(28)) + '" y2="' + r1(Y(172)) +
+      '" stroke="var(--d-violet)" stroke-width="1.6" opacity=".9"/>';
+    s += '<line x1="' + r1(X(1)) + '" y1="' + r1(Y(140)) + '" x2="' + r1(X(28)) + '" y2="' + r1(Y(198)) +
+      '" stroke="var(--d-violet)" stroke-width="1.6" stroke-dasharray="7 5" opacity=".7"/>';
+    s += note(X(0) + 6, Y(140) - 8, '通道上沿', 'var(--d-violet)', 'start', 10.5);
+    s += note(X(0) + 6, Y(114) + 16, '趋势线', 'var(--d-violet)', 'start', 10.5);
+
+    s += barsSVG(bars, X, bw, Y);
+
+    /* 三次回踩趋势线的位置 */
+    [8, 16, 24].forEach(function (i) {
+      s += ringDot(X(i), Y(bars[i].l), 'var(--d-amber)', '', 0);
+      s += '<line x1="' + r1(X(i)) + '" y1="' + r1(Y(bars[i].l) + 8) + '" x2="' + r1(X(i)) +
+        '" y2="' + r1(Y(bars[i].l) + 30) + '" stroke="var(--d-amber)" stroke-width="1.4" marker-end="url(#tArrow)"/>';
+    });
+    s += note(X(8), Y(bars[8].l) + 48, '回踩进场', 'var(--d-amber-strong)', 'middle', 10.5);
+
+    s += note(878, 40, '回撤打到趋势线 → 给出进场点', 'var(--d-neutral)', 'end', 11.5);
+
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" ' +
+      'aria-label="通道式趋势示意图：价格沿平行通道推进，回踩趋势线给出进场点">' +
+      '<defs><marker id="tArrow" viewBox="0 0 10 10" refX="4" refY="5" markerWidth="5" markerHeight="5" ' +
+      'orient="auto-start-reverse"><path d="M1 1L6 5L1 9" fill="none" stroke="var(--d-amber)" ' +
+      'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>' + s + '</svg>';
+  }
+
+  /* 3. 反转需要跟进 K 线：上排是没有跟进的失败反转，下排是确认成立的切换 */
+  function reversalDiagram() {
+    var w = 900, h = 404;
+    var x0 = 60, barW = 27, bw = 14;
+
+    var up = synthBars([100, 106, 112, 118, 124, 130, 136, 127, 133, 140, 146, 152, 158, 164], 2.6);
+    var down = synthBars([100, 106, 112, 118, 124, 130, 136, 127, 121, 114, 108, 103, 99, 95], 2.6);
+
+    function X(i) { return x0 + i * barW; }
+    function mkY(t, b, pMin, pMax) {
+      return function (p) { return t + (pMax - p) / (pMax - pMin) * (b - t); };
+    }
+    var Y1 = mkY(102, 202, 94, 170);
+    var Y2 = mkY(278, 378, 90, 170);
+
+    function band(y0, y1) {
+      return '<rect x="' + r1(X(0) - 36) + '" y="' + y0 + '" width="' + r1(X(13) - X(0) + 72) +
+        '" height="' + (y1 - y0) + '" rx="10" fill="var(--surface-2)" opacity=".55"/>';
+    }
+
+    var s = '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="var(--surface)"/>';
+    s += band(88, 214);
+    s += band(264, 390);
+
+    /* 上：只有一根反转 K 线，之后没有跟进 */
+    s += barsSVG(up, X, bw, Y1);
+    s += ringDot(X(7), Y1(127), 'var(--d-neutral)', '', 0);
+    s += note(X(7), Y1(127) + 24, '单根反转', 'var(--d-neutral)', 'middle', 10.5);
+    s += note(X(0) - 16, 78, '只有一根反转 K 线，之后没有跟进 → 旧趋势继续',
+      'var(--d-neutral)', 'start', 11.5);
+
+    /* 下：反转 K 线 + 跟进 K 线，把两根一起框住 */
+    s += barsSVG(down, X, bw, Y2);
+    var bTop = Y2(139), bBot = Y2(116);
+    s += '<rect x="' + r1(X(7) - bw - 2) + '" y="' + r1(bTop) + '" width="' + r1(X(8) - X(7) + bw + 4) +
+      '" height="' + r1(bBot - bTop) + '" rx="7" fill="none" stroke="var(--d-cyan)" ' +
+      'stroke-width="1.4" stroke-dasharray="4 3"/>';
+    s += note((X(7) + X(8)) / 2, bTop - 9, '反转 + 跟进', 'var(--d-cyan)', 'middle', 10.5);
+    s += note(X(0) - 16, 254, '反转 K 线 + 跟进 K 线 → 方向切换成立',
+      'var(--d-cyan)', 'start', 11.5);
+
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" ' +
+      'aria-label="反转示意图：上排为没有跟进 K 线的失败反转，下排为有跟进确认的成功切换">' + s + '</svg>';
+  }
+
   var DIAGRAMS = {
     'wyckoff-schematic': wyckoffSchematic,
-    'elliott-53': elliott53
+    'elliott-53': elliott53,
+    'trend-up': trendUpDiagram,
+    'trend-channel': trendChannelDiagram,
+    'trend-reversal': reversalDiagram
   };
 
   function mountDiagrams(root) {

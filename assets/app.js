@@ -44,6 +44,13 @@
 
   function escRe(s) { return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 
+  /* URL 片段：英文名优先；没有英文名的卡片用中文名（浏览器地址栏会显示解码后的中文，照样可读） */
+  function slugify(s) {
+    return String(s == null ? '' : s).toLowerCase()
+      .replace(/[^a-z0-9\u4e00-\u9fa5]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+
   function highlight(text, q) {
     var safe = esc(text);
     if (!q) return safe;
@@ -135,35 +142,177 @@
     if (!p.chapters || !p.chapters.length) return '';
     return '<nav class="toc"><p class="toc-title">本页目录</p><ol>' +
       p.chapters.map(function (c) {
-        return '<li><a href="#/' + esc(p.id) + '#' + esc(c.id) + '" data-anchor="' + esc(c.id) + '">' + esc(c.label) + '</a></li>';
+        return '<li><a href="#/' + esc(p.id) + '/' + esc(c.id) + '">' + esc(c.label) + '</a></li>';
       }).join('') + '</ol></nav>';
   }
 
   function renderPage(p) {
-    elContent.style.setProperty('--accent', p.accent || '');
-    elContent.style.setProperty('--accent-soft', p.accent ? hexSoft(p.accent) : '');
-    elContent.style.setProperty('--accent-text', p.accent || '');
+    applyAccent(p.accent);
 
     var html = heroHTML(p) + tocHTML(p) + p.body;
     elContent.innerHTML = html;
+
+    afterMount();
+    document.title = (p.id === 'overview')
+      ? '交易理论图谱 · 价格行为学 / ICT / SMC / 威科夫 / 波浪理论'
+      : p.title + ' · 交易理论图谱';
+    refreshRail();
+  }
+
+  function applyAccent(accent) {
+    elContent.style.setProperty('--accent', accent || '');
+    elContent.style.setProperty('--accent-soft', accent ? hexSoft(accent) : '');
+    elContent.style.setProperty('--accent-text', accent || '');
+  }
+
+  /* 内容塞进 #content 之后都要走这一步：补锚点、装挂件、装饰提示块 */
+  function afterMount() {
+    /* 给概念卡补锚点，供细纲与全文搜索跳转（序号与 collectConcepts 一致） */
+    Array.prototype.forEach.call(elContent.querySelectorAll('.concept'), function (card, i) {
+      card.id = 'c-' + i;
+    });
 
     mountOverviewCards(elContent);
     mountGlossary(elContent);
     decorateCallouts(elContent);
 
-    /* 给概念卡补锚点，供细纲「概念」视图与全文搜索跳转（序号与 collectConcepts 一致） */
-    Array.prototype.forEach.call(elContent.querySelectorAll('.concept'), function (card, i) {
-      card.id = 'c-' + i;
-    });
-
     if (CHART) {
       CHART.mountDiagrams(elContent);
       CHART.mountInteractive(elContent);
     }
+  }
 
-    document.title = (p.id === 'overview')
-      ? '交易理论图谱 · 价格行为学 / ICT / SMC / 威科夫 / 波浪理论'
-      : p.title + ' · 交易理论图谱';
+  /* ------------------------------------------------------------ 独立页 */
+  /* 每一级都有自己的地址，可以直接打开 / 分享：
+       #/wyckoff                          体系页
+       #/wyckoff/laws                     章节页
+       #/wyckoff/laws/law-of-supply-…     概念页 */
+
+  var BASE_TITLE = ' · 交易理论图谱';
+
+  function crumbHTML(items) {
+    return '<nav class="crumb" aria-label="面包屑">' +
+      items.map(function (it) {
+        return it[0] ? '<a href="' + esc(it[0]) + '">' + esc(it[1]) + '</a>'
+                     : '<span aria-current="page">' + esc(it[1]) + '</span>';
+      }).join('<i>/</i>') +
+      '</nav>';
+  }
+
+  function chapOf(p, chapId) {
+    var hit = null;
+    (p.chapters || []).forEach(function (c) { if (c.id === chapId) hit = c; });
+    return hit;
+  }
+
+  function conceptHref(pageId, chapId, slug) {
+    return '#/' + esc(pageId) + '/' + esc(chapId) + '/' + encodeURIComponent(slug);
+  }
+
+  /* 同节其它概念：概念页用它做交叉入口（章节页正文里已经含这些卡，就不再重复列） */
+  function siblingHTML(pageId, chapId, selfSlug) {
+    var kids = CONCEPTS_BY_CHAP[pageId + '#' + chapId] || [];
+    var rest = kids.filter(function (k) { return k.slug !== selfSlug; });
+    if (!rest.length) return '';
+    return '<section class="siblings"><h2>' + (selfSlug ? '同一节里的其它概念' : '这一节的概念') + '</h2>' +
+      '<div class="card-grid">' +
+      rest.map(function (k) {
+        return '<a class="card" href="' + conceptHref(pageId, chapId, k.slug) + '">' +
+          '<span class="card-bar"></span>' +
+          '<h3>' + esc(k.zh) + '</h3>' +
+          (k.en ? '<span class="card-en">' + esc(k.en) + '</span>' : '') +
+          '<p>' + esc(k.desc.slice(0, 64)) + (k.desc.length > 64 ? '…' : '') + '</p></a>';
+      }).join('') +
+      '</div></section>';
+  }
+
+  /* 章节页底部：同体系里的上一节 / 下一节 */
+  function chapterNavHTML(p, chapId) {
+    var chaps = p.chapters || [];
+    var at = -1;
+    chaps.forEach(function (c, i) { if (c.id === chapId) at = i; });
+    if (at < 0) return '';
+    var prev = at > 0 ? chaps[at - 1] : null;
+    var next = at < chaps.length - 1 ? chaps[at + 1] : null;
+    if (!prev && !next) return '';
+    var link = function (c) { return '#/' + esc(p.id) + '/' + esc(c.id); };
+    return '<nav class="concept-nav">' +
+      (prev ? '<a href="' + link(prev) + '"><span>上一节</span><strong>' + esc(prev.label) + '</strong></a>' : '<span></span>') +
+      (next ? '<a class="cn-next" href="' + link(next) + '"><span>下一节</span><strong>' + esc(next.label) + '</strong></a>' : '<span></span>') +
+      '</nav>';
+  }
+
+  function renderChapterPage(r) {
+    var p = PAGE_BY_ID[r.id];
+    var chap = p && chapOf(p, r.chap);
+    var body = CHAPTER_HTML[r.id + '#' + r.chap];
+
+    /* 术语速查这类页面的正文是运行时拼的，切不出小节：
+       退回整页并滚到那一组，不让链接点空 */
+    if (!p || !body) {
+      renderPage(p || SITE.overview);
+      var node = document.getElementById(r.chap);
+      if (node) {
+        requestAnimationFrame(function () {
+          node.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      }
+      return;
+    }
+
+    applyAccent(p.accent);
+    var label = chap ? chap.label : r.chap;
+
+    elContent.innerHTML =
+      crumbHTML([['#/' + p.id, p.navLabel || p.title], [null, label]]) +
+      '<div class="hero hero-sub">' +
+        '<span class="hero-en">' + esc(p.navLabel || p.title) + '</span>' +
+        '<h1>' + esc(label) + '</h1>' +
+      '</div>' +
+      body +
+      chapterNavHTML(p, r.chap);
+
+    afterMount();
+    document.title = label + ' · ' + (p.navLabel || p.title) + BASE_TITLE;
+    refreshRail();
+  }
+
+  function renderConceptPage(r) {
+    var p = PAGE_BY_ID[r.id];
+    var chap = p && chapOf(p, r.chap);
+    var one = null;
+    CONCEPTS.forEach(function (c) {
+      if (c.pageId === r.id && c.chap === r.chap && c.slug === r.slug) one = c;
+    });
+    if (!p || !one) { renderPage(p || SITE.overview); return; }
+
+    applyAccent(p.accent);
+    var kids = CONCEPTS_BY_CHAP[r.id + '#' + r.chap] || [];
+    var at = -1;
+    kids.forEach(function (k, i) { if (k.slug === one.slug) at = i; });
+    var prev = at > 0 ? kids[at - 1] : null;
+    var next = (at >= 0 && at < kids.length - 1) ? kids[at + 1] : null;
+
+    elContent.innerHTML =
+      crumbHTML([
+        ['#/' + p.id, p.navLabel || p.title],
+        ['#/' + p.id + '/' + r.chap, chap ? chap.label : r.chap],
+        [null, one.zh]
+      ]) +
+      '<div class="hero hero-sub">' +
+        '<span class="hero-en">' + esc(p.navLabel || p.title) + (chap ? ' · ' + esc(chap.label) : '') + '</span>' +
+        '<h1>' + esc(one.zh) + '</h1>' +
+        (one.en ? '<p class="concept-en-full">' + esc(one.en) + '</p>' : '') +
+      '</div>' +
+      '<div class="concept-detail"><p>' + (one.descHTML || esc(one.desc)) + '</p></div>' +
+      (prev || next ? '<nav class="concept-nav">' +
+        (prev ? '<a href="' + conceptHref(r.id, r.chap, prev.slug) + '"><span>上一个</span><strong>' + esc(prev.zh) + '</strong></a>' : '<span></span>') +
+        (next ? '<a class="cn-next" href="' + conceptHref(r.id, r.chap, next.slug) + '"><span>下一个</span><strong>' + esc(next.zh) + '</strong></a>' : '<span></span>') +
+        '</nav>' : '') +
+      siblingHTML(r.id, r.chap, one.slug);
+
+    afterMount();
+    document.title = one.zh + ' · ' + (p.navLabel || p.title) + BASE_TITLE;
     refreshRail();
   }
 
@@ -226,9 +375,10 @@
       });
       if (!found.length) return;
 
+      var seen = {};
       var items = found.map(function (f, i) {
         var card = f.card;
-        var zh = '', en = '', desc = '';
+        var zh = '', en = '', desc = '', descHTML = '';
         var termEl = card.querySelector('.concept-term');
         if (termEl) {
           /* 术语后面可能跟着 <span class="badge-inline">，取名字前先摘掉 */
@@ -240,8 +390,15 @@
         var enEl = card.querySelector('.concept-en');
         if (enEl) en = enEl.textContent.trim();
         var descEl = card.querySelector('p:not(.concept-term)');
-        if (descEl) desc = descEl.textContent.trim();
-        return { idx: i, zh: zh, en: en, desc: desc, chap: f.chap };
+        if (descEl) { desc = descEl.textContent.trim(); descHTML = descEl.innerHTML; }
+
+        /* 同一页面内 slug 唯一即可，页面之间可以重名（各自挂在体系路径下） */
+        var base = slugify(en || zh) || ('c-' + i);
+        var slug = base, n = 2;
+        while (seen[slug]) { slug = base + '-' + n; n++; }
+        seen[slug] = true;
+
+        return { idx: i, zh: zh, en: en, desc: desc, descHTML: descHTML, chap: f.chap, slug: slug };
       });
 
       CONCEPT_GROUPS.push({
@@ -253,11 +410,37 @@
       items.forEach(function (c) {
         CONCEPTS.push({
           pageId: p.id, pageTitle: p.navLabel || p.title,
-          idx: c.idx, zh: c.zh, en: c.en, desc: c.desc
+          idx: c.idx, zh: c.zh, en: c.en, desc: c.desc, chap: c.chap, slug: c.slug
         });
         if (!c.chap) return;
         var key = p.id + '#' + c.chap;
         (CONCEPTS_BY_CHAP[key] = CONCEPTS_BY_CHAP[key] || []).push(c);
+      });
+    });
+  }
+
+  /* --------- 章节切片 ---------
+     把每个页面的正文按 h2 切开，让「章节」也能独立成页（#/wyckoff/laws）。
+     h2 自身不进切片，章节页的标题用 chapters 元数据里的 label。 */
+
+  var CHAPTER_HTML = {};   /* "pageId#chapId" -> 该节正文的 HTML */
+
+  function sliceChapters() {
+    SITE.pages.forEach(function (p) {
+      var tmp = document.createElement('div');
+      tmp.innerHTML = p.body || '';
+      var cur = null;
+      var buf = {};
+      Array.prototype.forEach.call(tmp.children, function (node) {
+        if (node.tagName === 'H2') {
+          cur = node.id || null;
+          if (cur) buf[cur] = [];
+          return;
+        }
+        if (cur && buf[cur]) buf[cur].push(node.outerHTML);
+      });
+      Object.keys(buf).forEach(function (k) {
+        CHAPTER_HTML[p.id + '#' + k] = buf[k].join('');
       });
     });
   }
@@ -283,7 +466,7 @@
     return zh.indexOf(q) !== -1 || en.indexOf(q) !== -1;
   }
 
-  function renderRail(pageId, q) {
+  function renderRail(r, q) {
     if (!elRailBody) return;
     var html = '';
     OUTLINE.forEach(function (g) {
@@ -296,10 +479,13 @@
         var kidsHit = q ? kids.filter(function (k) { return hit(k, q); }) : kids;
         if (q && !chapHit && !kidsHit.length) return;   /* 自己没中、子项也没中，整节不显示 */
 
+        var on = (p.id === r.id && c.id === r.chap && !r.slug);
+        var href = '#/' + esc(p.id) + '/' + esc(c.id);
+
         /* 没有子内容的章节仍然是普通链接 */
         if (!kids.length) {
-          rows.push('<a class="rail-chap" href="#/' + esc(p.id) + '#' + esc(c.id) +
-            '" data-anchor="' + esc(c.id) + '">' + esc(c.label) + '</a>');
+          rows.push('<a class="rail-chap' + (on ? ' active' : '') + '" href="' + href + '">' +
+            esc(c.label) + '</a>');
           return;
         }
 
@@ -309,17 +495,20 @@
         var open = q ? show.length > 0 : !!CHAP_OPEN[key];
 
         rows.push(
-          '<button type="button" class="rail-chap rail-chap-head' + (open ? ' open' : '') +
-            '" data-chap="' + esc(key) + '" data-anchor="' + esc(c.id) + '"' +
-            ' aria-expanded="' + (open ? 'true' : 'false') + '">' +
-            '<span class="rail-chap-label">' + esc(c.label) + '</span>' +
+          '<div class="rail-chap-head' + (open ? ' open' : '') + '">' +
+            '<a class="rail-chap-link' + (on ? ' active' : '') + '" href="' + href + '">' + esc(c.label) + '</a>' +
             '<span class="rail-chap-count">' + kids.length + '</span>' +
-            '<svg class="rail-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>' +
-          '</button>' +
+            '<button type="button" class="rail-chev-btn" data-chap="' + esc(key) + '"' +
+              ' aria-expanded="' + (open ? 'true' : 'false') + '" aria-label="展开这一节的概念">' +
+              '<svg class="rail-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>' +
+            '</button>' +
+          '</div>' +
           '<div class="rail-kids">' +
             show.map(function (k) {
-              return '<a class="rail-chap rail-concept" href="#/' + esc(p.id) + '#c-' + k.idx +
-                '" data-anchor="c-' + k.idx + '" title="' + esc(k.zh + (k.en ? ' · ' + k.en : '')) + '">' +
+              var kon = (p.id === r.id && c.id === r.chap && k.slug === r.slug);
+              return '<a class="rail-chap rail-concept' + (kon ? ' active' : '') + '"' +
+                ' href="' + conceptHref(p.id, c.id, k.slug) + '"' +
+                ' title="' + esc(k.zh + (k.en ? ' · ' + k.en : '')) + '">' +
                 '<span class="rc-zh">' + esc(k.zh) + '</span>' +
                 (k.en ? '<span class="rc-en">' + esc(k.en) + '</span>' : '') +
               '</a>';
@@ -334,15 +523,15 @@
         title: p.navLabel || p.title,
         accent: p.accent || '#64748b',
         count: g.chapters.length,
-        cur: p.id === pageId,
-        open: q ? true : (p.id === pageId || !!RAIL_OPEN[p.id]),
+        cur: p.id === r.id,
+        open: q ? true : (p.id === r.id || !!RAIL_OPEN[p.id]),
         items: rows.join('')
       });
     });
     elRailBody.innerHTML = html || '<p class="rail-empty">没有匹配的章节</p>';
   }
 
-  function renderConcepts(pageId, q) {
+  function renderConcepts(r, q) {
     if (!elRailConcepts) return;
     var html = '';
     CONCEPT_GROUPS.forEach(function (g) {
@@ -353,11 +542,15 @@
         title: g.title,
         accent: g.accent,
         count: items.length,
-        cur: g.pageId === pageId,
-        open: q ? true : (g.pageId === pageId || !!RAIL_OPEN[g.pageId]),
+        cur: g.pageId === r.id,
+        open: q ? true : (g.pageId === r.id || !!RAIL_OPEN[g.pageId]),
         items: items.map(function (c) {
-          return '<a class="rail-chap rail-concept" href="#/' + esc(g.pageId) + '#c-' + c.idx +
-            '" data-anchor="c-' + c.idx + '" title="' + esc(c.zh + (c.en ? ' · ' + c.en : '')) + '">' +
+          var kon = (g.pageId === r.id && c.slug === r.slug);
+          /* href 指向独立页；data-anchor 留给滚动同步用（在体系长页上定位到那张卡） */
+          return '<a class="rail-chap rail-concept' + (kon ? ' active' : '') + '"' +
+            ' href="' + conceptHref(g.pageId, c.chap, c.slug) + '"' +
+            ' data-anchor="c-' + c.idx + '"' +
+            ' title="' + esc(c.zh + (c.en ? ' · ' + c.en : '')) + '">' +
             '<span class="rc-zh">' + esc(c.zh) + '</span>' +
             (c.en ? '<span class="rc-en">' + esc(c.en) + '</span>' : '') +
           '</a>';
@@ -370,11 +563,16 @@
   function refreshRail() {
     var r = currentRoute();
     var q = (elRailFilter && elRailFilter.value ? elRailFilter.value : '').trim().toLowerCase();
-    renderRail(r.id, q);
-    renderConcepts(r.id, q);
+    renderRail(r, q);
+    renderConcepts(r, q);
     if (elRailPage) {
       var p = PAGE_BY_ID[r.id];
-      elRailPage.textContent = p ? (p.navLabel || p.title) : '细纲';
+      var label = p ? (p.navLabel || p.title) : '细纲';
+      if (r.chap) {
+        var c = p && chapOf(p, r.chap);
+        label += ' · ' + (c ? c.label : r.chap);
+      }
+      elRailPage.textContent = label;
     }
     collectSpy(r.id);
   }
@@ -479,8 +677,8 @@
 
   if (elRailScroll) {
     elRailScroll.addEventListener('click', function (e) {
+      /* 体系组头：折叠 / 切页 */
       var head = e.target.closest('.rail-group-head');
-
       if (head) {
         var pid = head.getAttribute('data-page');
         if (pid === currentRoute().id) {
@@ -496,39 +694,19 @@
         return;
       }
 
-      /* 章节可展开：露出该节下的概念卡；展开的同时把正文滚到这一节 */
-      var chapHead = e.target.closest('.rail-chap-head');
-      if (chapHead) {
-        var key = chapHead.getAttribute('data-chap');
-        var willOpen = !chapHead.classList.contains('open');
-        chapHead.classList.toggle('open', willOpen);
-        chapHead.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
-        CHAP_OPEN[key] = willOpen;
-
-        if (willOpen) {
-          var anchorId = chapHead.getAttribute('data-anchor');
-          var node = document.getElementById(anchorId);
-          if (node) {
-            history.replaceState(null, '', '#/' + currentRoute().id + '#' + anchorId);
-            node.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-        }
+      /* 章节右侧的小箭头：就地摊开这一节的概念，不跳页 */
+      var chev = e.target.closest('.rail-chev-btn');
+      if (chev) {
+        var box = chev.closest('.rail-chap-head');
+        var willOpen = !box.classList.contains('open');
+        box.classList.toggle('open', willOpen);
+        chev.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+        CHAP_OPEN[chev.getAttribute('data-chap')] = willOpen;
         return;
       }
 
-      var a = e.target.closest('.rail-chap');
-      if (!a) return;
-      closeRail();
-
-      /* 同页内锚点跳转不触发 hashchange，这里自己接管平滑滚动 */
-      var anchor = a.getAttribute('data-anchor');
-      if (a.getAttribute('href').indexOf('#/' + currentRoute().id + '#') !== 0) return;
-      var target = document.getElementById(anchor);
-      if (!target) return;
-      e.preventDefault();
-      history.replaceState(null, '', '#/' + currentRoute().id + '#' + anchor);
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      flashTarget(target);
+      /* 其余都是指向独立页的普通链接，交给 hash 路由；移动端顺手收起抽屉 */
+      if (e.target.closest('.rail-chap, .rail-chap-link')) closeRail();
     });
   }
 
@@ -547,17 +725,39 @@
 
   /* ------------------------------------------------------------ 路由 */
 
+  function safeDecode(s) {
+    try { return decodeURIComponent(s); } catch (e) { return s; }
+  }
+
+  /* #/id              体系页
+     #/id/chap         章节页
+     #/id/chap/slug    概念页
+     另兼容早期写法 #/id#anchor（当页内锚点） */
   function currentRoute() {
     var raw = (location.hash || '').replace(/^#\/?/, '');
-    var parts = raw.split('#');
-    return { id: parts[0] || 'overview', anchor: parts[1] || '' };
+
+    var legacy = '';
+    var h = raw.indexOf('#');
+    if (h !== -1) { legacy = raw.slice(h + 1); raw = raw.slice(0, h); }
+
+    var parts = raw.split('/').filter(function (s) { return !!s; });
+    return {
+      id: parts[0] || 'overview',
+      chap: parts[1] ? safeDecode(parts[1]) : '',
+      slug: parts[2] ? safeDecode(parts[2]) : '',
+      anchor: parts[2] ? '' : legacy
+    };
   }
 
   function route() {
     var r = currentRoute();
+    closeRail();
+
+    if (r.chap && r.slug) { renderConceptPage(r); window.scrollTo({ top: 0, behavior: 'auto' }); return; }
+    if (r.chap) { renderChapterPage(r); window.scrollTo({ top: 0, behavior: 'auto' }); return; }
+
     var p = PAGE_BY_ID[r.id] || SITE.overview;
     renderPage(p);
-    closeRail();
 
     if (r.anchor) {
       var target = document.getElementById(r.anchor);
@@ -605,6 +805,7 @@
             pageId: p.id,
             pageTitle: p.navLabel || p.title,
             anchor: bucket.id,
+            link: bucket.id ? '#/' + p.id + '/' + bucket.id : '',
             heading: bucket.heading,
             text: text
           });
@@ -638,6 +839,7 @@
         pageId: c.pageId,
         pageTitle: c.pageTitle,
         anchor: 'c-' + c.idx,
+        link: (c.chap && c.slug) ? '#/' + c.pageId + '/' + c.chap + '/' + encodeURIComponent(c.slug) : '',
         heading: c.zh + (c.en ? ' · ' + c.en : ''),
         text: c.desc + '（' + c.pageTitle + ' · 概念卡）'
       });
@@ -677,7 +879,7 @@
 
     elResults.innerHTML = hits.map(function (h) {
       var it = h.item;
-      var href = '#/' + it.pageId + (it.anchor ? '#' + it.anchor : '');
+      var href = it.link || ('#/' + it.pageId + (it.anchor ? '#' + it.anchor : ''));
       return '<a class="sr-item" href="' + href + '">' +
         '<span class="sr-title">' + highlight(it.heading, q) +
         '<span class="sr-badge">' + esc(it.pageTitle) + '</span></span>' +
@@ -753,6 +955,7 @@
 
   initTheme();
   collectConcepts();
+  sliceChapters();
   buildIndex();
   route();
 })();

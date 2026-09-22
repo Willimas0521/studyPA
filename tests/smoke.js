@@ -224,14 +224,17 @@ else fail('细纲容器 #rail / #railBody 缺失');
 go('wyckoff');
 const curHead = doc.querySelector('#railBody .rail-group-head.current');
 const wyckoffChaps = SITE.theories.filter((t) => t.id === 'wyckoff')[0].chapters.length;
-/* 章节项可能是可展开的 button（有概念卡），也可能是普通链接（没有）；只数直接子元素，不含展开出来的概念 */
-const curChapLinks = doc.querySelectorAll('#railBody .rail-group-head.current + .rail-chaps > .rail-chap');
+/* 章节项：有概念卡的是 .rail-chap-head，没有的是普通链接；只数直接子元素，不含展开出来的概念 */
+const curChapItems = doc.querySelectorAll(
+  '#railBody .rail-group-head.current + .rail-chaps > .rail-chap, ' +
+  '#railBody .rail-group-head.current + .rail-chaps > .rail-chap-head'
+);
 
 if (curHead && curHead.getAttribute('data-page') === 'wyckoff') ok('当前体系组头已高亮');
 else fail('当前体系组头未高亮');
 
-if (curChapLinks.length === wyckoffChaps) ok('当前体系展开 ' + curChapLinks.length + ' 节，与 chapters 元数据一致');
-else fail('当前体系章节数 ' + curChapLinks.length + ' ≠ ' + wyckoffChaps);
+if (curChapItems.length === wyckoffChaps) ok('当前体系展开 ' + curChapItems.length + ' 节，与 chapters 元数据一致');
+else fail('当前体系章节数 ' + curChapItems.length + ' ≠ ' + wyckoffChaps);
 
 if (doc.querySelectorAll('#railBody .rail-group-head.open').length === 1) ok('默认只展开当前所在体系');
 else fail('默认展开数异常: ' + doc.querySelectorAll('#railBody .rail-group-head.open').length);
@@ -239,13 +242,13 @@ else fail('默认展开数异常: ' + doc.querySelectorAll('#railBody .rail-grou
 if (railPage && railPage.textContent.indexOf('威科夫') !== -1) ok('细纲页头同步: ' + railPage.textContent);
 else fail('细纲页头未同步: ' + (railPage && railPage.textContent));
 
-/* 章节链接格式必须能跨页定位： #/page#anchor （anchor 含中文组名，如术语页 g-流动性） */
+/* 章节项都指向章节独立页 #/体系/章节（章节 id 可能含中文，如术语页的 g-市场结构） */
+const chapAnchors = doc.querySelectorAll('#railBody a.rail-chap:not(.rail-concept)');
 const badHref = Array.prototype.filter.call(
-  doc.querySelectorAll('#railBody .rail-chap[href]'),
-  (a) => !/^#\/[a-z-]+#[^#]+$/.test(a.getAttribute('href'))
+  chapAnchors, (a) => !/^#\/[a-z-]+\/[^/]+$/.test(a.getAttribute('href'))
 );
-if (!badHref.length) ok('章节链接格式全部正确（' + doc.querySelectorAll('#railBody .rail-chap[href]').length + ' 条）');
-else fail('章节链接格式异常: ' + badHref.length + ' 个');
+if (!badHref.length) ok('章节链接全部指向独立页 #/体系/章节（' + chapAnchors.length + ' 条）');
+else fail('章节链接格式异常: ' + badHref.length + ' 个 → ' + badHref[0].getAttribute('href'));
 
 /* ---------- 章节可展开：露出该节下的概念卡 ---------- */
 const chapHeads = doc.querySelectorAll('#railBody .rail-chap-head');
@@ -255,47 +258,48 @@ Array.prototype.forEach.call(chapHeads, (h) => {
   const kids = h.nextElementSibling.querySelectorAll('.rail-concept');
   kidTotal += kids.length;
   Array.prototype.forEach.call(kids, (k) => {
-    if (!/^#\/[a-z-]+#c-\d+$/.test(k.getAttribute('href'))) badKid.push(k.getAttribute('href'));
+    if (!/^#\/[a-z-]+\/[a-z0-9-]+\/.+$/.test(k.getAttribute('href'))) badKid.push(k.getAttribute('href'));
   });
 });
 if (kidTotal === 84) ok('章节树里挂载了全部 84 张概念卡（分布在 ' + chapHeads.length + ' 个章节下）');
 else fail('章节树子项 ' + kidTotal + ' ≠ 84');
-if (!badKid.length) ok('章节树内的概念链接格式全部正确');
-else fail('章节树概念链接异常: ' + badKid.length);
+if (!badKid.length) ok('概念链接全部指向独立页 #/体系/章节/slug');
+else fail('概念链接格式异常: ' + badKid.length + ' → ' + badKid[0]);
 
-/* 展开 / 收起 */
+/* 展开 / 收起：点章节右侧的小箭头 */
 go('wyckoff');
 const firstHead = doc.querySelector('#railBody .rail-chap-head');
+const firstChev = firstHead.querySelector('.rail-chev-btn');
 const firstKids = firstHead.nextElementSibling.querySelectorAll('.rail-concept').length;
-firstHead.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
-if (firstHead.classList.contains('open') && firstHead.getAttribute('aria-expanded') === 'true') {
-  ok('点章节展开（该节 ' + firstKids + ' 张概念卡）');
+firstChev.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+if (firstHead.classList.contains('open') && firstChev.getAttribute('aria-expanded') === 'true') {
+  ok('点小箭头展开（该节 ' + firstKids + ' 张概念卡）');
 } else fail('章节展开失败');
-firstHead.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
-if (!firstHead.classList.contains('open')) ok('再点章节收起');
+firstChev.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+if (!firstHead.classList.contains('open')) ok('再点小箭头收起');
 else fail('章节收起失败');
 
 /* 展开状态在切页后保持 */
-firstHead.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+firstChev.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
 go('ict');
 go('wyckoff');
 const kept = doc.querySelector('#railBody .rail-chap-head');
 if (kept.classList.contains('open')) ok('切页回来后展开状态保持');
 else fail('展开状态未保持');
 
-/* 每套体系的章节锚点在各自页面都能定位（跨页点进去不会落空） */
-const dangling = [];
+/* 每一节都能作为独立页打开，标题就是该节的名字 */
+const badChapPage = [];
+let chapPageCount = 0;
 SITE.theories.forEach((t) => {
-  const live = {};
-  go(t.id);
-  doc.querySelectorAll('#railBody .rail-group-head.current + .rail-chaps .rail-chap').forEach((a) => {
-    const id = a.getAttribute('data-anchor');
-    if (!doc.getElementById(id)) live[id] = 1;
+  t.chapters.forEach((c) => {
+    go(t.id + '/' + c.id);
+    chapPageCount++;
+    const h1 = doc.querySelector('#content h1');
+    if (!h1 || h1.textContent.trim() !== c.label) badChapPage.push(t.id + '/' + c.id);
   });
-  Object.keys(live).forEach((id) => dangling.push(t.id + '#' + id));
 });
-if (!dangling.length) ok('五套体系的细纲锚点在各自页面全部可定位');
-else fail('细纲锚点落空: ' + dangling.join(', '));
+if (!badChapPage.length) ok('全部 ' + chapPageCount + ' 个章节可独立打开，标题正确');
+else fail('章节独立页异常: ' + badChapPage.slice(0, 4).join(', '));
 
 /* 点其它体系的组头 → 切页并自动展开 */
 go('wyckoff');
@@ -349,20 +353,34 @@ const withId = doc.querySelectorAll('#content .concept[id^="c-"]');
 if (withId.length > 0 && withId.length === allCards.length) ok('正文概念卡已注入锚点 id（' + withId.length + ' 张）');
 else fail('概念卡锚点注入不全: ' + withId.length + '/' + allCards.length);
 
-/* 跨页可达：每条概念链接指向的 id，在其所属页面渲染后都应存在 */
-const cBad = [];
-const byPage = {};
-Array.prototype.forEach.call(cLinks, (a) => {
-  const m = /^#\/([a-z-]+)#(c-\d+)$/.exec(a.getAttribute('href'));
-  if (!m) { cBad.push(a.getAttribute('href')); return; }
-  (byPage[m[1]] = byPage[m[1]] || []).push(m[2]);
+/* 链接格式：#/体系/章节/slug，全部指向概念独立页 */
+const cUrl = /^#\/([a-z-]+)\/([a-z0-9-]+)\/(.+)$/;
+const badCU = Array.prototype.filter.call(cLinks, (a) => !cUrl.test(a.getAttribute('href')));
+if (!badCU.length) ok('全部 ' + cLinks.length + ' 条概念链接指向独立页 #/体系/章节/slug');
+else fail('概念链接格式异常: ' + badCU.length + ' → ' + badCU[0].getAttribute('href'));
+
+/* 抽查五套体系各一个，能真渲染成独立页且标题与概念名一致 */
+const sampleLinks = ['price-action', 'ict', 'smc', 'wyckoff', 'elliott'].map((pid) =>
+  Array.prototype.filter.call(cLinks, (a) => a.getAttribute('href').indexOf('#/' + pid + '/') === 0)[0]
+).filter(Boolean);
+const badPage = [];
+sampleLinks.forEach((a) => {
+  go(a.getAttribute('href').replace(/^#\//, ''));
+  const h1 = doc.querySelector('#content h1');
+  const want = a.querySelector('.rc-zh').textContent.trim();
+  if (!h1 || h1.textContent.trim() !== want) badPage.push(a.getAttribute('href'));
 });
-Object.keys(byPage).forEach((pid) => {
-  go(pid);
-  byPage[pid].forEach((id) => { if (!doc.getElementById(id)) cBad.push(pid + '#' + id); });
-});
-if (!cBad.length) ok('全部 ' + cLinks.length + ' 条概念链接跨页可达');
-else fail('概念锚点落空: ' + cBad.slice(0, 5).join(', '));
+if (!badPage.length) ok('抽查 ' + sampleLinks.length + ' 个概念独立页，标题与概念名一致');
+else fail('概念独立页异常: ' + badPage.join(', '));
+
+/* 概念页要带面包屑与相邻概念的跳转 */
+go(sampleLinks[0].getAttribute('href').replace(/^#\//, ''));
+const crumbEl = doc.querySelector('#content .crumb');
+const cnav = doc.querySelectorAll('#content .concept-nav a');
+if (crumbEl && crumbEl.querySelectorAll('a').length >= 2) ok('概念页有面包屑（' + crumbEl.textContent.trim().replace(/\s+/g, ' ') + '）');
+else fail('概念页缺面包屑');
+if (cnav.length > 0) ok('概念页有相邻概念跳转链接 ' + cnav.length + ' 个');
+else note('概念页没有相邻概念链接（可能是所在节只有一张卡）');
 
 const withEn = doc.querySelectorAll('#railConcepts .rail-concept .rc-en');
 if (withEn.length > 40) ok('概念条目带英文对照 ' + withEn.length + '/84 条（其余卡片本身未写英文名）');
@@ -407,9 +425,9 @@ si.value = '订单块';
 si.dispatchEvent(new window.Event('input', { bubbles: true }));
 const hitC = Array.prototype.filter.call(
   sr.querySelectorAll('.sr-item'),
-  (a) => (a.getAttribute('href') || '').indexOf('#c-') !== -1
+  (a) => cUrl.test(a.getAttribute('href') || '')
 ).length;
-if (hitC > 0) ok('顶栏搜索可命中具体概念卡（' + hitC + ' 条结果落到卡片）');
+if (hitC > 0) ok('顶栏搜索可直达概念独立页（' + hitC + ' 条）');
 else fail('概念卡未进搜索索引');
 
 /* ---------- 资源引用检查 ---------- */

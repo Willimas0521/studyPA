@@ -311,6 +311,51 @@ a:hover { text-decoration: underline; }
 }
 .rail-foot .disclaimer-mini { margin-top: 8px; }
 
+/* ---------- 独立页（章节页 / 概念页）---------- */
+.crumb {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+  margin-bottom: 18px; font-size: 13px; color: var(--text-3);
+}
+.crumb a { color: var(--text-3); text-decoration: none; }
+.crumb a:hover { color: var(--accent-text); }
+.crumb i { font-style: normal; color: var(--border-2); }
+
+.hero-sub { padding: 22px 26px; margin-bottom: 26px; }
+.hero-sub h1 { font-size: 27px; margin: 8px 0 0; }
+.concept-en-full {
+  margin: 7px 0 0; font: 500 13px/1.5 var(--font-mono);
+  color: var(--accent-text); letter-spacing: .02em;
+}
+
+.concept-detail {
+  padding: 20px 22px; margin-bottom: 24px;
+  border: 1px solid var(--border); border-left: 3px solid var(--accent);
+  border-radius: var(--radius); background: var(--surface);
+}
+.concept-detail p { margin: 0; font-size: 16px; line-height: 1.78; color: var(--text-2); }
+.concept-detail p + p { margin-top: 12px; }
+.concept-detail strong { color: var(--text); font-weight: 640; }
+
+.concept-nav { display: flex; gap: 12px; margin: 0 0 30px; }
+.concept-nav > span { flex: 1; }
+.concept-nav a {
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column; gap: 3px;
+  padding: 12px 15px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--surface); text-decoration: none;
+  transition: border-color .16s, background .16s;
+}
+.concept-nav a:hover { border-color: var(--accent); background: var(--surface-2); text-decoration: none; }
+.concept-nav a span { font-size: 11.5px; color: var(--text-3); }
+.concept-nav a strong {
+  font-size: 14.5px; font-weight: 600; color: var(--text);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.concept-nav .cn-next { text-align: right; }
+
+.siblings { margin-top: 40px; padding-top: 26px; border-top: 1px solid var(--border); }
+.siblings h2 { font-size: 19px; margin: 0 0 16px; padding: 0; border: 0; }
+
 .rail-group-head {
   width: 100%; display: flex; align-items: center; gap: 8px;
   padding: 7px 8px; margin-bottom: 1px;
@@ -345,19 +390,30 @@ a:hover { text-decoration: underline; }
 .rail-chap:hover { color: var(--text); background: var(--surface); text-decoration: none; }
 .rail-chap.active { color: var(--accent-text); font-weight: 620; background: var(--accent-soft); }
 
-/* 章节项：可展开的父节点，展开后列出这一节下的概念卡 */
+/* 章节项：名字是跳去章节独立页的链接，右侧小箭头负责就地展开概念 */
 .rail-chap-head {
-  display: flex; align-items: center; gap: 6px;
-  width: 100%; border: 0; background: transparent;
-  font: inherit; font-size: 12.8px; color: var(--text-2);
-  text-align: left; cursor: pointer;
-  padding: 4px 8px; border-radius: 6px;
+  display: flex; align-items: center; gap: 4px;
+  padding: 0 4px 0 8px; border-radius: 6px;
+  transition: background .14s;
+}
+.rail-chap-head:hover { background: var(--surface-2); }
+.rail-chap-link {
+  flex: 1; min-width: 0; padding: 4px 0;
+  font-size: 12.8px; line-height: 1.55; color: var(--text-2); text-decoration: none;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.rail-chap-link:hover { color: var(--text); text-decoration: none; }
+.rail-chap-link.active { color: var(--accent-text); font-weight: 620; }
+.rail-chap-count { flex: none; font-size: 10.5px; color: var(--text-3); font-variant-numeric: tabular-nums; }
+.rail-chev-btn {
+  flex: none; width: 20px; height: 22px; padding: 0;
+  display: grid; place-items: center;
+  border: 0; border-radius: 5px; background: transparent;
+  color: var(--text-3); cursor: pointer;
   transition: background .14s, color .14s;
 }
-.rail-chap-head:hover { color: var(--text); background: var(--surface-2); }
-.rail-chap-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.rail-chap-count { flex: none; font-size: 10.5px; color: var(--text-3); font-variant-numeric: tabular-nums; }
-.rail-chap-head .rail-chev { width: 12px; height: 12px; }
+.rail-chev-btn:hover { color: var(--text); background: var(--surface-3); }
+.rail-chev-btn .rail-chev { width: 12px; height: 12px; }
 .rail-chap-head.open .rail-chev { transform: rotate(90deg); }
 
 .rail-kids {

@@ -224,7 +224,8 @@ else fail('细纲容器 #rail / #railBody 缺失');
 go('wyckoff');
 const curHead = doc.querySelector('#railBody .rail-group-head.current');
 const wyckoffChaps = SITE.theories.filter((t) => t.id === 'wyckoff')[0].chapters.length;
-const curChapLinks = doc.querySelectorAll('#railBody .rail-group-head.current + .rail-chaps .rail-chap');
+/* 章节项可能是可展开的 button（有概念卡），也可能是普通链接（没有）；只数直接子元素，不含展开出来的概念 */
+const curChapLinks = doc.querySelectorAll('#railBody .rail-group-head.current + .rail-chaps > .rail-chap');
 
 if (curHead && curHead.getAttribute('data-page') === 'wyckoff') ok('当前体系组头已高亮');
 else fail('当前体系组头未高亮');
@@ -240,11 +241,47 @@ else fail('细纲页头未同步: ' + (railPage && railPage.textContent));
 
 /* 章节链接格式必须能跨页定位： #/page#anchor （anchor 含中文组名，如术语页 g-流动性） */
 const badHref = Array.prototype.filter.call(
-  doc.querySelectorAll('#railBody .rail-chap'),
+  doc.querySelectorAll('#railBody .rail-chap[href]'),
   (a) => !/^#\/[a-z-]+#[^#]+$/.test(a.getAttribute('href'))
 );
-if (!badHref.length) ok('全部 ' + doc.querySelectorAll('#railBody .rail-chap').length + ' 个章节链接格式正确');
+if (!badHref.length) ok('章节链接格式全部正确（' + doc.querySelectorAll('#railBody .rail-chap[href]').length + ' 条）');
 else fail('章节链接格式异常: ' + badHref.length + ' 个');
+
+/* ---------- 章节可展开：露出该节下的概念卡 ---------- */
+const chapHeads = doc.querySelectorAll('#railBody .rail-chap-head');
+let kidTotal = 0;
+const badKid = [];
+Array.prototype.forEach.call(chapHeads, (h) => {
+  const kids = h.nextElementSibling.querySelectorAll('.rail-concept');
+  kidTotal += kids.length;
+  Array.prototype.forEach.call(kids, (k) => {
+    if (!/^#\/[a-z-]+#c-\d+$/.test(k.getAttribute('href'))) badKid.push(k.getAttribute('href'));
+  });
+});
+if (kidTotal === 84) ok('章节树里挂载了全部 84 张概念卡（分布在 ' + chapHeads.length + ' 个章节下）');
+else fail('章节树子项 ' + kidTotal + ' ≠ 84');
+if (!badKid.length) ok('章节树内的概念链接格式全部正确');
+else fail('章节树概念链接异常: ' + badKid.length);
+
+/* 展开 / 收起 */
+go('wyckoff');
+const firstHead = doc.querySelector('#railBody .rail-chap-head');
+const firstKids = firstHead.nextElementSibling.querySelectorAll('.rail-concept').length;
+firstHead.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+if (firstHead.classList.contains('open') && firstHead.getAttribute('aria-expanded') === 'true') {
+  ok('点章节展开（该节 ' + firstKids + ' 张概念卡）');
+} else fail('章节展开失败');
+firstHead.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+if (!firstHead.classList.contains('open')) ok('再点章节收起');
+else fail('章节收起失败');
+
+/* 展开状态在切页后保持 */
+firstHead.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+go('ict');
+go('wyckoff');
+const kept = doc.querySelector('#railBody .rail-chap-head');
+if (kept.classList.contains('open')) ok('切页回来后展开状态保持');
+else fail('展开状态未保持');
 
 /* 每套体系的章节锚点在各自页面都能定位（跨页点进去不会落空） */
 const dangling = [];
@@ -355,11 +392,13 @@ if (doc.querySelectorAll('#railConcepts .rail-chap.rail-concept').length === 84)
 else fail('清空过滤未恢复');
 
 /* 章节视图同样可过滤（章节标签是中文，按中文词匹配） */
+const chapItemSel = '#railBody .rail-chap-head, #railBody a.rail-chap:not(.rail-concept)';
+const chapItemAll = doc.querySelectorAll(chapItemSel).length;
 railFilter.value = '误区';
 railFilter.dispatchEvent(new window.Event('input', { bubbles: true }));
-const fChap = doc.querySelectorAll('#railBody .rail-chap').length;
-if (fChap > 0 && fChap < 53) ok('章节视图过滤「误区」收敛到 ' + fChap + ' 条');
-else fail('章节过滤未生效: ' + fChap);
+const fChap = doc.querySelectorAll(chapItemSel).length;
+if (fChap > 0 && fChap < chapItemAll) ok('章节视图过滤「误区」收敛到 ' + fChap + ' 条（共 ' + chapItemAll + '）');
+else fail('章节过滤未生效: ' + fChap + '/' + chapItemAll);
 railFilter.value = '';
 railFilter.dispatchEvent(new window.Event('input', { bubbles: true }));
 
@@ -386,7 +425,7 @@ ok('所有引用的文件均存在');
 const css = read('assets/style.css');
 ['.hero', '.concept', '.callout', '.step', '.table-wrap', '.gl-item', '.layer-btn',
  '.cw-canvas', '.sr-item', '.toc', '.card', '.rail', '.rail-group-head', '.rail-foot',
- '.rail-tab', '.rail-filter', '.rail-concept', '.rail-chap',
+ '.rail-tab', '.rail-filter', '.rail-concept', '.rail-chap', '.rail-chap-head', '.rail-kids',
  '[data-theme="dark"]', '@media print']
   .forEach((sel) => { if (!css.includes(sel)) note('CSS 缺少选择器 ' + sel); });
 ok('CSS 关键选择器检查完成');

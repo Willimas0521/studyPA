@@ -177,6 +177,7 @@
      当前所在体系默认展开，其余折叠；滚动时高亮当前小节。 */
 
   var RAIL_OPEN = {};   /* 展开状态：pageId -> true（两个视图共享同一体系的开关） */
+  var CHAP_OPEN = {};   /* 章节展开状态："pageId#chapId" -> true */
   var railTab = 'outline';
 
   /* --------- 章节视图的数据 --------- */
@@ -204,16 +205,29 @@
 
   var CONCEPT_GROUPS = [];
   var CONCEPTS = [];
+  var CONCEPTS_BY_CHAP = {};   /* "pageId#chapId" -> [该节下的概念] */
 
   function collectConcepts() {
     SITE.pages.forEach(function (p) {
       var tmp = document.createElement('div');
       tmp.innerHTML = p.body || '';
-      var cards = tmp.querySelectorAll('.concept');
-      if (!cards.length) return;
 
-      var items = [];
-      Array.prototype.forEach.call(cards, function (card, i) {
+      /* 顺着文档流扫一遍，记住每张概念卡归属哪个 h2 —— 顺序必须与 renderPage 补 id 的顺序一致 */
+      var found = [];
+      var chap = '';
+      Array.prototype.forEach.call(tmp.children, function (node) {
+        if (node.tagName === 'H2') { chap = node.id || ''; return; }
+        var cards = (node.classList && node.classList.contains('concept'))
+          ? [node]
+          : node.querySelectorAll('.concept');
+        Array.prototype.forEach.call(cards, function (card) {
+          found.push({ card: card, chap: chap });
+        });
+      });
+      if (!found.length) return;
+
+      var items = found.map(function (f, i) {
+        var card = f.card;
         var zh = '', en = '', desc = '';
         var termEl = card.querySelector('.concept-term');
         if (termEl) {
@@ -227,7 +241,7 @@
         if (enEl) en = enEl.textContent.trim();
         var descEl = card.querySelector('p:not(.concept-term)');
         if (descEl) desc = descEl.textContent.trim();
-        items.push({ idx: i, zh: zh, en: en, desc: desc });
+        return { idx: i, zh: zh, en: en, desc: desc, chap: f.chap };
       });
 
       CONCEPT_GROUPS.push({
@@ -241,6 +255,9 @@
           pageId: p.id, pageTitle: p.navLabel || p.title,
           idx: c.idx, zh: c.zh, en: c.en, desc: c.desc
         });
+        if (!c.chap) return;
+        var key = p.id + '#' + c.chap;
+        (CONCEPTS_BY_CHAP[key] = CONCEPTS_BY_CHAP[key] || []).push(c);
       });
     });
   }
@@ -271,19 +288,55 @@
     var html = '';
     OUTLINE.forEach(function (g) {
       var p = g.page;
-      var chaps = g.chapters.filter(function (c) { return hit(c, q); });
-      if (!chaps.length) return;
+      var rows = [];
+
+      g.chapters.forEach(function (c) {
+        var kids = CONCEPTS_BY_CHAP[p.id + '#' + c.id] || [];
+        var chapHit = hit(c, q);
+        var kidsHit = q ? kids.filter(function (k) { return hit(k, q); }) : kids;
+        if (q && !chapHit && !kidsHit.length) return;   /* 自己没中、子项也没中，整节不显示 */
+
+        /* 没有子内容的章节仍然是普通链接 */
+        if (!kids.length) {
+          rows.push('<a class="rail-chap" href="#/' + esc(p.id) + '#' + esc(c.id) +
+            '" data-anchor="' + esc(c.id) + '">' + esc(c.label) + '</a>');
+          return;
+        }
+
+        /* 过滤时只展开命中的子项；纯章节名命中就只留章节本身，不铺开它的全部概念 */
+        var show = kidsHit;
+        var key = p.id + '#' + c.id;
+        var open = q ? show.length > 0 : !!CHAP_OPEN[key];
+
+        rows.push(
+          '<button type="button" class="rail-chap rail-chap-head' + (open ? ' open' : '') +
+            '" data-chap="' + esc(key) + '" data-anchor="' + esc(c.id) + '"' +
+            ' aria-expanded="' + (open ? 'true' : 'false') + '">' +
+            '<span class="rail-chap-label">' + esc(c.label) + '</span>' +
+            '<span class="rail-chap-count">' + kids.length + '</span>' +
+            '<svg class="rail-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>' +
+          '</button>' +
+          '<div class="rail-kids">' +
+            show.map(function (k) {
+              return '<a class="rail-chap rail-concept" href="#/' + esc(p.id) + '#c-' + k.idx +
+                '" data-anchor="c-' + k.idx + '" title="' + esc(k.zh + (k.en ? ' · ' + k.en : '')) + '">' +
+                '<span class="rc-zh">' + esc(k.zh) + '</span>' +
+                (k.en ? '<span class="rc-en">' + esc(k.en) + '</span>' : '') +
+              '</a>';
+            }).join('') +
+          '</div>'
+        );
+      });
+
+      if (!rows.length) return;
       html += railGroupHTML({
         pageId: p.id,
         title: p.navLabel || p.title,
         accent: p.accent || '#64748b',
-        count: chaps.length,
+        count: g.chapters.length,
         cur: p.id === pageId,
         open: q ? true : (p.id === pageId || !!RAIL_OPEN[p.id]),
-        items: chaps.map(function (c) {
-          return '<a class="rail-chap" href="#/' + esc(p.id) + '#' + esc(c.id) +
-            '" data-anchor="' + esc(c.id) + '">' + esc(c.label) + '</a>';
-        }).join('')
+        items: rows.join('')
       });
     });
     elRailBody.innerHTML = html || '<p class="rail-empty">没有匹配的章节</p>';
@@ -439,6 +492,26 @@
         } else {
           RAIL_OPEN[pid] = true;
           location.hash = '#/' + pid;
+        }
+        return;
+      }
+
+      /* 章节可展开：露出该节下的概念卡；展开的同时把正文滚到这一节 */
+      var chapHead = e.target.closest('.rail-chap-head');
+      if (chapHead) {
+        var key = chapHead.getAttribute('data-chap');
+        var willOpen = !chapHead.classList.contains('open');
+        chapHead.classList.toggle('open', willOpen);
+        chapHead.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+        CHAP_OPEN[key] = willOpen;
+
+        if (willOpen) {
+          var anchorId = chapHead.getAttribute('data-anchor');
+          var node = document.getElementById(anchorId);
+          if (node) {
+            history.replaceState(null, '', '#/' + currentRoute().id + '#' + anchorId);
+            node.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
         }
         return;
       }

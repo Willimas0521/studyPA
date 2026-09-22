@@ -345,6 +345,30 @@ a:hover { text-decoration: underline; }
 .rail-chap:hover { color: var(--text); background: var(--surface); text-decoration: none; }
 .rail-chap.active { color: var(--accent-text); font-weight: 620; background: var(--accent-soft); }
 
+/* 章节项：可展开的父节点，展开后列出这一节下的概念卡 */
+.rail-chap-head {
+  display: flex; align-items: center; gap: 6px;
+  width: 100%; border: 0; background: transparent;
+  font: inherit; font-size: 12.8px; color: var(--text-2);
+  text-align: left; cursor: pointer;
+  padding: 4px 8px; border-radius: 6px;
+  transition: background .14s, color .14s;
+}
+.rail-chap-head:hover { color: var(--text); background: var(--surface-2); }
+.rail-chap-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rail-chap-count { flex: none; font-size: 10.5px; color: var(--text-3); font-variant-numeric: tabular-nums; }
+.rail-chap-head .rail-chev { width: 12px; height: 12px; }
+.rail-chap-head.open .rail-chev { transform: rotate(90deg); }
+
+.rail-kids {
+  display: none;
+  margin: 1px 0 5px 12px; padding-left: 6px;
+  border-left: 1px solid var(--border-2);
+}
+.rail-chap-head.open + .rail-kids { display: block; }
+.rail-kids .rail-concept { padding: 3px 7px; font-size: 12.3px; }
+.rail-kids .rail-concept .rc-en { font-size: 10px; }
+
 /* 顶栏的细纲开关：只在 rail 收起为抽屉时出现 */
 .rail-btn { display: none; }
 

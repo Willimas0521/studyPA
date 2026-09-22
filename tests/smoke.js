@@ -208,7 +208,7 @@ else if (badToc.length) fail('目录链接无锚点: ' + badToc.length);
 /* 全站「本页目录」：每篇文章页（含无 chapters 元数据的概览 / 对比 / 学习路径 / 术语速查）都有目录，
    且链接锚点全部可定位（章节一级走独立页、h3 二级走页内锚点） */
 console.log('\n【全站目录】');
-const tocPages = ['overview', 'price-action', 'ict', 'smc', 'wyckoff', 'elliott', 'compare', 'path', 'glossary'];
+const tocPages = ['overview', 'price-action', 'ict', 'smc', 'wyckoff', 'elliott', 'compare', 'chart', 'path', 'glossary'];
 const tocBad = [];
 tocPages.forEach((id) => {
   go(id);

@@ -813,6 +813,7 @@ window.SITE = (function () {
     plainTitle: '五体系图层图',
     tags: ['交互', '吸筹→拉升', '图层切换'],
     body: [
+      '<h2 id="diagram">交互图表</h2>',
       '<p class="lede">下面是一段合成的行情：<strong>下跌 → 抛售高潮 → 长时间横盘 → 向下假破 → 突破走强</strong>。这是威科夫教科书里的标准吸筹结构，但它同样可以被其他四个体系完整标注。点开不同图层对照看，是理解这五套理论关系最快的方式。</p>',
       '<div class="callout tip"><div class="callout-body"><p class="callout-title">怎么看这张图</p><p>默认只打开了「关键价位」和「威科夫」两个图层。建议先读懂威科夫的事件标注（SC → AR → ST → Spring → SOS → LPS）；然后关掉它、打开「ICT」和「SMC」，你会看到同样的位置被叫做 FVG、Order Block、SSL 扫荡——<strong>而且这两个图层几乎完全重合，这不是巧合。</strong>最后把它们全部打开，看那一片被虚线圈出的区域。</p></div></div>',
       '<div id="chartMount"></div>',

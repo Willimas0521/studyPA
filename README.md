@@ -27,7 +27,7 @@
 index.html            页面外壳
 assets/style.css      设计系统（浅色 / 深色主题、响应式、打印样式）
 assets/app.js         hash 路由、细纲导航（章节 / 概念双视图）、全文搜索、主题切换
-assets/chart.js       交互式图层对照图 + 两张 SVG 示意图
+assets/chart.js       交互式图层对照图 + 若干张内联 SVG 示意图
 data/theories.js      五个体系的正文内容
 data/glossary.js      术语库
 tests/smoke.js        jsdom 冒烟测试

@@ -290,6 +290,89 @@ if (railBtn) {
   else fail('细纲抽屉开关异常: open=' + opened + ' close=' + closed);
 } else fail('#railBtn 缺失');
 
+/* ---------- 细纲 · 概念视图 ---------- */
+console.log('\n【细纲 · 概念视图】');
+
+const railC = doc.getElementById('railConcepts');
+const tabC = doc.getElementById('tabConcepts');
+const tabO = doc.getElementById('tabOutline');
+const railFilter = doc.getElementById('railFilter');
+
+if (railC && tabC && tabO && railFilter) ok('概念视图的容器 / Tab / 过滤框都已就位');
+else fail('概念视图缺少元素');
+
+go('price-action');
+const cGroups = doc.querySelectorAll('#railConcepts .rail-group-head');
+const cLinks = doc.querySelectorAll('#railConcepts .rail-chap.rail-concept');
+if (cLinks.length === 84) ok('概念索引收录 ' + cLinks.length + ' 张卡，分布在 ' + cGroups.length + ' 个体系组');
+else fail('概念条目 ' + cLinks.length + ' ≠ 84');
+
+const allCards = doc.querySelectorAll('#content .concept');
+const withId = doc.querySelectorAll('#content .concept[id^="c-"]');
+if (withId.length > 0 && withId.length === allCards.length) ok('正文概念卡已注入锚点 id（' + withId.length + ' 张）');
+else fail('概念卡锚点注入不全: ' + withId.length + '/' + allCards.length);
+
+/* 跨页可达：每条概念链接指向的 id，在其所属页面渲染后都应存在 */
+const cBad = [];
+const byPage = {};
+Array.prototype.forEach.call(cLinks, (a) => {
+  const m = /^#\/([a-z-]+)#(c-\d+)$/.exec(a.getAttribute('href'));
+  if (!m) { cBad.push(a.getAttribute('href')); return; }
+  (byPage[m[1]] = byPage[m[1]] || []).push(m[2]);
+});
+Object.keys(byPage).forEach((pid) => {
+  go(pid);
+  byPage[pid].forEach((id) => { if (!doc.getElementById(id)) cBad.push(pid + '#' + id); });
+});
+if (!cBad.length) ok('全部 ' + cLinks.length + ' 条概念链接跨页可达');
+else fail('概念锚点落空: ' + cBad.slice(0, 5).join(', '));
+
+const withEn = doc.querySelectorAll('#railConcepts .rail-concept .rc-en');
+if (withEn.length > 40) ok('概念条目带英文对照 ' + withEn.length + '/84 条（其余卡片本身未写英文名）');
+else note('英文对照偏少: ' + withEn.length);
+
+/* Tab 切换 */
+go('price-action');
+tabC.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+if (railC.hidden === false && doc.getElementById('railBody').hidden === true && tabC.classList.contains('active')) {
+  ok('切到「概念」：章节列表隐藏、概念列表显示');
+} else fail('概念视图切换异常');
+tabO.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+if (railC.hidden === true && doc.getElementById('railBody').hidden === false) ok('切回「章节」正常');
+else fail('切回章节视图异常');
+
+/* 过滤 */
+tabC.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+railFilter.value = '弹簧';
+railFilter.dispatchEvent(new window.Event('input', { bubbles: true }));
+const filtered = doc.querySelectorAll('#railConcepts .rail-chap.rail-concept').length;
+if (filtered > 0 && filtered < 84) ok('过滤「弹簧」后收敛到 ' + filtered + ' 条');
+else fail('概念过滤未生效: ' + filtered);
+
+railFilter.value = '';
+railFilter.dispatchEvent(new window.Event('input', { bubbles: true }));
+if (doc.querySelectorAll('#railConcepts .rail-chap.rail-concept').length === 84) ok('清空过滤后恢复全部');
+else fail('清空过滤未恢复');
+
+/* 章节视图同样可过滤（章节标签是中文，按中文词匹配） */
+railFilter.value = '误区';
+railFilter.dispatchEvent(new window.Event('input', { bubbles: true }));
+const fChap = doc.querySelectorAll('#railBody .rail-chap').length;
+if (fChap > 0 && fChap < 53) ok('章节视图过滤「误区」收敛到 ' + fChap + ' 条');
+else fail('章节过滤未生效: ' + fChap);
+railFilter.value = '';
+railFilter.dispatchEvent(new window.Event('input', { bubbles: true }));
+
+/* 概念卡也进了顶栏全文搜索 */
+si.value = '订单块';
+si.dispatchEvent(new window.Event('input', { bubbles: true }));
+const hitC = Array.prototype.filter.call(
+  sr.querySelectorAll('.sr-item'),
+  (a) => (a.getAttribute('href') || '').indexOf('#c-') !== -1
+).length;
+if (hitC > 0) ok('顶栏搜索可命中具体概念卡（' + hitC + ' 条结果落到卡片）');
+else fail('概念卡未进搜索索引');
+
 /* ---------- 资源引用检查 ---------- */
 console.log('\n【资源引用】');
 const htmlSrc = read('index.html');
@@ -303,7 +386,8 @@ ok('所有引用的文件均存在');
 const css = read('assets/style.css');
 ['.hero', '.concept', '.callout', '.step', '.table-wrap', '.gl-item', '.layer-btn',
  '.cw-canvas', '.sr-item', '.toc', '.card', '.rail', '.rail-group-head', '.rail-foot',
- '.rail-chap', '[data-theme="dark"]', '@media print']
+ '.rail-tab', '.rail-filter', '.rail-concept', '.rail-chap',
+ '[data-theme="dark"]', '@media print']
   .forEach((sel) => { if (!css.includes(sel)) note('CSS 缺少选择器 ' + sel); });
 ok('CSS 关键选择器检查完成');
 

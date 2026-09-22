@@ -232,12 +232,12 @@ a:hover { text-decoration: underline; }
   width: var(--rail-w); flex: none;
   height: calc(100vh - var(--topbar-h));
   display: flex; flex-direction: column;
-  overflow-y: auto; overscroll-behavior: contain;
-  padding: 18px 10px 20px;
+  overflow: hidden;                    /* 滚动交给内部的 .rail-scroll */
+  padding: 16px 10px 14px;
   border-right: 1px solid var(--border);
   background: var(--surface);
 }
-.rail-head { padding: 0 8px 11px; margin-bottom: 10px; border-bottom: 1px solid var(--border); }
+.rail-head { padding: 0 6px 11px; margin-bottom: 10px; border-bottom: 1px solid var(--border); }
 .rail-kicker {
   display: block; font-size: 11px; font-weight: 700;
   letter-spacing: .09em; text-transform: uppercase; color: var(--text-3);
@@ -246,8 +246,59 @@ a:hover { text-decoration: underline; }
   display: block; margin-top: 3px; font-size: 14px; font-weight: 660; color: var(--text);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.rail-body { flex: 0 0 auto; }
-.rail-foot { margin-top: auto; padding: 14px 8px 0; border-top: 1px solid var(--border); }
+/* 视图切换（章节 / 概念）与过滤框 */
+.rail-tabs { display: flex; gap: 4px; padding: 0 6px 8px; }
+.rail-tab {
+  flex: 1; padding: 6px 4px;
+  border: 1px solid transparent; border-radius: 7px;
+  background: transparent; color: var(--text-3);
+  font: inherit; font-size: 12.8px; font-weight: 620;
+  cursor: pointer; transition: background .14s, color .14s, border-color .14s;
+}
+.rail-tab:hover { color: var(--text); background: var(--surface-2); }
+.rail-tab.active {
+  color: var(--accent-text); background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+.rail-filter { position: relative; padding: 0 6px 8px; }
+.rail-filter svg {
+  position: absolute; left: 15px; top: 15px; transform: translateY(-50%);
+  width: 13px; height: 13px;
+  fill: none; stroke: var(--text-3); stroke-width: 2;
+  stroke-linecap: round; pointer-events: none;
+}
+.rail-filter input {
+  width: 100%; height: 30px; padding: 0 8px 0 27px;
+  font: inherit; font-size: 12.6px; color: var(--text);
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: 7px; outline: none;
+  transition: border-color .14s, background .14s;
+}
+.rail-filter input::placeholder { color: var(--text-3); }
+.rail-filter input:focus { border-color: var(--accent); background: var(--surface); }
+
+/* 列表区独立滚动，底部的 GitHub / 免责声明常驻 */
+.rail-scroll {
+  flex: 1 1 auto; min-height: 0;
+  overflow-y: auto; overscroll-behavior: contain;
+  padding-right: 2px;
+}
+
+/* 概念条目：中文 + 英文对照，长名各自省略 */
+.rail-concept { display: flex; align-items: baseline; gap: 6px; }
+.rail-concept .rc-zh {
+  flex: 0 1 auto; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.rail-concept .rc-en {
+  flex: 0 1 auto; min-width: 0; margin-left: auto;
+  font: 500 10.5px/1.5 var(--font-mono); color: var(--text-3);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.rail-empty { padding: 14px 8px; font-size: 12.6px; color: var(--text-3); line-height: 1.6; }
+
+.rail-foot { margin-top: auto; padding: 14px 6px 0; border-top: 1px solid var(--border); }
 .rail-ext {
   display: flex; align-items: center; gap: 8px;
   padding: 6px 0 2px; font-size: 13px; color: var(--text-2); text-decoration: none;
@@ -370,6 +421,13 @@ a:hover { text-decoration: underline; }
   transition: border-color .16s, transform .16s, box-shadow .16s;
 }
 .concept:hover { border-color: color-mix(in srgb, var(--accent) 42%, var(--border)); transform: translateY(-1px); box-shadow: var(--shadow); }
+/* 从细纲「概念」跳过来时闪一下，指明落点是哪张卡 */
+.concept.flash { animation: concept-flash 1.6s ease-out; }
+@keyframes concept-flash {
+  0%   { background: color-mix(in srgb, var(--accent) 24%, var(--surface)); border-color: var(--accent); }
+  60%  { background: color-mix(in srgb, var(--accent) 11%, var(--surface)); }
+  100% { background: var(--surface); border-color: var(--border); }
+}
 .concept-term { font-size: 15px; font-weight: 660; margin: 0 0 2px; color: var(--text); }
 .concept-en { font: 500 11.5px/1.35 var(--font-mono); color: var(--accent-text); letter-spacing: .02em; display: block; margin-bottom: 8px; }
 .concept p { margin: 0; font-size: 14px; line-height: 1.68; color: var(--text-2); }

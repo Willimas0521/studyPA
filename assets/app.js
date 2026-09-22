@@ -17,6 +17,11 @@
   var elScrim = document.getElementById('scrim');
   var elRail = document.getElementById('rail');
   var elRailBody = document.getElementById('railBody');
+  var elRailConcepts = document.getElementById('railConcepts');
+  var elRailScroll = document.querySelector('.rail-scroll');
+  var elRailFilter = document.getElementById('railFilter');
+  var elTabOutline = document.getElementById('tabOutline');
+  var elTabConcepts = document.getElementById('tabConcepts');
   var elRailPage = document.getElementById('railPage');
   var elRailBtn = document.getElementById('railBtn');
   var elThemeBtn = document.getElementById('themeBtn');
@@ -145,6 +150,12 @@
     mountOverviewCards(elContent);
     mountGlossary(elContent);
     decorateCallouts(elContent);
+
+    /* 给概念卡补锚点，供细纲「概念」视图与全文搜索跳转（序号与 collectConcepts 一致） */
+    Array.prototype.forEach.call(elContent.querySelectorAll('.concept'), function (card, i) {
+      card.id = 'c-' + i;
+    });
+
     if (CHART) {
       CHART.mountDiagrams(elContent);
       CHART.mountInteractive(elContent);
@@ -153,7 +164,7 @@
     document.title = (p.id === 'overview')
       ? '交易理论图谱 · 价格行为学 / ICT / SMC / 威科夫 / 波浪理论'
       : p.title + ' · 交易理论图谱';
-    renderRail(p.id);
+    refreshRail();
   }
 
   /* 由强调色生成浅底（用于卡片/导航高亮），保持与主题无关的柔和效果 */
@@ -165,7 +176,10 @@
   /* 主导航右侧的第二栏：把每套体系的具体章节摊开。
      当前所在体系默认展开，其余折叠；滚动时高亮当前小节。 */
 
-  var RAIL_OPEN = {};   /* 用户手动展开过的体系：pageId -> true */
+  var RAIL_OPEN = {};   /* 展开状态：pageId -> true（两个视图共享同一体系的开关） */
+  var railTab = 'outline';
+
+  /* --------- 章节视图的数据 --------- */
 
   function outlineChapters(p) {
     if (p.chapters && p.chapters.length) return p.chapters;
@@ -184,45 +198,142 @@
     return { page: p, chapters: outlineChapters(p) };
   }).filter(function (g) { return g.chapters.length; });
 
-  function renderRail(pageId) {
-    if (!elRailBody) return;
+  /* --------- 概念视图的数据 --------- */
+  /* 概念卡本来只是正文里的一堆卡片，没有锚点。这里把它们抽出来建索引，
+     并记下它在页面内的序号；renderPage 会给每张卡补 id="c-N"，两边序号务必一致。 */
 
+  var CONCEPT_GROUPS = [];
+  var CONCEPTS = [];
+
+  function collectConcepts() {
+    SITE.pages.forEach(function (p) {
+      var tmp = document.createElement('div');
+      tmp.innerHTML = p.body || '';
+      var cards = tmp.querySelectorAll('.concept');
+      if (!cards.length) return;
+
+      var items = [];
+      Array.prototype.forEach.call(cards, function (card, i) {
+        var zh = '', en = '', desc = '';
+        var termEl = card.querySelector('.concept-term');
+        if (termEl) {
+          /* 术语后面可能跟着 <span class="badge-inline">，取名字前先摘掉 */
+          var clone = termEl.cloneNode(true);
+          var badge = clone.querySelector('.badge-inline');
+          if (badge) badge.parentNode.removeChild(badge);
+          zh = clone.textContent.trim();
+        }
+        var enEl = card.querySelector('.concept-en');
+        if (enEl) en = enEl.textContent.trim();
+        var descEl = card.querySelector('p:not(.concept-term)');
+        if (descEl) desc = descEl.textContent.trim();
+        items.push({ idx: i, zh: zh, en: en, desc: desc });
+      });
+
+      CONCEPT_GROUPS.push({
+        pageId: p.id,
+        title: p.navLabel || p.title,
+        accent: p.accent || '#64748b',
+        items: items
+      });
+      items.forEach(function (c) {
+        CONCEPTS.push({
+          pageId: p.id, pageTitle: p.navLabel || p.title,
+          idx: c.idx, zh: c.zh, en: c.en, desc: c.desc
+        });
+      });
+    });
+  }
+
+  /* --------- 渲染 --------- */
+
+  function railGroupHTML(g) {
+    return '<button type="button" class="rail-group-head' + (g.cur ? ' current' : '') + (g.open ? ' open' : '') +
+        '" data-page="' + esc(g.pageId) + '" style="--rc:' + esc(g.accent) + '"' +
+        ' aria-expanded="' + (g.open ? 'true' : 'false') + '">' +
+        '<span class="rail-dot"></span>' +
+        '<span class="rail-name">' + esc(g.title) + '</span>' +
+        '<span class="rail-count">' + g.count + '</span>' +
+        '<svg class="rail-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>' +
+      '</button>' +
+      '<div class="rail-chaps">' + g.items + '</div>';
+  }
+
+  function hit(item, q) {
+    if (!q) return true;
+    var zh = (item.zh || item.label || '').toLowerCase();
+    var en = (item.en || '').toLowerCase();
+    return zh.indexOf(q) !== -1 || en.indexOf(q) !== -1;
+  }
+
+  function renderRail(pageId, q) {
+    if (!elRailBody) return;
     var html = '';
     OUTLINE.forEach(function (g) {
       var p = g.page;
-      var cur = p.id === pageId;
-      var open = cur || !!RAIL_OPEN[p.id];
-
-      html += '<button type="button" class="rail-group-head' + (cur ? ' current' : '') + (open ? ' open' : '') +
-          '" data-page="' + esc(p.id) + '" style="--rc:' + esc(p.accent || '#64748b') + '"' +
-          ' aria-expanded="' + (open ? 'true' : 'false') + '" aria-controls="rail-chaps-' + esc(p.id) + '">' +
-          '<span class="rail-dot"></span>' +
-          '<span class="rail-name">' + esc(p.navLabel || p.title) + '</span>' +
-          '<span class="rail-count">' + g.chapters.length + '</span>' +
-          '<svg class="rail-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>' +
-        '</button>' +
-        '<div class="rail-chaps" id="rail-chaps-' + esc(p.id) + '">' +
-          g.chapters.map(function (c) {
-            return '<a class="rail-chap" href="#/' + esc(p.id) + '#' + esc(c.id) +
-              '" data-anchor="' + esc(c.id) + '">' + esc(c.label) + '</a>';
-          }).join('') +
-        '</div>';
+      var chaps = g.chapters.filter(function (c) { return hit(c, q); });
+      if (!chaps.length) return;
+      html += railGroupHTML({
+        pageId: p.id,
+        title: p.navLabel || p.title,
+        accent: p.accent || '#64748b',
+        count: chaps.length,
+        cur: p.id === pageId,
+        open: q ? true : (p.id === pageId || !!RAIL_OPEN[p.id]),
+        items: chaps.map(function (c) {
+          return '<a class="rail-chap" href="#/' + esc(p.id) + '#' + esc(c.id) +
+            '" data-anchor="' + esc(c.id) + '">' + esc(c.label) + '</a>';
+        }).join('')
+      });
     });
-    elRailBody.innerHTML = html;
-
-    if (elRailPage) {
-      var cur2 = PAGE_BY_ID[pageId];
-      elRailPage.textContent = cur2 ? (cur2.navLabel || cur2.title) : '细纲';
-    }
-    collectSpy(pageId);
+    elRailBody.innerHTML = html || '<p class="rail-empty">没有匹配的章节</p>';
   }
 
-  /* --------- 滚动同步：高亮当前所在的小节 --------- */
+  function renderConcepts(pageId, q) {
+    if (!elRailConcepts) return;
+    var html = '';
+    CONCEPT_GROUPS.forEach(function (g) {
+      var items = g.items.filter(function (c) { return hit(c, q); });
+      if (!items.length) return;
+      html += railGroupHTML({
+        pageId: g.pageId,
+        title: g.title,
+        accent: g.accent,
+        count: items.length,
+        cur: g.pageId === pageId,
+        open: q ? true : (g.pageId === pageId || !!RAIL_OPEN[g.pageId]),
+        items: items.map(function (c) {
+          return '<a class="rail-chap rail-concept" href="#/' + esc(g.pageId) + '#c-' + c.idx +
+            '" data-anchor="c-' + c.idx + '" title="' + esc(c.zh + (c.en ? ' · ' + c.en : '')) + '">' +
+            '<span class="rc-zh">' + esc(c.zh) + '</span>' +
+            (c.en ? '<span class="rc-en">' + esc(c.en) + '</span>' : '') +
+          '</a>';
+        }).join('')
+      });
+    });
+    elRailConcepts.innerHTML = html || '<p class="rail-empty">没有匹配的概念</p>';
+  }
+
+  function refreshRail() {
+    var r = currentRoute();
+    var q = (elRailFilter && elRailFilter.value ? elRailFilter.value : '').trim().toLowerCase();
+    renderRail(r.id, q);
+    renderConcepts(r.id, q);
+    if (elRailPage) {
+      var p = PAGE_BY_ID[r.id];
+      elRailPage.textContent = p ? (p.navLabel || p.title) : '细纲';
+    }
+    collectSpy(r.id);
+  }
+
+  /* --------- 滚动同步：高亮当前所在的小节 / 概念卡 --------- */
 
   var spyTargets = [];
+  var conceptTargets = [];
 
   function collectSpy(pageId) {
     spyTargets = [];
+    conceptTargets = [];
     OUTLINE.forEach(function (g) {
       if (g.page.id !== pageId) return;
       g.chapters.forEach(function (c) {
@@ -230,12 +341,19 @@
         if (node) spyTargets.push({ id: c.id, el: node });
       });
     });
-    markRailAnchor('');
+    CONCEPT_GROUPS.forEach(function (g) {
+      if (g.pageId !== pageId) return;
+      g.items.forEach(function (c) {
+        var node = document.getElementById('c-' + c.idx);
+        if (node) conceptTargets.push({ id: 'c-' + c.idx, el: node });
+      });
+    });
+    markRailAnchor('', railTab === 'concepts' ? elRailConcepts : elRailBody);
   }
 
-  function markRailAnchor(id) {
-    if (!elRailBody) return;
-    Array.prototype.forEach.call(elRailBody.querySelectorAll('.rail-chap'), function (a) {
+  function markRailAnchor(id, root) {
+    if (!root) return;
+    Array.prototype.forEach.call(root.querySelectorAll('.rail-chap'), function (a) {
       var on = !!id && a.getAttribute('data-anchor') === id;
       a.classList.toggle('active', on);
       if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
@@ -244,27 +362,70 @@
 
   var spyQueued = false;
   function syncSpy() {
-    if (spyQueued || !spyTargets.length) return;
+    if (spyQueued) return;
     spyQueued = true;
     requestAnimationFrame(function () {
       spyQueued = false;
-      /* 以顶栏下方 28px 为判定线：最后一个越过该线的标题即当前节 */
+      var isC = railTab === 'concepts';
+      var list = isC ? conceptTargets : spyTargets;
+      var root = isC ? elRailConcepts : elRailBody;
+      if (!list.length || !root) return;
+      /* 以顶栏下方 28px 为判定线：最后一个越过该线的标题 / 卡片即当前项 */
       var line = (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--topbar-h')) || 60) + 28;
       var cur = '';
-      for (var i = 0; i < spyTargets.length; i++) {
-        if (spyTargets[i].el.getBoundingClientRect().top <= line) cur = spyTargets[i].id;
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].el.getBoundingClientRect().top <= line) cur = list[i].id;
         else break;
       }
-      markRailAnchor(cur);
+      markRailAnchor(cur, root);
     });
   }
 
   window.addEventListener('scroll', syncSpy, { passive: true });
 
-  /* --------- 细纲交互 --------- */
+  /* --------- 视图切换与过滤 --------- */
 
-  if (elRailBody) {
-    elRailBody.addEventListener('click', function (e) {
+  function setRailTab(name) {
+    railTab = name;
+    var isOutline = name === 'outline';
+    if (elRailBody) elRailBody.hidden = !isOutline;
+    if (elRailConcepts) elRailConcepts.hidden = isOutline;
+    if (elTabOutline) {
+      elTabOutline.classList.toggle('active', isOutline);
+      elTabOutline.setAttribute('aria-selected', isOutline ? 'true' : 'false');
+    }
+    if (elTabConcepts) {
+      elTabConcepts.classList.toggle('active', !isOutline);
+      elTabConcepts.setAttribute('aria-selected', isOutline ? 'false' : 'true');
+    }
+    syncSpy();
+  }
+
+  if (elTabOutline) elTabOutline.addEventListener('click', function () { setRailTab('outline'); });
+  if (elTabConcepts) elTabConcepts.addEventListener('click', function () { setRailTab('concepts'); });
+
+  if (elRailFilter) {
+    elRailFilter.addEventListener('input', refreshRail);
+    elRailFilter.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      elRailFilter.value = '';
+      refreshRail();
+      elRailFilter.blur();
+    });
+  }
+
+  /* --------- 跳转与高亮 --------- */
+
+  function flashTarget(el) {
+    if (!el || !el.classList || !el.classList.contains('concept')) return;
+    el.classList.remove('flash');
+    void el.offsetWidth;                 /* 强制回流，让动画能重放 */
+    el.classList.add('flash');
+    setTimeout(function () { el.classList.remove('flash'); }, 1700);
+  }
+
+  if (elRailScroll) {
+    elRailScroll.addEventListener('click', function (e) {
       var head = e.target.closest('.rail-group-head');
 
       if (head) {
@@ -294,6 +455,7 @@
       e.preventDefault();
       history.replaceState(null, '', '#/' + currentRoute().id + '#' + anchor);
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      flashTarget(target);
     });
   }
 
@@ -329,6 +491,7 @@
       if (target) {
         requestAnimationFrame(function () {
           target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          flashTarget(target);
         });
         return;
       }
@@ -393,6 +556,17 @@
           heading: it.zh + ' · ' + it.en,
           text: it.desc + '（' + g.group + '，' + (it.src || []).join('/') + '）'
         });
+      });
+    });
+
+    /* 正文里的概念卡也进索引，搜「弹簧」「公允价值缺口」这类词才找得到 */
+    CONCEPTS.forEach(function (c) {
+      INDEX.push({
+        pageId: c.pageId,
+        pageTitle: c.pageTitle,
+        anchor: 'c-' + c.idx,
+        heading: c.zh + (c.en ? ' · ' + c.en : ''),
+        text: c.desc + '（' + c.pageTitle + ' · 概念卡）'
       });
     });
   }
@@ -505,6 +679,7 @@
   /* ------------------------------------------------------------ 启动 */
 
   initTheme();
+  collectConcepts();
   buildIndex();
   route();
 })();

@@ -59,7 +59,22 @@
       <span class="rail-kicker">细纲</span>
       <span class="rail-page" id="railPage">概览</span>
     </div>
-    <nav class="rail-body" id="railBody"></nav>
+
+    <div class="rail-tabs" role="tablist" aria-label="细纲视图">
+      <button type="button" class="rail-tab active" id="tabOutline" role="tab" aria-selected="true" aria-controls="railBody">章节</button>
+      <button type="button" class="rail-tab" id="tabConcepts" role="tab" aria-selected="false" aria-controls="railConcepts">概念</button>
+    </div>
+
+    <div class="rail-filter">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+      <input type="search" id="railFilter" placeholder="过滤条目…" autocomplete="off" aria-label="过滤细纲条目">
+    </div>
+
+    <div class="rail-scroll">
+    <nav class="rail-body" id="railBody" role="tabpanel" aria-labelledby="tabOutline"></nav>
+    <nav class="rail-body rail-concepts" id="railConcepts" role="tabpanel" aria-labelledby="tabConcepts" hidden></nav>
+    </div>
+
     <div class="rail-foot">
       <a class="rail-ext" href="https://github.com/Willimas0521/studyPA" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-8.4 8.4M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>

@@ -262,12 +262,14 @@
 
     applyAccent(p.accent);
     var label = chap ? chap.label : r.chap;
+    var kids = CONCEPTS_BY_CHAP[r.id + '#' + r.chap] || [];
 
     elContent.innerHTML =
       crumbHTML([['#/' + p.id, p.navLabel || p.title], [null, label]]) +
       '<div class="hero hero-sub">' +
         '<span class="hero-en">' + esc(p.navLabel || p.title) + '</span>' +
         '<h1>' + esc(label) + '</h1>' +
+        (kids.length ? '<p class="hero-meta">本节 <b>' + kids.length + '</b> 个概念 · 点卡片可单独打开</p>' : '') +
       '</div>' +
       body +
       chapterNavHTML(p, r.chap);
@@ -303,6 +305,7 @@
         '<span class="hero-en">' + esc(p.navLabel || p.title) + (chap ? ' · ' + esc(chap.label) : '') + '</span>' +
         '<h1>' + esc(one.zh) + '</h1>' +
         (one.en ? '<p class="concept-en-full">' + esc(one.en) + '</p>' : '') +
+        (kids.length > 1 ? '<p class="hero-meta">第 <b>' + (at + 1) + '</b> / ' + kids.length + ' 个</p>' : '') +
       '</div>' +
       '<div class="concept-detail"><p>' + (one.descHTML || esc(one.desc)) + '</p></div>' +
       (prev || next ? '<nav class="concept-nav">' +

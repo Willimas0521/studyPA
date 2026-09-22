@@ -778,6 +778,13 @@ th.rowhead { text-align: left; background: var(--surface-2); font-weight: 660; c
 .toc a { color: var(--text-2); }
 .toc a:hover { color: var(--accent-text); }
 
+/* 章节页的「本节内容」：比页面目录更轻，虚线框 + 透明底，别抢标题的注意力 */
+.toc-sub {
+  padding: 13px 16px; margin: -6px 0 26px;
+  background: transparent; border-style: dashed;
+}
+.toc-sub li { font-size: 13.5px; }
+
 /* ---------- 页脚 / 回到顶部 ---------- */
 .footer {
   max-width: var(--content-w); margin: 60px auto 0; padding-top: 22px;

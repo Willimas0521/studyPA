@@ -301,6 +301,44 @@ SITE.theories.forEach((t) => {
 if (!badChapPage.length) ok('全部 ' + chapPageCount + ' 个章节可独立打开，标题正确');
 else fail('章节独立页异常: ' + badChapPage.slice(0, 4).join(', '));
 
+/* ---------- 章节页的「本节内容」目录（按 h3 标题生成） ---------- */
+go('price-action/always-in');
+const subToc = doc.querySelector('#content .toc-sub');
+const subLinks = doc.querySelectorAll('#content .toc-sub a[data-anchor]');
+const h3s = doc.querySelectorAll('#content h3');
+if (subToc && h3s.length > 1 && subLinks.length === h3s.length) {
+  ok('章节页有「本节内容」目录：' + subLinks.length + ' 项，与 h3 数量一致');
+} else {
+  fail('章节页目录异常: toc=' + !!subToc + ' links=' + subLinks.length + ' h3=' + h3s.length);
+}
+
+const h3WithId = doc.querySelectorAll('#content h3[id^="sec-"]');
+if (h3WithId.length === h3s.length && h3s.length > 0) ok('全部 ' + h3s.length + ' 个 h3 都补了锚点 id');
+else fail('h3 锚点不全: ' + h3WithId.length + '/' + h3s.length);
+
+const badSec = [];
+Array.prototype.forEach.call(subLinks, (a) => {
+  if (!/^#\/[a-z-]+\/[a-z0-9-]+#sec-\d+-/.test(a.getAttribute('href'))) badSec.push('href=' + a.getAttribute('href'));
+  else if (!doc.getElementById(a.getAttribute('data-anchor'))) badSec.push('missing=' + a.getAttribute('data-anchor'));
+});
+if (!badSec.length) ok('目录链接格式正确，每个锚点都能在页内定位');
+else fail('目录锚点异常: ' + badSec.slice(0, 3).join(', '));
+
+/* 只有一两个小节的章节不生成目录，免得占地方 */
+go('price-action/workflow');
+const h3Few = doc.querySelectorAll('#content h3').length;
+if (h3Few <= 1 && !doc.querySelector('#content .toc-sub')) ok('h3 不足两节时不生成目录');
+else note('小节数 ' + h3Few + '，目录状态: ' + !!doc.querySelector('#content .toc-sub'));
+
+/* 点目录项后 hash 应带上小节锚点 */
+go('price-action/always-in');
+const firstSec = doc.querySelector('#content .toc-sub a[data-anchor]');
+if (firstSec) {
+  firstSec.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+  if (window.location.hash.indexOf('#sec-1-') !== -1) ok('点目录项 → 地址带上小节锚点');
+  else fail('点目录项后 hash 未更新: ' + window.location.hash);
+} else fail('找不到目录项');
+
 /* 点其它体系的组头 → 切页并自动展开 */
 go('wyckoff');
 const ictHead = Array.prototype.filter.call(
@@ -449,8 +487,10 @@ const css = read('assets/style.css');
 ok('CSS 关键选择器检查完成');
 
 console.error = origErr;
-/* jsdom 未实现 scrollTo 等浏览器 API，属测试环境限制，不计为失败 */
-const real = errors.filter((e) => !/Not implemented:/.test(e));
+/* jsdom 未实现 scrollTo / scrollIntoView 等浏览器 API，属测试环境限制，不计为失败 */
+const real = errors.filter((e) =>
+  !/Not implemented:|scrollIntoView is not a function|scrollTo is not a function/.test(e)
+);
 if (real.length) {
   console.log('\n【运行时错误】');
   real.forEach((e) => fail(e));

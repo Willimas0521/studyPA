@@ -146,6 +146,29 @@
       }).join('') + '</ol></nav>';
   }
 
+  /* 章节页的「本节内容」目录。正文里的 h3 本来没有锚点，这里现补一个：
+     序号负责唯一性，标题片段负责可读性（地址栏里一眼能看懂跳到哪）。 */
+  function sectionToc(bodyHTML, pageId, chapId) {
+    var tmp = document.createElement('div');
+    tmp.innerHTML = bodyHTML;
+
+    var items = [];
+    Array.prototype.forEach.call(tmp.querySelectorAll('h3'), function (h, i) {
+      var label = h.textContent.trim();
+      var id = 'sec-' + (i + 1) + '-' + (slugify(label).slice(0, 20) || 'x');
+      h.id = id;
+      items.push('<li><a href="#/' + esc(pageId) + '/' + esc(chapId) + '#' + esc(id) +
+        '" data-anchor="' + esc(id) + '">' + esc(label) + '</a></li>');
+    });
+
+    return {
+      html: tmp.innerHTML,
+      toc: items.length > 1
+        ? '<nav class="toc toc-sub"><p class="toc-title">本节内容</p><ol>' + items.join('') + '</ol></nav>'
+        : ''
+    };
+  }
+
   function renderPage(p) {
     applyAccent(p.accent);
 
@@ -263,6 +286,7 @@
     applyAccent(p.accent);
     var label = chap ? chap.label : r.chap;
     var kids = CONCEPTS_BY_CHAP[r.id + '#' + r.chap] || [];
+    var sec = sectionToc(body, r.id, r.chap);
 
     elContent.innerHTML =
       crumbHTML([['#/' + p.id, p.navLabel || p.title], [null, label]]) +
@@ -271,7 +295,8 @@
         '<h1>' + esc(label) + '</h1>' +
         (kids.length ? '<p class="hero-meta">本节 <b>' + kids.length + '</b> 个概念 · 点卡片可单独打开</p>' : '') +
       '</div>' +
-      body +
+      sec.toc +
+      sec.html +
       chapterNavHTML(p, r.chap);
 
     afterMount();
@@ -713,6 +738,20 @@
     });
   }
 
+  /* 章节页的「本节内容」：同一个页面内的锚点自己接管滚动，
+     交回 hash 路由会整页重渲染再跳，视觉上会闪一下 */
+  elContent.addEventListener('click', function (e) {
+    var a = e.target.closest('.toc a[data-anchor]');
+    if (!a) return;
+    var r = currentRoute();
+    if (a.getAttribute('href').indexOf('#/' + r.id + (r.chap ? '/' + r.chap : '') + '#') !== 0) return;
+    var target = document.getElementById(a.getAttribute('data-anchor'));
+    if (!target) return;
+    e.preventDefault();
+    history.replaceState(null, '', a.getAttribute('href'));
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
   function openRail() {
     if (!elRail) return;
     elRail.classList.add('open');
@@ -757,7 +796,21 @@
     closeRail();
 
     if (r.chap && r.slug) { renderConceptPage(r); window.scrollTo({ top: 0, behavior: 'auto' }); return; }
-    if (r.chap) { renderChapterPage(r); window.scrollTo({ top: 0, behavior: 'auto' }); return; }
+    if (r.chap) {
+      renderChapterPage(r);
+      /* 章节页也支持 #/体系/章节#小节锚点（「本节内容」目录点进来的） */
+      if (r.anchor) {
+        var sec = document.getElementById(r.anchor);
+        if (sec) {
+          requestAnimationFrame(function () {
+            sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+          return;
+        }
+      }
+      window.scrollTo({ top: 0, behavior: 'auto' });
+      return;
+    }
 
     var p = PAGE_BY_ID[r.id] || SITE.overview;
     renderPage(p);

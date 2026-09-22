@@ -261,8 +261,8 @@ Array.prototype.forEach.call(chapHeads, (h) => {
     if (!/^#\/[a-z-]+\/[a-z0-9-]+\/.+$/.test(k.getAttribute('href'))) badKid.push(k.getAttribute('href'));
   });
 });
-if (kidTotal === 88) ok('章节树里挂载了全部 88 张概念卡（分布在 ' + chapHeads.length + ' 个章节下）');
-else fail('章节树子项 ' + kidTotal + ' ≠ 88');
+if (kidTotal === 92) ok('章节树里挂载了全部 92 张概念卡（分布在 ' + chapHeads.length + ' 个章节下）');
+else fail('章节树子项 ' + kidTotal + ' ≠ 92');
 if (!badKid.length) ok('概念链接全部指向独立页 #/体系/章节/slug');
 else fail('概念链接格式异常: ' + badKid.length + ' → ' + badKid[0]);
 
@@ -345,8 +345,8 @@ else fail('概念视图缺少元素');
 go('price-action');
 const cGroups = doc.querySelectorAll('#railConcepts .rail-group-head');
 const cLinks = doc.querySelectorAll('#railConcepts .rail-chap.rail-concept');
-if (cLinks.length === 88) ok('概念索引收录 ' + cLinks.length + ' 张卡，分布在 ' + cGroups.length + ' 个体系组');
-else fail('概念条目 ' + cLinks.length + ' ≠ 88');
+if (cLinks.length === 92) ok('概念索引收录 ' + cLinks.length + ' 张卡，分布在 ' + cGroups.length + ' 个体系组');
+else fail('概念条目 ' + cLinks.length + ' ≠ 92');
 
 const allCards = doc.querySelectorAll('#content .concept');
 const withId = doc.querySelectorAll('#content .concept[id^="c-"]');
@@ -383,7 +383,7 @@ if (cnav.length > 0) ok('概念页有相邻概念跳转链接 ' + cnav.length + 
 else note('概念页没有相邻概念链接（可能是所在节只有一张卡）');
 
 const withEn = doc.querySelectorAll('#railConcepts .rail-concept .rc-en');
-if (withEn.length > 40) ok('概念条目带英文对照 ' + withEn.length + '/88 条（其余卡片本身未写英文名）');
+if (withEn.length > 40) ok('概念条目带英文对照 ' + withEn.length + '/92 条（其余卡片本身未写英文名）');
 else note('英文对照偏少: ' + withEn.length);
 
 /* Tab 切换 */
@@ -401,12 +401,12 @@ tabC.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
 railFilter.value = '弹簧';
 railFilter.dispatchEvent(new window.Event('input', { bubbles: true }));
 const filtered = doc.querySelectorAll('#railConcepts .rail-chap.rail-concept').length;
-if (filtered > 0 && filtered < 88) ok('过滤「弹簧」后收敛到 ' + filtered + ' 条');
+if (filtered > 0 && filtered < 92) ok('过滤「弹簧」后收敛到 ' + filtered + ' 条');
 else fail('概念过滤未生效: ' + filtered);
 
 railFilter.value = '';
 railFilter.dispatchEvent(new window.Event('input', { bubbles: true }));
-if (doc.querySelectorAll('#railConcepts .rail-chap.rail-concept').length === 88) ok('清空过滤后恢复全部');
+if (doc.querySelectorAll('#railConcepts .rail-chap.rail-concept').length === 92) ok('清空过滤后恢复全部');
 else fail('清空过滤未恢复');
 
 /* 章节视图同样可过滤（章节标签是中文，按中文词匹配） */

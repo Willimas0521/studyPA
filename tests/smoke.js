@@ -205,6 +205,28 @@ const badToc = Array.prototype.filter.call(tocLinks, (a) => !doc.getElementById(
 if (tocLinks.length && !badToc.length) ok('目录 ' + tocLinks.length + ' 个链接全部有对应锚点');
 else if (badToc.length) fail('目录链接无锚点: ' + badToc.length);
 
+/* 全站「本页目录」：每篇文章页（含无 chapters 元数据的概览 / 对比 / 学习路径 / 术语速查）都有目录，
+   且链接锚点全部可定位（章节一级走独立页、h3 二级走页内锚点） */
+console.log('\n【全站目录】');
+const tocPages = ['overview', 'price-action', 'ict', 'smc', 'wyckoff', 'elliott', 'compare', 'path', 'glossary'];
+const tocBad = [];
+tocPages.forEach((id) => {
+  go(id);
+  const toc = doc.querySelector('#content .toc:not(.toc-sub)');
+  if (!toc) { tocBad.push(id + '(无 .toc)'); return; }
+  const links = toc.querySelectorAll('a');
+  if (!links.length) { tocBad.push(id + '(无链接)'); return; }
+  let bad = 0;
+  Array.prototype.forEach.call(links, (a) => {
+    const da = a.getAttribute('data-anchor');
+    if (da) { if (!doc.getElementById(da)) bad++; }
+    else if (!/^#\/[a-z-]+\/[a-z0-9-]+$/.test(a.getAttribute('href'))) bad++;
+  });
+  if (bad) tocBad.push(id + '(异常链接 ' + bad + ')');
+});
+if (!tocBad.length) ok('全部 ' + tocPages.length + ' 篇文章页均有「本页目录」，链接锚点全部可定位');
+else fail('文章页目录异常: ' + tocBad.join(', '));
+
 /* 体系卡片跳转 */
 go('overview');
 const cards = doc.querySelectorAll('#overviewCards .card');

@@ -88,8 +88,11 @@
     var mount = root.querySelector('#glossaryMount');
     if (!mount) return;
     var html = '';
+    var tocItems = [];
     GLOSSARY.forEach(function (g) {
-      html += '<h2 id="g-' + esc(g.group) + '">' + esc(g.group) + '</h2>';
+      var gid = 'g-' + esc(g.group);
+      tocItems.push('<li><a href="#/glossary#' + gid + '" data-anchor="' + gid + '">' + esc(g.group) + '</a></li>');
+      html += '<h2 id="' + gid + '">' + esc(g.group) + '</h2>';
       html += '<div class="glossary">';
       g.items.forEach(function (it) {
         var src = (it.src || []).map(function (s) {
@@ -104,6 +107,14 @@
       html += '</div>';
     });
     mount.innerHTML = html;
+
+    /* 术语速查没有静态 h2 正文（由本函数动态拼出），单独生成一份「本页目录」 */
+    if (tocItems.length > 1) {
+      var nav = document.createElement('nav');
+      nav.className = 'toc';
+      nav.innerHTML = '<p class="toc-title">本页目录</p><ol>' + tocItems.join('') + '</ol>';
+      mount.parentNode.insertBefore(nav, mount);
+    }
   }
 
   /* ------------------------------------------------------------ 概览卡片 */
@@ -138,12 +149,61 @@
     return h;
   }
 
-  function tocHTML(p) {
-    if (!p.chapters || !p.chapters.length) return '';
-    return '<nav class="toc"><p class="toc-title">本页目录</p><ol>' +
-      p.chapters.map(function (c) {
-        return '<li><a href="#/' + esc(p.id) + '/' + esc(c.id) + '">' + esc(c.label) + '</a></li>';
-      }).join('') + '</ol></nav>';
+  /* 全站通用的「本页目录」：扫描正文里的 h2 / h3 标题，补锚点并生成两级目录。
+     每篇文章页都走这里，保证「所有文章都有目录」（与章节页的「本节内容」同一套范式）。
+       - 标题数 ≤ 1 时不生成目录（单节文章没必要）；
+       - h2 为一级条目：若该 h2 同时是独立章节页（p.chapters 命中），则链接到章节独立页，
+         否则链接到页内锚点；
+       - h3 挂在前一个 h2 之下做二级，统一走页内锚点。 */
+  function pageToc(p) {
+    var tmp = document.createElement('div');
+    tmp.innerHTML = p.body || '';
+
+    var heads = [];
+    Array.prototype.forEach.call(tmp.children, function (n) {
+      if (n.tagName === 'H2' || n.tagName === 'H3') heads.push(n);
+    });
+    if (heads.length <= 1) return { html: p.body || '', toc: '' };
+
+    var chapIds = {};
+    (p.chapters || []).forEach(function (c) { chapIds[c.id] = true; });
+
+    var h2n = 0, h3n = 0;
+    var top = [];
+    var cur = null;
+    heads.forEach(function (h) {
+      var label = h.textContent.trim();
+      if (h.tagName === 'H2') {
+        h2n++;
+        var id = h.id || ('h2-' + h2n + '-' + (slugify(label).slice(0, 18) || 'x'));
+        h.id = id;
+        cur = { id: id, label: label, kids: [], chapter: !!chapIds[id] };
+        top.push(cur);
+      } else {
+        h3n++;
+        var kid = h.id || ('sec-' + h3n + '-' + (slugify(label).slice(0, 18) || 'x'));
+        h.id = kid;
+        if (cur) cur.kids.push({ id: kid, label: label });
+      }
+    });
+
+    function li(it) {
+      var href, cls = '', anchorAttr = '';
+      if (it.chapter) {
+        href = '#/' + esc(p.id) + '/' + esc(it.id);     /* 章节独立页 */
+        cls = ' class="toc-chap"';
+      } else {
+        href = '#/' + esc(p.id) + '#' + esc(it.id);      /* 同页锚点 */
+        anchorAttr = ' data-anchor="' + esc(it.id) + '"';
+      }
+      var s = '<li><a href="' + href + '"' + cls + anchorAttr + '>' + esc(it.label) + '</a>';
+      if (it.kids && it.kids.length) s += '<ol>' + it.kids.map(li).join('') + '</ol>';
+      return s + '</li>';
+    }
+
+    var toc = '<nav class="toc"><p class="toc-title">本页目录</p><ol>' +
+      top.map(li).join('') + '</ol></nav>';
+    return { html: tmp.innerHTML, toc: toc };
   }
 
   /* 章节页的「本节内容」目录。正文里的 h3 本来没有锚点，这里现补一个：
@@ -172,7 +232,8 @@
   function renderPage(p) {
     applyAccent(p.accent);
 
-    var html = heroHTML(p) + tocHTML(p) + p.body;
+    var page = pageToc(p);
+    var html = heroHTML(p) + page.toc + page.html;
     elContent.innerHTML = html;
 
     afterMount();

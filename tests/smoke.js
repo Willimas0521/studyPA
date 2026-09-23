@@ -38,6 +38,21 @@ const doc = window.document;
 const SITE = window.SITE;
 const CHART = window.ChartModule;
 
+/* ---------------------------------------------------------------------------
+   期望值一律从 SITE 数据推导，避免新增正文后测试因写死的数字而误报失败。
+   概念卡的唯一真实来源就是各页 body 里 class="concept" 的出现次数 ——
+   注意细纲的「概念」视图收的是全部页面（含对比页 / 图层图页），不只是五套体系。
+   --------------------------------------------------------------------------- */
+const countConcepts = (p) => (p.body.match(/class="concept"/g) || []).length;
+const EXPECT_CONCEPTS = SITE.pages.reduce((n, p) => n + countConcepts(p), 0);
+const EXPECT_CHAPTERS = SITE.theories.reduce((n, t) => n + t.chapters.length, 0);
+const EXPECT_THEORIES = SITE.theories.length;
+const EXPECT_PAGES = SITE.pages.length;
+const EXPECT_TERMS = window.GLOSSARY.reduce((n, g) => n + g.items.length, 0);
+console.log('  · 数据规模：' + EXPECT_THEORIES + ' 个体系 / ' + EXPECT_CHAPTERS +
+  ' 个章节 / ' + EXPECT_CONCEPTS + ' 张概念卡 / ' + EXPECT_PAGES + ' 个页面 / ' +
+  EXPECT_TERMS + ' 条术语');
+
 console.log('\n【初始渲染】');
 const content = doc.getElementById('content');
 if (content && content.innerHTML.length > 500) ok('#content 已渲染 (' + content.innerHTML.length + ' 字符)');
@@ -45,8 +60,8 @@ else fail('#content 未渲染');
 
 /* 主导航已并入细纲：组数应覆盖 10 个页面（概览 / 五体系 / 对比 / 图层图 / 术语 / 路径） */
 const railGroups = doc.querySelectorAll('#railBody .rail-group-head');
-if (railGroups.length >= 10) ok('细纲导航生成 ' + railGroups.length + ' 个组，已接管主导航');
-else fail('细纲组数偏少: ' + railGroups.length);
+if (railGroups.length >= EXPECT_PAGES) ok('细纲导航生成 ' + railGroups.length + ' 个组，已接管主导航');
+else fail('细纲组数偏少: ' + railGroups.length + ' < ' + EXPECT_PAGES);
 
 if (!doc.getElementById('sidebar') && !doc.getElementById('nav')) ok('旧侧边栏已移除');
 else fail('侧边栏残留');
@@ -55,7 +70,7 @@ const ghLink = doc.querySelector('.rail-ext[href*="github.com"]');
 if (ghLink) ok('细纲底部保留 GitHub 入口: ' + ghLink.textContent.trim());
 else fail('GitHub 入口丢失');
 
-if (doc.querySelectorAll('#overviewCards .card').length === 5) ok('概览页 5 张体系卡片已生成');
+if (doc.querySelectorAll('#overviewCards .card').length === EXPECT_THEORIES) ok('概览页 ' + EXPECT_THEORIES + ' 张体系卡片已生成');
 else fail('概览页卡片数异常: ' + doc.querySelectorAll('#overviewCards .card').length);
 
 if (doc.querySelectorAll('.callout .callout-icon').length > 0) ok('提示块图标已注入');
@@ -189,8 +204,8 @@ else fail('路由渲染失败: ' + missed.join(', '));
 go('glossary');
 const glItems = doc.querySelectorAll('#content .gl-item').length;
 const glGroups = doc.querySelectorAll('#content .glossary').length;
-if (glItems === 67) ok('术语页渲染 ' + glItems + ' 条 / ' + glGroups + ' 组');
-else fail('术语条目 ' + glItems + ' ≠ 67');
+if (glItems === EXPECT_TERMS) ok('术语页渲染 ' + glItems + ' 条 / ' + glGroups + ' 组');
+else fail('术语条目 ' + glItems + ' ≠ ' + EXPECT_TERMS);
 
 /* 章节锚点 */
 go('ict');
@@ -283,8 +298,8 @@ Array.prototype.forEach.call(chapHeads, (h) => {
     if (!/^#\/[a-z-]+\/[a-z0-9-]+\/.+$/.test(k.getAttribute('href'))) badKid.push(k.getAttribute('href'));
   });
 });
-if (kidTotal === 92) ok('章节树里挂载了全部 92 张概念卡（分布在 ' + chapHeads.length + ' 个章节下）');
-else fail('章节树子项 ' + kidTotal + ' ≠ 92');
+if (kidTotal === EXPECT_CONCEPTS) ok('章节树里挂载了全部 ' + EXPECT_CONCEPTS + ' 张概念卡（分布在 ' + chapHeads.length + ' 个章节下）');
+else fail('章节树子项 ' + kidTotal + ' ≠ ' + EXPECT_CONCEPTS);
 if (!badKid.length) ok('概念链接全部指向独立页 #/体系/章节/slug');
 else fail('概念链接格式异常: ' + badKid.length + ' → ' + badKid[0]);
 
@@ -405,8 +420,8 @@ else fail('概念视图缺少元素');
 go('price-action');
 const cGroups = doc.querySelectorAll('#railConcepts .rail-group-head');
 const cLinks = doc.querySelectorAll('#railConcepts .rail-chap.rail-concept');
-if (cLinks.length === 92) ok('概念索引收录 ' + cLinks.length + ' 张卡，分布在 ' + cGroups.length + ' 个体系组');
-else fail('概念条目 ' + cLinks.length + ' ≠ 92');
+if (cLinks.length === EXPECT_CONCEPTS) ok('概念索引收录 ' + cLinks.length + ' 张卡，分布在 ' + cGroups.length + ' 个体系组');
+else fail('概念条目 ' + cLinks.length + ' ≠ ' + EXPECT_CONCEPTS);
 
 const allCards = doc.querySelectorAll('#content .concept');
 const withId = doc.querySelectorAll('#content .concept[id^="c-"]');
@@ -443,7 +458,7 @@ if (cnav.length > 0) ok('概念页有相邻概念跳转链接 ' + cnav.length + 
 else note('概念页没有相邻概念链接（可能是所在节只有一张卡）');
 
 const withEn = doc.querySelectorAll('#railConcepts .rail-concept .rc-en');
-if (withEn.length > 40) ok('概念条目带英文对照 ' + withEn.length + '/92 条（其余卡片本身未写英文名）');
+if (withEn.length > EXPECT_CONCEPTS * 0.4) ok('概念条目带英文对照 ' + withEn.length + '/' + EXPECT_CONCEPTS + ' 条（其余卡片本身未写英文名）');
 else note('英文对照偏少: ' + withEn.length);
 
 /* Tab 切换 */
@@ -461,12 +476,12 @@ tabC.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
 railFilter.value = '弹簧';
 railFilter.dispatchEvent(new window.Event('input', { bubbles: true }));
 const filtered = doc.querySelectorAll('#railConcepts .rail-chap.rail-concept').length;
-if (filtered > 0 && filtered < 92) ok('过滤「弹簧」后收敛到 ' + filtered + ' 条');
+if (filtered > 0 && filtered < EXPECT_CONCEPTS) ok('过滤「弹簧」后收敛到 ' + filtered + ' 条');
 else fail('概念过滤未生效: ' + filtered);
 
 railFilter.value = '';
 railFilter.dispatchEvent(new window.Event('input', { bubbles: true }));
-if (doc.querySelectorAll('#railConcepts .rail-chap.rail-concept').length === 92) ok('清空过滤后恢复全部');
+if (doc.querySelectorAll('#railConcepts .rail-chap.rail-concept').length === EXPECT_CONCEPTS) ok('清空过滤后恢复全部');
 else fail('清空过滤未恢复');
 
 /* 章节视图同样可过滤（章节标签是中文，按中文词匹配） */

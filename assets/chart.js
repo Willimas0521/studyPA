@@ -916,12 +916,527 @@ window.ChartModule = (function () {
       'aria-label="反转示意图：上排为没有跟进 K 线的失败反转，下排为有跟进确认的成功切换">' + s + '</svg>';
   }
 
+  /* 3. 单根 K 线解剖：四个价格、三样东西，以及三类 K 线的横向对照 */
+  function candleAnatomyDiagram() {
+    var w = 900, h = 386;
+    var s = '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="var(--surface)"/>';
+
+    /* 左右分栏 */
+    s += '<line x1="392" y1="34" x2="392" y2="336" stroke="var(--border)" ' +
+      'stroke-width="1" stroke-dasharray="5 5"/>';
+
+    /* 同一根放大的阳线，用它的区间标出上三分之一与下三分之一 */
+    var cx = 210, bw = 58;
+    var hi = 54, lo = 300, yClose = 124, yOpen = 252;
+    var rng = lo - hi;
+    var t1 = hi + rng / 3, t2 = hi + rng * 2 / 3;
+
+    s += dashLine(56, t1, 360, t1, 'var(--border-2)');
+    s += dashLine(56, t2, 360, t2, 'var(--border-2)');
+    s += note(56, t1 - 6, '上三分之一', 'var(--text-3)', 'start', 10);
+    s += note(56, t2 + 16, '下三分之一', 'var(--text-3)', 'start', 10);
+
+    /* 上下影线 + 实体 */
+    s += '<line x1="' + cx + '" y1="' + hi + '" x2="' + cx + '" y2="' + lo +
+      '" stroke="var(--up)" stroke-width="2.2"/>';
+    s += '<rect x="' + (cx - bw / 2) + '" y="' + yClose + '" width="' + bw + '" height="' +
+      (yOpen - yClose) + '" rx="3" fill="var(--up)"/>';
+
+    /* 左侧：四个价格 */
+    s += dashLine(cx - bw / 2, yClose, 138, yClose, 'var(--d-amber)');
+    s += note(132, yClose + 4, '收盘', 'var(--d-amber)', 'end', 11);
+    s += dashLine(cx - bw / 2, yOpen, 138, yOpen, 'var(--text-2)');
+    s += note(132, yOpen + 4, '开盘', 'var(--text-2)', 'end', 11);
+    s += note(cx, hi - 12, '最高', 'var(--up)', 'middle', 11);
+    s += note(cx, lo + 20, '最低', 'var(--up)', 'middle', 11);
+
+    /* 右侧：三样东西 */
+    s += dashLine(cx + bw / 2, (hi + yClose) / 2, 258, (hi + yClose) / 2, 'var(--d-cyan)');
+    s += note(264, (hi + yClose) / 2 + 4, '上影线', 'var(--d-cyan)', 'start', 12);
+    s += note(264, (hi + yClose) / 2 + 20, '被拒绝的高价', 'var(--text-3)', 'start', 10.5);
+
+    s += dashLine(cx + bw / 2, (yClose + yOpen) / 2, 258, (yClose + yOpen) / 2, 'var(--d-blue)');
+    s += note(264, (yClose + yOpen) / 2 + 4, '实体', 'var(--d-blue)', 'start', 12);
+    s += note(264, (yClose + yOpen) / 2 + 20, '开盘 → 收盘', 'var(--text-3)', 'start', 10.5);
+
+    s += dashLine(cx + bw / 2, (yOpen + lo) / 2, 258, (yOpen + lo) / 2, 'var(--d-cyan)');
+    s += note(264, (yOpen + lo) / 2 + 4, '下影线', 'var(--d-cyan)', 'start', 12);
+    s += note(264, (yOpen + lo) / 2 + 20, '被拒绝的低价', 'var(--text-3)', 'start', 10.5);
+
+    s += note(cx, 336, '收盘落在上三分之一 → 买方守住了战果', 'var(--d-amber)', 'middle', 11.5);
+
+    /* ---- 右栏：三类 K 线，同一区间下对比实体与影线 ---- */
+    var rHi = 70, rLo = 286;
+    function bigBar(x, wd, yTop, yBot, color) {
+      var out = '<line x1="' + x + '" y1="' + rHi + '" x2="' + x + '" y2="' + rLo +
+        '" stroke="' + color + '" stroke-width="2.2"/>';
+      out += '<rect x="' + (x - wd / 2) + '" y="' + yTop + '" width="' + wd + '" height="' +
+        (yBot - yTop) + '" rx="3" fill="' + color + '"/>';
+      return out;
+    }
+
+    /* 趋势棒：实体几乎占满，影线极短 */
+    s += bigBar(492, 40, 78, 278, 'var(--up)');
+    s += note(492, 322, '趋势棒', 'var(--up)', 'middle', 12);
+    s += note(492, 340, '实体长 · 影线短 · 单边压倒', 'var(--text-3)', 'middle', 10.5);
+
+    /* 十字星：实体极小，上下影线都长 */
+    s += bigBar(666, 40, 174, 184, 'var(--d-neutral)');
+    s += note(666, 322, '十字星', 'var(--d-neutral)', 'middle', 12);
+    s += note(666, 340, '实体极小 · 双方打平', 'var(--text-3)', 'middle', 10.5);
+
+    /* 反转棒：下影线很长，收盘回到上三分之一 */
+    s += bigBar(840, 40, 128, 226, 'var(--up)');
+    s += note(840, 322, '反转棒', 'var(--d-violet)', 'middle', 12);
+    s += note(840, 340, '长下影 · 收盘拉回上方', 'var(--text-3)', 'middle', 10.5);
+
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" ' +
+      'aria-label="K 线解剖图：左侧标注最高最低开盘收盘与实体影线，右侧对比趋势棒、十字星、反转棒">' + s + '</svg>';
+  }
+
+  /* 4. 交易区间：上下沿、中部无信息区、边缘交易与一次失败突破 */
+  function tradingRangeDiagram() {
+    var w = 900, h = 372;
+    var x0 = 100, barW = 18, bw = 9;
+    var t = 84, b = 300, pMin = 90, pMax = 205;
+    var UPPER = 175, LOWER = 105;
+    var N = 40;
+
+    var bars = synthBars([
+      126, 138, 150, 160, 168, 172, 168, 158, 146, 134,
+      124, 114, 108, 112, 124, 136, 148, 158, 166, 170,
+      164, 152, 140, 128, 118, 110, 106, 112, 126, 140,
+      152, 162, 168, 195, 178, 158, 140, 126, 118, 124
+    ], 2.2);
+
+    function X(i) { return x0 + i * barW; }
+    function Y(p) { return t + (pMax - p) / (pMax - pMin) * (b - t); }
+
+    var s = '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="var(--surface)"/>';
+
+    /* 中部无信息区 */
+    var mTop = Y(UPPER - 20), mBot = Y(LOWER + 20);
+    s += '<rect x="' + r1(X(0) - 16) + '" y="' + r1(mTop) + '" width="' + r1(X(N - 1) - X(0) + 32) +
+      '" height="' + r1(mBot - mTop) + '" rx="6" fill="var(--surface-2)"/>';
+    s += note((X(0) + X(N - 1)) / 2, r1((mTop + mBot) / 2) + 4,
+      '中部无信息区 —— 盈亏比最差、方向上最含糊的地方，正确的做法是什么都不做',
+      'var(--text-3)', 'middle', 11.5);
+
+    /* 上下沿 */
+    s += dashLine(X(0) - 24, Y(UPPER), X(N - 1) + 26, Y(UPPER), 'var(--d-blue)');
+    s += dashLine(X(0) - 24, Y(LOWER), X(N - 1) + 26, Y(LOWER), 'var(--d-blue)');
+    s += note(X(N - 1) + 32, Y(UPPER) - 8, '区间上沿', 'var(--d-blue)', 'start', 11.5);
+    s += note(X(N - 1) + 32, Y(LOWER) + 18, '区间下沿', 'var(--d-blue)', 'start', 11.5);
+
+    s += barsSVG(bars, X, bw, Y);
+
+    /* 边缘反向：下沿买、上沿卖 */
+    s += ringDot(X(12), Y(108), 'var(--up)', '', 0);
+    s += note(X(12) - 4, Y(108) + 22, '下沿买', 'var(--up)', 'middle', 11.5);
+    s += ringDot(X(19), Y(170), 'var(--down)', '', 0);
+    s += note(X(19) + 4, Y(170) - 14, '上沿卖', 'var(--down)', 'middle', 11.5);
+
+    /* 那次假突破 */
+    s += ringDot(X(33), Y(195), 'var(--d-amber)', '', 0);
+    s += note(X(33), Y(195) - 14, '失败突破', 'var(--d-amber)', 'middle', 11.5);
+    s += note(X(33), Y(195) - 30, '八成突破尝试会失败', 'var(--d-amber)', 'middle', 10.5);
+
+    s += note(w / 2, 348, '区间持续越久，突破后的测量移动越大 —— 把区间高度复制到突破方向，就是第一目标',
+      'var(--text-2)', 'middle', 11.5);
+
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" ' +
+      'aria-label="交易区间示意图：上下沿清晰，中部为无信息区，下沿买上沿卖，上方有一次失败突破">' + s + '</svg>';
+  }
+
+  /* 5. 突破的两种结局：跟进的成立，与被收回的失败 */
+  function breakoutTypesDiagram() {
+    var w = 900, h = 424;
+    var x0 = 66, barW = 24, bw = 12;
+    var LEVEL_A = 126, LEVEL_B = 130;
+
+    var win = synthBars([
+      100, 104, 108, 112, 116, 120, 124, 130, 138, 146, 152, 148, 144, 146, 152, 158, 166
+    ], 2.2);
+    var fail = synthBars([
+      100, 105, 111, 117, 123, 129, 136, 144, 152, 150, 140, 130, 120, 112, 105, 100
+    ], 2.2);
+
+    function X(i) { return x0 + i * barW; }
+    function mkY(t, b, pMin, pMax) {
+      return function (p) { return t + (pMax - p) / (pMax - pMin) * (b - t); };
+    }
+    var Y1 = mkY(112, 208, 94, 174);
+    var Y2 = mkY(286, 382, 92, 162);
+
+    var s = '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="var(--surface)"/>';
+
+    /* ---- 上：成功突破 ---- */
+    s += dashLine(X(0) - 26, Y1(LEVEL_A), X(16) + 26, Y1(LEVEL_A), 'var(--d-blue)');
+    s += note(X(16) + 30, Y1(LEVEL_A) + 4, '关键位', 'var(--d-blue)', 'start', 11);
+    s += barsSVG(win, X, bw, Y1);
+
+    s += note(X(0) - 26, 96, '成功突破：突破 → 跟进 → 回踩不破 → 延续',
+      'var(--d-cyan)', 'start', 11.5);
+    s += '<rect x="' + r1(X(7) - bw / 2 - 3) + '" y="' + r1(Y1(140) - 6) + '" width="' +
+      r1(X(9) - X(7) + bw + 6) + '" height="' + r1(Y1(126) - Y1(140) + 12) +
+      '" rx="6" fill="none" stroke="var(--d-cyan)" stroke-width="1.4" stroke-dasharray="4 3"/>';
+    s += note((X(7) + X(9)) / 2, Y1(140) - 14, '突破 + 跟进', 'var(--d-cyan)', 'middle', 10.5);
+    s += ringDot(X(12), Y1(144), 'var(--up)', '', 0);
+    s += note(X(12), Y1(144) + 22, '回踩守住', 'var(--up)', 'middle', 10.5);
+
+    /* ---- 下：失败突破 ---- */
+    s += dashLine(X(0) - 26, Y2(LEVEL_B), X(15) + 26, Y2(LEVEL_B), 'var(--d-blue)');
+    s += note(X(15) + 30, Y2(LEVEL_B) + 4, '关键位', 'var(--d-blue)', 'start', 11);
+    s += barsSVG(fail, X, bw, Y2);
+
+    s += note(X(0) - 26, 270, '失败突破：突破后收不回区间 → 原来的方向继续，且追高者变成卖压',
+      'var(--d-amber-strong)', 'start', 11.5);
+    s += ringDot(X(8), Y2(152), 'var(--d-amber)', '', 0);
+    s += note(X(8), Y2(152) - 12, '最高', 'var(--d-amber)', 'middle', 10.5);
+    s += ringDot(X(12), Y2(120), 'var(--down)', '', 0);
+    s += note(X(12), Y2(120) + 24, '收回区间内 → 突破失败', 'var(--d-amber-strong)', 'middle', 10.5);
+
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" ' +
+      'aria-label="突破成败对比图：上排为有跟进并回踩守住的成功突破，下排为突破后收回区间内的失败突破">' + s + '</svg>';
+  }
+
+  /* 6. 通道的三种结局：加速突破、转成区间、跌破反转 */
+  function channelFatesDiagram() {
+    var w = 900, h = 310;
+    var COL = 300, barW = 12, bw = 7;
+    var t = 60, b = 238;
+
+    function pane(col, pMin, pMax) {
+      var x0 = col * COL + 24;
+      return {
+        x: function (i) { return x0 + i * barW; },
+        y: function (p) { return t + (pMax - p) / (pMax - pMin) * (b - t); }
+      };
+    }
+    function solid(x1, y1, x2, y2, color, wid) {
+      return '<line x1="' + r1(x1) + '" y1="' + r1(y1) + '" x2="' + r1(x2) + '" y2="' + r1(y2) +
+        '" stroke="' + color + '" stroke-width="' + (wid || 1.6) + '"/>';
+    }
+    function caption(x, l1, l2) {
+      return note(x, 266, l1, 'var(--text-2)', 'start', 11) +
+        note(x, 288, l2, 'var(--text-3)', 'start', 10.5);
+    }
+
+    var s = '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="var(--surface)"/>';
+
+    /* ---------- ① 加速：实体收在通道上沿之外 ---------- */
+    var g1 = pane(0, 94, 192);
+    var b1 = synthBars([100, 106, 113, 119, 115, 110, 116, 123, 130, 126, 121, 127,
+      134, 141, 137, 133, 140, 148, 158, 170, 182], 2.0);
+    s += solid(g1.x(3), g1.y(119), g1.x(20), g1.y(156.4), 'var(--d-violet)');
+    s += dashLine(g1.x(5), g1.y(110), g1.x(20), g1.y(143), 'var(--d-violet)');
+    s += barsSVG(b1, g1.x, bw, g1.y);
+    s += note(g1.x(0), 40, '① 通道加速', 'var(--d-cyan)', 'start', 12);
+    s += note(g1.x(0), 80, '实体收在通道上沿之外', 'var(--d-cyan)', 'start', 10.5);
+    s += note(g1.x(0), 96, '→ 斜率变陡，原来的通道被甩在下面', 'var(--d-cyan)', 'start', 10.5);
+    s += caption(g1.x(0), '要维持更陡的角度，需要越来越大的买盘', '通常出现在趋势的最后阶段');
+
+    /* ---------- ② 转区间：打破后走平 ---------- */
+    var g2 = pane(1, 94, 148);
+    var b2 = synthBars([100, 106, 113, 119, 115, 110, 116, 123, 130, 135, 131, 127,
+      128, 133, 124, 132, 125, 131, 126, 130, 127], 2.0);
+    s += solid(g2.x(3), g2.y(119), g2.x(12), g2.y(143), 'var(--d-violet)');
+    s += dashLine(g2.x(5), g2.y(110), g2.x(12), g2.y(129.8), 'var(--d-violet)');
+    s += barsSVG(b2, g2.x, bw, g2.y);
+    s += dashLine(g2.x(13), g2.y(135.5), g2.x(22), g2.y(135.5), 'var(--d-blue)');
+    s += dashLine(g2.x(13), g2.y(121.5), g2.x(22), g2.y(121.5), 'var(--d-blue)');
+    s += note(g2.x(0), 40, '② 通道转区间', 'var(--d-blue)', 'start', 12);
+    s += note(g2.x(0), 80, '通道被打破后不再延续', 'var(--d-blue)', 'start', 10.5);
+    s += note(g2.x(0), 96, '→ 高低点重新变水平', 'var(--d-blue)', 'start', 10.5);
+    s += caption(g2.x(0), '三种结局里最常见的一种', '它是中继信号，不是反转信号');
+
+    /* ---------- ③ 反转：跌穿趋势线 ---------- */
+    var g3 = pane(2, 82, 140);
+    var b3 = synthBars([100, 106, 113, 119, 115, 110, 116, 123, 130, 126, 121, 117,
+      124, 131, 130, 124, 116, 109, 102, 95, 88], 2.0);
+    s += solid(g3.x(3), g3.y(119), g3.x(15), g3.y(133.4), 'var(--d-violet)');
+    s += dashLine(g3.x(5), g3.y(110), g3.x(20), g3.y(127.5), 'var(--d-violet)');
+    s += barsSVG(b3, g3.x, bw, g3.y);
+    s += dashLine(g3.x(14), g3.y(132), g3.x(20), g3.y(90), 'var(--d-amber)');
+    s += ringDot(g3.x(17), g3.y(109), 'var(--d-amber)', '', 0);
+    s += note(g3.x(17) + 9, g3.y(109) + 4, '跌破', 'var(--d-amber)', 'start', 10.5);
+    s += note(g3.x(0), 40, '③ 通道反转', 'var(--d-amber)', 'start', 12);
+    s += note(g3.x(0), 80, '跌穿趋势线之后不再收回', 'var(--d-amber)', 'start', 10.5);
+    s += note(g3.x(0), 96, '→ 斜率反向', 'var(--d-amber)', 'start', 10.5);
+    s += caption(g3.x(0), '判据是跌穿之后持续走低', '只是碰到趋势线又弹回来，那叫回踩');
+
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" ' +
+      'aria-label="通道的三种结局并排对比：左为加速突破，中为转成水平区间，右为跌破趋势线反转">' + s + '</svg>';
+  }
+
+  /* 7. 开盘突破：区间被有效突破 → 全天单边；被收回 → 震荡日 */
+  function openingBreakoutDiagram() {
+    var w = 900, h = 424;
+    var x0 = 76, barW = 30, bw = 14;
+
+    var trend = synthBars([100, 103, 97, 104, 96,
+      110, 114, 118, 122, 126, 130, 134, 132, 137, 142, 147, 152, 158, 164, 170], 1.8);
+    var chop = synthBars([100, 103, 97, 104, 96,
+      105, 107, 103, 99, 97, 96, 99, 102, 103, 100, 98, 96, 99, 102, 100], 1.8);
+
+    function X(i) { return x0 + i * barW; }
+    function mkY(t, b, pMin, pMax) {
+      return function (p) { return t + (pMax - p) / (pMax - pMin) * (b - t); };
+    }
+    var Y1 = mkY(118, 214, 90, 176);
+    var Y2 = mkY(302, 398, 90, 112);
+
+    var s = '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="var(--surface)"/>';
+
+    /* ---------- 上：趋势从开盘开始 ---------- */
+    s += note(20, 92, '① 趋势从开盘开始', 'var(--d-cyan)', 'start', 12);
+    s += note(20, 108, '开盘区间被有效突破，且不再回到区间内 —— 全天单边', 'var(--d-cyan)', 'start', 10.5);
+    s += '<rect x="' + r1(X(0) - bw / 2 - 6) + '" y="' + r1(Y1(105)) + '" width="' +
+      r1(X(4) - X(0) + bw + 12) + '" height="' + r1(Y1(95) - Y1(105)) +
+      '" rx="5" fill="none" stroke="var(--d-blue)" stroke-width="1.4" stroke-dasharray="4 3"/>';
+    s += barsSVG(trend, X, bw, Y1);
+    s += note((X(0) + X(4)) / 2, Y1(105) - 10, '开盘区间', 'var(--d-blue)', 'middle', 10.5);
+    s += ringDot(X(5), Y1(trend[5].c), 'var(--d-cyan)', '', 0);
+    s += note(X(5), Y1(trend[5].c) + 22, '突破点', 'var(--d-cyan)', 'middle', 10.5);
+
+    /* ---------- 下：突破失败 → 震荡日 ---------- */
+    s += note(20, 276, '② 突破失败：被收回开盘区间', 'var(--d-amber-strong)', 'start', 12);
+    s += note(20, 292, '当天大概率是震荡日，切回区间边缘反向的做法', 'var(--d-amber-strong)', 'start', 10.5);
+    s += '<rect x="' + r1(X(0) - bw / 2 - 6) + '" y="' + r1(Y2(104)) + '" width="' +
+      r1(X(19) - X(0) + bw + 12) + '" height="' + r1(Y2(96) - Y2(104)) +
+      '" rx="5" fill="var(--surface-2)"/>';
+    s += dashLine(X(0) - 18, Y2(104), X(19) + 20, Y2(104), 'var(--d-blue)');
+    s += dashLine(X(0) - 18, Y2(96), X(19) + 20, Y2(96), 'var(--d-blue)');
+    s += barsSVG(chop, X, bw, Y2);
+    s += ringDot(X(6), Y2(chop[6].h), 'var(--d-amber)', '', 0);
+    s += note(X(6) + 12, Y2(chop[6].h) - 6, '假突破', 'var(--d-amber-strong)', 'start', 10.5);
+
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" ' +
+      'aria-label="开盘突破对比图：上格开盘区间被有效突破后全天单边，下格突破被收回后当天转为震荡">' + s + '</svg>';
+  }
+
+  /* 8. 测量移动：区间高度投射 / 突破段投射 */
+  function measuredMoveDiagram() {
+    var w = 900, h = 424;
+    var x0 = 76, barW = 30, bw = 14;
+
+    var fromRange = synthBars([104, 108, 111, 106, 101, 100, 105, 110, 112, 107,
+      114, 118, 121, 124, 126, 124], 1.8);
+    var fromLeg = synthBars([100, 103, 106, 109, 112, 108, 105, 104,
+      107, 110, 113, 116, 119, 121, 119, 118], 1.8);
+
+    function X(i) { return x0 + i * barW; }
+    function mkY(t, b, pMin, pMax) {
+      return function (p) { return t + (pMax - p) / (pMax - pMin) * (b - t); };
+    }
+    function vMeasure(x, y1, y2, color) {
+      var cap = 5;
+      return '<line x1="' + r1(x) + '" y1="' + r1(y1) + '" x2="' + r1(x) + '" y2="' + r1(y2) +
+        '" stroke="' + color + '" stroke-width="1.5"/>' +
+        '<line x1="' + r1(x - cap) + '" y1="' + r1(y1) + '" x2="' + r1(x + cap) + '" y2="' + r1(y1) +
+        '" stroke="' + color + '" stroke-width="1.5"/>' +
+        '<line x1="' + r1(x - cap) + '" y1="' + r1(y2) + '" x2="' + r1(x + cap) + '" y2="' + r1(y2) +
+        '" stroke="' + color + '" stroke-width="1.5"/>';
+    }
+    var Y1 = mkY(112, 196, 96, 134);
+    var Y2 = mkY(292, 382, 96, 126);
+    var mx = X(15) + 52;
+
+    var s = '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="var(--surface)"/>';
+
+    /* ---------- 上：区间高度投射 ---------- */
+    s += note(20, 88, '① 区间高度投射（最常用）', 'var(--d-cyan)', 'start', 12);
+    s += note(20, 104, '区间横得越久，这个目标越可靠', 'var(--d-cyan)', 'start', 10.5);
+    s += dashLine(X(0) - 22, Y1(112), X(9) + 14, Y1(112), 'var(--d-violet)');
+    s += dashLine(X(0) - 22, Y1(100), X(9) + 14, Y1(100), 'var(--d-violet)');
+    s += barsSVG(fromRange, X, bw, Y1);
+    s += dashLine(X(10), Y1(124), X(15) + 30, Y1(124), 'var(--d-cyan)');
+    s += note(X(10), Y1(124) - 9, '目标位', 'var(--d-cyan)', 'start', 10.5);
+    s += vMeasure(mx, Y1(100), Y1(112), 'var(--d-violet)');
+    s += note(mx + 10, (Y1(100) + Y1(112)) / 2 + 4, '区间高度', 'var(--d-violet)', 'start', 10.5);
+    s += vMeasure(mx, Y1(112), Y1(124), 'var(--d-cyan)');
+    s += note(mx + 10, (Y1(112) + Y1(124)) / 2 + 4, '等长投射', 'var(--d-cyan)', 'start', 10.5);
+
+    /* ---------- 下：突破段投射 ---------- */
+    s += note(20, 268, '② 突破段投射', 'var(--d-amber)', 'start', 12);
+    s += note(20, 284, '量出第一段上涨，从回撤低点等长复制', 'var(--d-amber)', 'start', 10.5);
+    s += barsSVG(fromLeg, X, bw, Y2);
+    s += ringDot(X(7), Y2(fromLeg[7].l), 'var(--d-amber)', '', 0);
+    s += note(X(7) + 10, Y2(fromLeg[7].l) + 14, '回撤低点', 'var(--d-amber)', 'start', 10.5);
+    s += dashLine(X(8), Y2(116), X(15) + 30, Y2(116), 'var(--d-amber)');
+    s += note(X(8), Y2(116) - 9, '目标位', 'var(--d-amber)', 'start', 10.5);
+    s += vMeasure(mx, Y2(100), Y2(112), 'var(--d-violet)');
+    s += note(mx + 10, (Y2(100) + Y2(112)) / 2 + 4, '突破段', 'var(--d-violet)', 'start', 10.5);
+    s += vMeasure(mx, Y2(116), Y2(104), 'var(--d-amber)');
+    s += note(mx + 10, (Y2(116) + Y2(104)) / 2 + 4, '等长投射', 'var(--d-amber)', 'start', 10.5);
+
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" ' +
+      'aria-label="测量移动示意图：上格把区间高度投射到突破方向，下格把突破段高度从回撤低点等长复制">' + s + '</svg>';
+  }
+
+  /* 9. 区间的三种类型：窄幅 / 宽幅 / 倾斜（标准横向型已在交易区间图里） */
+  function rangeTypesDiagram() {
+    var w = 900, h = 310;
+    var COL = 300, barW = 12, bw = 7;
+    var t = 60, b = 238;
+
+    function pane(col, pMin, pMax) {
+      var x0 = col * COL + 24;
+      return {
+        x: function (i) { return x0 + i * barW; },
+        y: function (p) { return t + (pMax - p) / (pMax - pMin) * (b - t); }
+      };
+    }
+    function solid(x1, y1, x2, y2, color, wid, op) {
+      return '<line x1="' + r1(x1) + '" y1="' + r1(y1) + '" x2="' + r1(x2) + '" y2="' + r1(y2) +
+        '" stroke="' + color + '" stroke-width="' + (wid || 1.6) + '"' +
+        (op ? ' opacity="' + op + '"' : '') + '/>';
+    }
+    /* 用带端刺的竖线标注区间带宽 */
+    function widthBracket(x, y1, y2, color, label) {
+      var s2 = solid(x, y1, x, y2, color, 1.4);
+      s2 += solid(x - 5, y1, x + 5, y1, color, 1.4);
+      s2 += solid(x - 5, y2, x + 5, y2, color, 1.4);
+      if (label) s2 += note(x, y1 - 10, label, color, 'middle', 10.5);
+      return s2;
+    }
+    function caption(x, l1, l2) {
+      return note(x, 266, l1, 'var(--text-2)', 'start', 11) +
+        note(x, 288, l2, 'var(--text-3)', 'start', 10.5);
+    }
+
+    var s = '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="var(--surface)"/>';
+
+    /* ---------- ① 窄幅区间：宽度不足以覆盖成本 ---------- */
+    var g1 = pane(0, 94, 150);
+    var b1 = synthBars([101, 103, 100, 104, 102, 105, 101, 103, 106, 102, 104,
+      101, 103, 105, 102, 104, 103, 101, 104, 102, 103], 1.6);
+    var U1 = 107.4, L1 = 98.6;
+    s += dashLine(g1.x(0) - 14, g1.y(U1), g1.x(20) + 10, g1.y(U1), 'var(--d-cyan)');
+    s += dashLine(g1.x(0) - 14, g1.y(L1), g1.x(20) + 10, g1.y(L1), 'var(--d-cyan)');
+    s += barsSVG(b1, g1.x, bw, g1.y);
+    s += widthBracket(g1.x(20) + 16, g1.y(U1), g1.y(L1), 'var(--d-cyan)', '区间窄');
+    s += note(g1.x(1), g1.y(U1) - 12, '↑ 突破买', 'var(--d-cyan)', 'start', 10);
+    s += note(g1.x(1), g1.y(L1) + 18, '↓ 突破卖', 'var(--d-cyan)', 'start', 10);
+    s += note(g1.x(0), 40, '① 窄幅区间', 'var(--d-cyan)', 'start', 12);
+    s += note(g1.x(0), 80, 'K 线几乎完全重叠，边界看不出清晰的两次失败', 'var(--d-cyan)', 'start', 10.5);
+    s += note(g1.x(0), 96, '→ 空仓等待，或两侧各挂一张突破单', 'var(--d-cyan)', 'start', 10.5);
+    s += caption(g1.x(0), '窄到一定程度就不该交易', '摩擦成本会吃掉边缘反向的全部优势');
+
+    /* ---------- ② 宽幅区间：钱在边缘，但要放宽止损 ---------- */
+    var g2 = pane(1, 94, 185);
+    var b2 = synthBars([104, 120, 138, 150, 148, 132, 114, 100, 98, 110,
+      128, 144, 150, 140, 124, 106, 100, 114, 132, 148], 2.2);
+    var U2 = 151.5, L2 = 96.5, MID2 = 124;
+    s += dashLine(g2.x(0) - 14, g2.y(U2), g2.x(19) + 10, g2.y(U2), 'var(--d-blue)');
+    s += dashLine(g2.x(0) - 14, g2.y(L2), g2.x(19) + 10, g2.y(L2), 'var(--d-blue)');
+    s += dashLine(g2.x(0) - 6, g2.y(MID2), g2.x(19) + 6, g2.y(MID2), 'var(--d-neutral)');
+    s += barsSVG(b2, g2.x, bw, g2.y);
+    s += widthBracket(g2.x(19) + 16, g2.y(U2), g2.y(L2), 'var(--d-blue)', '区间宽');
+    s += note(g2.x(0), g2.y(MID2) - 8, '中部先当作目标，不要一口吃到另一端',
+      'var(--d-neutral)', 'start', 10.5);
+    s += note(g2.x(0), 40, '② 宽幅区间', 'var(--d-blue)', 'start', 12);
+    s += note(g2.x(0), 80, '单边推动远、回撤深，看着像"没有规律的趋势"', 'var(--d-blue)', 'start', 10.5);
+    s += note(g2.x(0), 96, '→ 边缘反向仍有效，但止损要放宽、仓位要减小', 'var(--d-blue)', 'start', 10.5);
+    s += caption(g2.x(0), '套用窄区间的紧止损，会被正常波动扫出去', '然后价格照着你的方向走');
+
+    /* ---------- ③ 倾斜区间：本质是通道 ---------- */
+    var g3 = pane(2, 90, 182);
+    var b3 = synthBars([102, 110, 111, 106, 103, 108, 120, 130, 132, 128,
+      124, 125, 137, 148, 154, 150, 146, 145, 155, 169], 1.8);
+    s += dashLine(g3.x(0), g3.y(104), g3.x(19), g3.y(170), 'var(--d-violet)');
+    s += dashLine(g3.x(0), g3.y(94), g3.x(19), g3.y(153), 'var(--d-violet)');
+    s += barsSVG(b3, g3.x, bw, g3.y);
+    s += note(g3.x(4), g3.y(126), '↗ 顺势方向优先', 'var(--d-violet)', 'start', 10.5);
+    s += note(g3.x(0), 40, '③ 倾斜区间', 'var(--d-violet)', 'start', 12);
+    s += note(g3.x(0), 80, '高低点在抬高，但节奏琐碎、重叠度高', 'var(--d-violet)', 'start', 10.5);
+    s += note(g3.x(0), 96, '→ 它其实就是通道，按通道的边缘做', 'var(--d-violet)', 'start', 10.5);
+    s += caption(g3.x(0), '当成水平区间做，会在倾斜的上沿反复做空', '逆着倾斜方向的胜率极低');
+
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" ' +
+      'aria-label="区间三种类型并排对比：左为窄幅区间（宽度不足以覆盖成本），中为宽幅区间（边界清晰但回撤深），右为倾斜区间（本质是通道）">' + s + '</svg>';
+  }
+
+  /* 10. 边界被反复测试之后逐渐变薄，第四次才走出去 */
+  function rangeWearingDiagram() {
+    var w = 900, h = 352;
+    var x0 = 76, barW = 24, bw = 11;
+    var t = 96, b = 300, pMin = 94, pMax = 166;
+    var UPPER = 131, LOWER = 100;
+    var N = 30;
+
+    var bars = synthBars([108, 118, 127, 118, 108, 102, 110, 129, 120, 110,
+      106, 108, 118, 128, 130, 121, 111, 107, 108, 118, 126, 130, 120, 111,
+      107, 108, 118, 130, 143, 155], 1.8);
+
+    function X(i) { return x0 + i * barW; }
+    function Y(p) { return t + (pMax - p) / (pMax - pMin) * (b - t); }
+    function edge(x1, x2, wid, op, dash) {
+      return '<line x1="' + r1(x1) + '" y1="' + r1(Y(UPPER)) + '" x2="' + r1(x2) + '" y2="' +
+        r1(Y(UPPER)) + '" stroke="var(--d-blue)" stroke-width="' + wid + '" opacity="' + op + '"' +
+        (dash ? ' stroke-dasharray="6 5"' : '') + '/>';
+    }
+
+    var s = '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="var(--surface)"/>';
+
+    /* 上沿被逐次消耗：线越画越淡 */
+    s += edge(X(0) - 22, X(7), 2.2, 0.95, false);
+    s += edge(X(7), X(14), 1.7, 0.62, false);
+    s += edge(X(14), X(21), 1.3, 0.38, true);
+    s += edge(X(21), X(26), 1.0, 0.20, true);
+    s += note(X(N - 1) + 12, Y(UPPER) - 8, '上沿：被测试 4 次后破', 'var(--d-blue)', 'start', 11);
+
+    /* 下沿只被测试过一次，挂单依然很厚 */
+    s += dashLine(X(0) - 22, Y(LOWER), X(N - 1) + 24, Y(LOWER), 'var(--d-blue)');
+    s += note(X(N - 1) + 12, Y(LOWER) + 18, '下沿：只被测试 1 次，仍然很厚',
+      'var(--d-blue)', 'start', 11);
+
+    s += barsSVG(bars, X, bw, Y);
+
+    /* 四次测试 */
+    s += ringDot(X(7), Y(UPPER), 'var(--d-blue)', '', 0);
+    s += note(X(7), Y(UPPER) - 12, '1', 'var(--d-blue)', 'middle', 11);
+    s += ringDot(X(14), Y(UPPER), 'var(--d-blue)', '', 0);
+    s += note(X(14), Y(UPPER) - 12, '2', 'var(--d-blue)', 'middle', 11);
+    s += ringDot(X(21), Y(UPPER), 'var(--d-blue)', '', 0);
+    s += note(X(21), Y(UPPER) - 12, '3', 'var(--d-blue)', 'middle', 11);
+    s += ringDot(X(27), Y(UPPER), 'var(--d-amber)', '', 0);
+    s += note(X(27), Y(UPPER) - 12, '4', 'var(--d-amber)', 'middle', 11);
+    s += ringDot(X(5), Y(LOWER), 'var(--d-blue)', '', 0);
+
+    /* 第 4 次之后走出来 */
+    s += '<line x1="' + r1(X(27)) + '" y1="' + r1(Y(131)) + '" x2="' + r1(X(29)) + '" y2="' +
+      r1(Y(156)) + '" stroke="var(--d-amber)" stroke-width="2"/>';
+    s += ringDot(X(29), Y(155), 'var(--up)', '', 0);
+    s += note(X(29), Y(155) - 14, '走出 + 跟进', 'var(--up)', 'middle', 10.5);
+
+    s += note(20, 34, '边界每被测试一次，挡在路上的挂单就被消耗掉一层',
+      'var(--text-2)', 'start', 12);
+    s += note(20, 56, '线越画越淡，代表阻力越薄 —— 这和 K 线强不强没有关系',
+      'var(--text-3)', 'start', 11);
+    s += note(20, 326, '区间的突破不发生在"最强"的时候，而发生在"边界最薄"的时候',
+      'var(--text-2)', 'start', 11);
+    s += note(20, 346, '所以同一个位置重复得越多，越该准备突破，而不是继续做边缘反向',
+      'var(--text-3)', 'start', 10.5);
+
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" ' +
+      'aria-label="区间边界被反复测试后逐渐削弱的示意图：上沿被测试四次，线条逐次变淡，第四次成功走出；下沿只被测试一次，依然很厚">' + s + '</svg>';
+  }
+
   var DIAGRAMS = {
     'wyckoff-schematic': wyckoffSchematic,
     'elliott-53': elliott53,
     'trend-up': trendUpDiagram,
     'trend-channel': trendChannelDiagram,
-    'trend-reversal': reversalDiagram
+    'trend-reversal': reversalDiagram,
+    'candle-anatomy': candleAnatomyDiagram,
+    'trading-range': tradingRangeDiagram,
+    'breakout-types': breakoutTypesDiagram,
+    'channel-fates': channelFatesDiagram,
+    'opening-breakout': openingBreakoutDiagram,
+    'measured-move': measuredMoveDiagram,
+    'range-types': rangeTypesDiagram,
+    'range-wearing': rangeWearingDiagram
   };
 
   function mountDiagrams(root) {

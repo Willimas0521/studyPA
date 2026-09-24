@@ -994,6 +994,50 @@ window.ChartModule = (function () {
       'aria-label="K 线解剖图：左侧标注最高最低开盘收盘与实体影线，右侧对比趋势棒、十字星、反转棒">' + s + '</svg>';
   }
 
+  /* 典型 K 线实例：并排 5 种最常见单根 / 双根形态，逐一读出结论 */
+  function candleExamplesDiagram() {
+    var w = 900, h = 386;
+    var s = '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="var(--surface)"/>';
+
+    function oneBar(x, bw, o, c, hi, lo, up) {
+      var color = up ? 'var(--up)' : 'var(--down)';
+      var out = '<line x1="' + r1(x) + '" y1="' + r1(hi) + '" x2="' + r1(x) + '" y2="' + r1(lo) +
+        '" stroke="' + color + '" stroke-width="2.2"/>';
+      var yTop = Math.min(o, c), yBot = Math.max(o, c);
+      out += '<rect x="' + r1(x - bw / 2) + '" y="' + r1(yTop) + '" width="' + bw +
+        '" height="' + r1(Math.max(2, yBot - yTop)) + '" rx="2" fill="' + color + '"/>';
+      return out;
+    }
+
+    var cols = [
+      { x: 90,  title: '强趋势棒', note: '实体长 · 影线短 · 收极值', up: true,
+        concl: '最强单边：买方碾压，别逆势', bars: [[34, 200, 72, 66, 214, true]] },
+      { x: 270, title: '长上影', note: '冲高被卖回 · 收下方', up: false,
+        concl: '上方被拒绝：供给压顶', bars: [[34, 196, 188, 58, 214, false]] },
+      { x: 450, title: '长下影', note: '探底被买回 · 收上方', up: true,
+        concl: '下方被接住：需求看多线索', bars: [[34, 110, 132, 92, 232, true]] },
+      { x: 630, title: '十字星', note: '实体极小 · 双方打平', up: false,
+        concl: '平衡暂停：不是反转', bars: [[34, 150, 153, 88, 222, false]] },
+      { x: 810, title: '内包线', note: '子棒落在母棒之内', up: true,
+        concl: '波动收缩：等突破', bars: [[36, 120, 200, 90, 224, true], [20, 150, 168, 134, 190, false]] }
+    ];
+
+    cols.forEach(function (col) {
+      col.bars.forEach(function (b) {
+        s += oneBar(col.x, b[0], b[1], b[2], b[3], b[4], b[5]);
+      });
+      s += note(col.x, 282, col.title, col.up ? 'var(--up)' : 'var(--d-neutral)', 'middle', 13);
+      s += note(col.x, 302, col.note, 'var(--text-3)', 'middle', 10);
+      s += '<line x1="' + r1(col.x - 86) + '" y1="314" x2="' + r1(col.x + 86) + '" y2="314" stroke="var(--border)" stroke-width="1"/>';
+      s += note(col.x, 334, col.concl, 'var(--d-amber)', 'middle', 10.5);
+    });
+
+    s += note(450, 366, '五个例子没有一个是“信号”本身：它们告诉你下一步该做什么，而不是立刻下单。', 'var(--text-3)', 'middle', 11);
+
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" ' +
+      'aria-label="典型 K 线实例：强趋势棒、长上影、长下影、十字星、内包线五种形态逐一读解">' + s + '</svg>';
+  }
+
   /* 4. 交易区间：上下沿、中部无信息区、边缘交易与一次失败突破 */
   function tradingRangeDiagram() {
     var w = 900, h = 372;
@@ -1423,6 +1467,118 @@ window.ChartModule = (function () {
       'aria-label="区间边界被反复测试后逐渐削弱的示意图：上沿被测试四次，线条逐次变淡，第四次成功走出；下沿只被测试一次，依然很厚">' + s + '</svg>';
   }
 
+  /* 10. 缺口回补：向上跳空形成后，价格随后走回空档将其填满 */
+  function gapFillDiagram() {
+    var w = 900, h = 348;
+    var x0 = 64, barW = 46, bw = 24;
+    var pTop = 56, pBot = 292, pMin = 98, pMax = 116;
+
+    var bars = [
+      { o: 100,   h: 102,   l: 99,    c: 101 },
+      { o: 101,   h: 103,   l: 100,   c: 102 },
+      { o: 102,   h: 104,   l: 101,   c: 103 },
+      { o: 103,   h: 105,   l: 102.5, c: 104.5 },
+      { o: 108,   h: 110,   l: 107.5, c: 109 },   /* 向上跳空 */
+      { o: 109,   h: 111,   l: 108.5, c: 110.5 },
+      { o: 110.5, h: 112.5, l: 110,   c: 112 },
+      { o: 112,   h: 113,   l: 107,   c: 108.5 }, /* 回踩进入缺口 */
+      { o: 108.5, h: 109.5, l: 104,   c: 105 },   /* 完全回补 */
+      { o: 105,   h: 106.5, l: 102.5, c: 103.5 }
+    ];
+
+    function X(i) { return x0 + i * barW; }
+    function Y(p) { return pTop + (pMax - p) / (pMax - pMin) * (pBot - pTop); }
+
+    var GAP_TOP = 107.5, GAP_BOT = 105;
+    var s = '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="var(--surface)"/>';
+
+    var gy1 = Y(GAP_TOP), gy2 = Y(GAP_BOT);
+    s += '<rect x="' + r1(X(4) - bw / 2 - 4) + '" y="' + r1(gy1) + '" width="' + r1(bw + 8) +
+      '" height="' + r1(gy2 - gy1) + '" fill="var(--d-cyan)" opacity=".14"/>';
+    s += dashLine(X(4) - bw / 2 - 10, gy1, X(4) + bw / 2 + 10, gy1, 'var(--d-cyan)');
+    s += dashLine(X(4) - bw / 2 - 10, gy2, X(4) + bw / 2 + 10, gy2, 'var(--d-cyan)');
+
+    s += barsSVG(bars, X, bw, Y);
+
+    s += note(X(4), gy1 - 14, '向上跳空 · 缺口形成', 'var(--d-cyan)', 'middle', 11);
+    s += note(X(4), gy1 - 30, '开盘跳到前一根最高价之上', 'var(--text-3)', 'middle', 10);
+
+    /* 价格回补：从高点拉一条磁吸曲线进入缺口 */
+    s += '<path d="M' + r1(X(6)) + ' ' + r1(Y(112.5) - 6) + ' Q' + r1(X(7)) + ' ' + r1(Y(110)) +
+      ' ' + r1(X(7.4)) + ' ' + r1(Y(106)) + '" fill="none" stroke="var(--d-amber)" stroke-width="1.6"/>';
+    s += ringDot(X(7.4), Y(106), 'var(--d-amber)', '', 0);
+    s += note(X(8.6), Y(106) - 4, '价格回到缺口内', 'var(--d-amber-strong)', 'start', 10.5);
+    s += note(X(8.6), Y(106) + 14, '→ 缺口被回补', 'var(--d-amber-strong)', 'start', 10.5);
+
+    s += note(w / 2, h - 18, '九成以上的缺口都会被回补 —— 缺口是磁铁，不是墙', 'var(--text-2)', 'middle', 11.5);
+
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" ' +
+      'aria-label="缺口回补示意图：向上跳空形成缺口后，价格随后走回空档将缺口填满">' + s + '</svg>';
+  }
+
+  /* 11. 三类缺口：突破跳空 / 中继跳空 / 衰竭跳空 同图对照 */
+  function gapTypesDiagram() {
+    var w = 900, h = 392;
+    var x0 = 46, barW = 46, bw = 22;
+    var pTop = 60, pBot = 300, pMin = 98, pMax = 132;
+
+    var bars = [
+      { o: 100,   h: 102,   l: 99,    c: 101 },
+      { o: 101,   h: 103,   l: 100,   c: 102 },
+      { o: 102,   h: 104,   l: 101,   c: 103 },
+      { o: 103,   h: 104.5, l: 101.5, c: 102 },
+      { o: 102,   h: 103,   l: 100.5, c: 101 },
+      { o: 101,   h: 102.5, l: 99.5,  c: 100.5 },
+      { o: 100.5, h: 102,   l: 99,    c: 100.5 },
+      { o: 100.5, h: 102,   l: 99.5,  c: 101.5 },
+      { o: 105,   h: 108,   l: 104.5, c: 107 },   /* 突破跳空 */
+      { o: 107,   h: 110,   l: 106.5, c: 109 },
+      { o: 109,   h: 112,   l: 108.5, c: 111 },
+      { o: 115,   h: 118,   l: 114.5, c: 117 },   /* 中继跳空 */
+      { o: 117,   h: 120,   l: 116.5, c: 119 },
+      { o: 119,   h: 122,   l: 118.5, c: 121 },
+      { o: 125,   h: 128,   l: 121,   c: 122.5 }, /* 衰竭跳空（收盘落回缺口内） */
+      { o: 122.5, h: 124,   l: 118,   c: 119 },   /* 反转向下 */
+      { o: 119,   h: 120.5, l: 115,   c: 116 },
+      { o: 116,   h: 117.5, l: 112,   c: 113 }
+    ];
+
+    function X(i) { return x0 + i * barW; }
+    function Y(p) { return pTop + (pMax - p) / (pMax - pMin) * (pBot - pTop); }
+
+    var s = '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="var(--surface)"/>';
+
+    s += dashLine(X(0) - 8, Y(104), X(7) + 8, Y(104), 'var(--d-neutral)');
+    s += note(X(0) - 8, Y(104) - 8, '区间', 'var(--text-3)', 'start', 10.5);
+
+    s += barsSVG(bars, X, bw, Y);
+
+    function gapBand(idx, top, bot, color) {
+      var gy1 = Y(top), gy2 = Y(bot);
+      return '<rect x="' + r1(X(idx) - bw / 2 - 3) + '" y="' + r1(gy1) +
+        '" width="' + r1(bw + 6) + '" height="' + r1(gy2 - gy1) +
+        '" fill="' + color + '" opacity=".16"/>';
+    }
+    s += gapBand(8, 104.5, 102, 'var(--d-blue)');
+    s += gapBand(11, 114.5, 112, 'var(--d-cyan)');
+    s += gapBand(14, 124.5, 122, 'var(--d-amber)');
+
+    s += note(X(8), Y(104.5) - 16, '① 突破跳空', 'var(--d-blue)', 'middle', 11);
+    s += note(X(8), Y(104.5) - 32, '区间突破 · 不回补', 'var(--text-3)', 'middle', 10);
+    s += note(X(11), Y(114.5) - 16, '② 中继跳空', 'var(--d-cyan)', 'middle', 11);
+    s += note(X(11), Y(114.5) - 32, '趋势中途 · 确认动能', 'var(--text-3)', 'middle', 10);
+    s += note(X(14), Y(124.5) - 16, '③ 衰竭跳空', 'var(--d-amber)', 'middle', 11);
+    s += note(X(14), Y(124.5) - 32, '末端放量 · 立刻被回补', 'var(--text-3)', 'middle', 10);
+
+    s += '<path d="M' + r1(X(14)) + ' ' + r1(Y(122.5) + 6) + ' Q' + r1(X(16)) + ' ' + r1(Y(118)) +
+      ' ' + r1(X(17)) + ' ' + r1(Y(113) + 6) + '" fill="none" stroke="var(--d-amber)" stroke-width="1.6"/>';
+
+    s += note(w / 2, h - 16, '位置决定含义：起点不回补、中点确认动能、终点迅速回补即预警反转', 'var(--text-2)', 'middle', 11.5);
+
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" ' +
+      'aria-label="三类缺口示意图：突破跳空不回补、中继跳空确认动能、衰竭跳空迅速回补并转向">' + s + '</svg>';
+  }
+
   var DIAGRAMS = {
     'wyckoff-schematic': wyckoffSchematic,
     'elliott-53': elliott53,
@@ -1430,13 +1586,16 @@ window.ChartModule = (function () {
     'trend-channel': trendChannelDiagram,
     'trend-reversal': reversalDiagram,
     'candle-anatomy': candleAnatomyDiagram,
+    'candle-examples': candleExamplesDiagram,
     'trading-range': tradingRangeDiagram,
     'breakout-types': breakoutTypesDiagram,
     'channel-fates': channelFatesDiagram,
     'opening-breakout': openingBreakoutDiagram,
     'measured-move': measuredMoveDiagram,
     'range-types': rangeTypesDiagram,
-    'range-wearing': rangeWearingDiagram
+    'range-wearing': rangeWearingDiagram,
+    'gap-fill': gapFillDiagram,
+    'gap-types': gapTypesDiagram
   };
 
   function mountDiagrams(root) {

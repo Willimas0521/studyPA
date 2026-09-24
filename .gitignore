@@ -1,0 +1,8 @@
+# 测试依赖（仅本地运行 jsdom 冒烟测试用，非站点运行依赖）
+node_modules/
+package.json
+package-lock.json
+
+# 本地推送凭证（含 GitHub PAT，绝不入库）
+.push_token
+

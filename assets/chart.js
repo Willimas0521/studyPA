@@ -1579,6 +1579,146 @@ window.ChartModule = (function () {
       'aria-label="三类缺口示意图：突破跳空不回补、中继跳空确认动能、衰竭跳空迅速回补并转向">' + s + '</svg>';
   }
 
+  /* 楔形：上升楔形（看跌）/ 下降楔形（看涨），两条边界同向收敛、突破常反向 */
+  function wedgeTypesDiagram() {
+    var w = 900, h = 392;
+    var pTop = 64, pBot = 296, pMin = 90, pMax = 134;
+
+    function panel(off) {
+      var x0 = 60 + off, barW = 26, bw = 12;
+      function X(i) { return x0 + i * barW; }
+      function Y(p) { return pTop + (pMax - p) / (pMax - pMin) * (pBot - pTop); }
+      return { X: X, Y: Y };
+    }
+
+    var s = '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="var(--surface)"/>';
+
+    /* 上升楔形（看跌）：两线同向上倾但下沿更陡，向右收敛，向下突破 */
+    var L = panel(0);
+    var up = synthBars([100, 106, 111, 115, 118, 120, 121.5, 122], 2.0);
+    s += barsSVG(up, L.X, L.bw, L.Y);
+    s += '<line x1="' + r1(L.X(0)) + '" y1="' + r1(L.Y(105)) + '" x2="' + r1(L.X(7)) + '" y2="' + r1(L.Y(124.5)) + '" stroke="var(--d-blue)" stroke-width="1.6" opacity=".85"/>';
+    s += '<line x1="' + r1(L.X(0)) + '" y1="' + r1(L.Y(100)) + '" x2="' + r1(L.X(7)) + '" y2="' + r1(L.Y(121.5)) + '" stroke="var(--d-blue)" stroke-width="1.6" opacity=".5"/>';
+    s += note(L.X(3.5), L.Y(128), '上升楔形（看跌）', 'var(--d-blue)', 'middle', 11.5);
+    s += dashLine(L.X(7), L.Y(122), L.X(7) + 16, L.Y(108), 'var(--d-amber)');
+    s += note(L.X(7) + 6, L.Y(104), '向下突破', 'var(--d-amber)', 'start', 10.5);
+
+    /* 下降楔形（看涨）：两线同向下倾但上沿更陡，向右收敛，向上突破 */
+    var R = panel(460);
+    var dn = synthBars([122, 116, 111, 107, 104, 102, 101, 100.5], 2.0);
+    s += barsSVG(dn, R.X, R.bw, R.Y);
+    s += '<line x1="' + r1(R.X(0)) + '" y1="' + r1(R.Y(124)) + '" x2="' + r1(R.X(7)) + '" y2="' + r1(R.Y(101)) + '" stroke="var(--d-cyan)" stroke-width="1.6" opacity=".85"/>';
+    s += '<line x1="' + r1(R.X(0)) + '" y1="' + r1(R.Y(122)) + '" x2="' + r1(R.X(7)) + '" y2="' + r1(R.Y(100)) + '" stroke="var(--d-cyan)" stroke-width="1.6" opacity=".5"/>';
+    s += note(R.X(3.5), R.Y(128), '下降楔形（看涨）', 'var(--d-cyan)', 'middle', 11.5);
+    s += dashLine(R.X(7), R.Y(100.5), R.X(7) + 16, R.Y(112), 'var(--d-amber)');
+    s += note(R.X(7) + 6, R.Y(116), '向上突破', 'var(--d-amber)', 'start', 10.5);
+
+    s += note(w / 2, h - 12, '两条边界都朝同一方向但收敛——动能逐次减弱；突破方向通常反向，入场要等突破后的结构确认', 'var(--text-2)', 'middle', 11);
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="楔形示意图：上升楔形看跌、下降楔形看涨，两者都收敛且突破常反向">' + s + '</svg>';
+  }
+
+  /* 支撑阻力：同一条水平被反复测试，跌破后原支撑翻转为阻力 */
+  function supportResistanceDiagram() {
+    var w = 900, h = 360;
+    var pTop = 56, pBot = 300, pMin = 100, pMax = 150;
+    var x0 = 56, barW = 38, bw = 18;
+    function X(i) { return x0 + i * barW; }
+    function Y(p) { return pTop + (pMax - p) / (pMax - pMin) * (pBot - pTop); }
+
+    var bars = [
+      { o: 138, h: 142, l: 128, c: 132 },
+      { o: 132, h: 135, l: 119, c: 124 },
+      { o: 124, h: 137, l: 119, c: 134 },
+      { o: 134, h: 138, l: 120, c: 127 },
+      { o: 127, h: 139, l: 119, c: 136 },
+      { o: 136, h: 141, l: 134, c: 138 },
+      { o: 138, h: 140, l: 116, c: 112 },
+      { o: 112, h: 120, l: 110, c: 117 },
+      { o: 117, h: 118, l: 103, c: 107 }
+    ];
+
+    var s = '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="var(--surface)"/>';
+    s += barsSVG(bars, X, bw, Y);
+
+    var lvl = 118;
+    s += '<line x1="' + r1(X(-0.5)) + '" y1="' + r1(Y(lvl)) + '" x2="' + r1(X(8.5)) + '" y2="' + r1(Y(lvl)) +
+      '" stroke="var(--d-violet)" stroke-width="1.6" stroke-dasharray="7 5" opacity=".8"/>';
+    s += note(X(-0.5) + 4, Y(lvl) - 8, '同一水平', 'var(--d-violet)', 'start', 10.5);
+
+    s += note(X(1.5), Y(lvl) + 26, '支撑（两次被接住）', 'var(--d-blue)', 'middle', 10);
+    s += note(X(5.5), Y(lvl) - 22, '跌破', 'var(--d-amber)', 'middle', 10);
+    s += note(X(7.5), Y(lvl) + 26, '回踩变阻力（被拒）', 'var(--d-cyan)', 'middle', 10);
+
+    s += note(w / 2, h - 12, '一条水平被反复测试 → 跌破后原支撑翻转为阻力，回踩时变成卖压区', 'var(--text-2)', 'middle', 11);
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="支撑阻力角色互换示意图：水平支撑被跌破后翻转为阻力">' + s + '</svg>';
+  }
+
+  /* 反转：上排微双底（更高的低点确认）、下排假突破（失败反转） */
+  function reversalTypesDiagram() {
+    var w = 900, h = 424;
+    var x0 = 64, barW = 32, bw = 15;
+    function X(i) { return x0 + i * barW; }
+    function mkY(t, b, pMin, pMax) {
+      return function (p) { return t + (pMax - p) / (pMax - pMin) * (b - t); };
+    }
+    var Y1 = mkY(96, 214, 100, 142);
+    var Y2 = mkY(276, 392, 96, 142);
+
+    var s = '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="var(--surface)"/>';
+
+    /* 上：下跌中两次下探，第二脚更高（HL）→ 反转 */
+    var up = synthBars([128, 122, 116, 110, 108, 116, 118, 110, 116, 124, 130], 2.4);
+    s += barsSVG(up, X, bw, Y1);
+    s += ringDot(X(4), Y1(108), 'var(--d-blue)', '低', Y1(108) + 22);
+    s += ringDot(X(7), Y1(110), 'var(--d-blue)', 'HL', Y1(110) + 22);
+    s += note(X(7), Y1(110) - 26, '第二脚更高 → 更高的低点', 'var(--d-blue)', 'middle', 10.5);
+    s += note(X(0) - 12, 80, '微双底：下跌末端出现更高的低点，反转成立', 'var(--d-blue)', 'start', 11.5);
+
+    /* 下：上涨创出新高后反转棒 + 跟进，向下反转 */
+    var dn = synthBars([108, 114, 120, 126, 132, 138, 142, 140, 132, 124, 116, 108], 2.4);
+    s += barsSVG(dn, X, bw, Y2);
+    s += ringDot(X(6), Y2(142), 'var(--d-amber)', '新高', Y2(142) - 16);
+    s += ringDot(X(7), Y2(140), 'var(--d-amber)', '反转', Y2(140) + 22);
+    s += note(X(6), Y2(142) + 30, '新高后被反转棒拉回 → 失败突破', 'var(--d-amber)', 'middle', 10.5);
+    s += note(X(0) - 12, 262, '假突破：创趋势末端新高，立刻被反转棒 + 跟进吞掉', 'var(--d-amber)', 'start', 11.5);
+
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="反转示意图：上排微双底更高的低点确认反转，下排假突破失败反转">' + s + '</svg>';
+  }
+
+  /* 通道宽度：窄通道回撤浅只能追；宽通道回撤深当区间做 */
+  function channelWidthDiagram() {
+    var w = 900, h = 344;
+    var pTop = 52, pBot = 296, pMin = 96, pMax = 150;
+
+    function panel(off) {
+      var x0 = 60 + off, barW = 30, bw = 14;
+      function X(i) { return x0 + i * barW; }
+      function Y(p) { return pTop + (pMax - p) / (pMax - pMin) * (pBot - pTop); }
+      return { X: X, Y: Y };
+    }
+
+    var s = '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="var(--surface)"/>';
+
+    /* 左：窄通道——回撤极浅，两线几乎贴合 */
+    var L = panel(0);
+    var tight = synthBars([110, 116, 121, 127, 132, 137, 142, 147, 152, 157], 1.4);
+    s += barsSVG(tight, L.X, L.bw, L.Y);
+    s += '<line x1="' + r1(L.X(1)) + '" y1="' + r1(L.Y(112)) + '" x2="' + r1(L.X(9)) + '" y2="' + r1(L.Y(154)) + '" stroke="var(--d-violet)" stroke-width="1.5" opacity=".8"/>';
+    s += '<line x1="' + r1(L.X(1)) + '" y1="' + r1(L.Y(115)) + '" x2="' + r1(L.X(9)) + '" y2="' + r1(L.Y(157)) + '" stroke="var(--d-violet)" stroke-width="1.5" stroke-dasharray="6 5" opacity=".55"/>';
+    s += note(L.X(4), L.Y(157) + 18, '窄通道：回撤极浅，只能追', 'var(--d-violet)', 'middle', 10.5);
+
+    /* 右：宽通道——回撤深，两线张开 */
+    var R = panel(470);
+    var broad = synthBars([112, 122, 132, 128, 118, 130, 142, 134, 122, 136], 4.0);
+    s += barsSVG(broad, R.X, R.bw, R.Y);
+    s += '<line x1="' + r1(R.X(1)) + '" y1="' + r1(R.Y(117)) + '" x2="' + r1(R.X(9)) + '" y2="' + r1(R.Y(126)) + '" stroke="var(--d-violet)" stroke-width="1.5" opacity=".8"/>';
+    s += '<line x1="' + r1(R.X(1)) + '" y1="' + r1(R.Y(127)) + '" x2="' + r1(R.X(9)) + '" y2="' + r1(R.Y(150)) + '" stroke="var(--d-violet)" stroke-width="1.5" stroke-dasharray="6 5" opacity=".55"/>';
+    s += note(R.X(4), R.Y(150) + 18, '宽通道：回撤深，当区间做', 'var(--d-violet)', 'middle', 10.5);
+
+    s += note(w / 2, h - 10, '宽度决定用哪套规则：窄通道只能追、止损远；宽通道按边缘反向，止损放宽、仓位减半', 'var(--text-2)', 'middle', 11);
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="通道宽度示意图：窄通道回撤浅只能追，宽通道回撤深当区间做">' + s + '</svg>';
+  }
+
   var DIAGRAMS = {
     'wyckoff-schematic': wyckoffSchematic,
     'elliott-53': elliott53,
@@ -1595,7 +1735,11 @@ window.ChartModule = (function () {
     'range-types': rangeTypesDiagram,
     'range-wearing': rangeWearingDiagram,
     'gap-fill': gapFillDiagram,
-    'gap-types': gapTypesDiagram
+    'gap-types': gapTypesDiagram,
+    'wedge-types': wedgeTypesDiagram,
+    'support-resistance': supportResistanceDiagram,
+    'reversal-types': reversalTypesDiagram,
+    'channel-width': channelWidthDiagram
   };
 
   function mountDiagrams(root) {

@@ -737,11 +737,21 @@ th.rowhead { text-align: left; background: var(--surface-2); font-weight: 660; c
   background: transparent; font-weight: 600;
 }
 .layer-btn.layer-all:hover { background: var(--surface-2); }
-.cw-canvas { position: relative; padding: 4px 12px 12px; }
-.cw-canvas svg { display: block; width: 100%; height: auto; }
 .cw-legend { padding: 0 20px 16px; font-size: 13px; color: var(--text-2); min-height: 40px; }
 .cw-legend .lg-row { display: flex; gap: 8px; align-items: baseline; margin-bottom: 3px; }
 .cw-legend .lg-swatch { flex: none; width: 9px; height: 9px; border-radius: 2px; position: relative; top: 1px; }
+
+/* ---------- TradingView Lightweight Charts 容器 ---------- */
+.cw-stage { position: relative; padding: 4px 12px 12px; }
+.diagram .chart-widget { margin: 0; }
+.lwc-host { position: relative; width: 100%; }
+.lwc-chart { position: absolute; inset: 0; }
+/* 标注层盖在 K 线上方，但不吃鼠标事件，缩放平移仍然由图表接管 */
+.lwc-overlay { position: absolute; left: 0; top: 0; pointer-events: none; }
+.diagram-fallback {
+  margin: 0; padding: 14px 16px; font-size: 13px; line-height: 1.6;
+  color: var(--text-3); background: var(--surface-2); border-radius: var(--radius-sm);
+}
 
 /* SVG 内部 */
 .chart-bg { fill: var(--surface); }

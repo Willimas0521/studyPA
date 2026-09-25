@@ -854,6 +854,8 @@
 
   function route() {
     var r = currentRoute();
+    /* 切换页面前先销毁上一页挂载的图表实例，避免轻量图表实例 / ResizeObserver 泄漏 */
+    if (CHART && CHART.destroyAll) CHART.destroyAll();
     closeRail();
 
     if (r.chap && r.slug) { renderConceptPage(r); window.scrollTo({ top: 0, behavior: 'auto' }); return; }

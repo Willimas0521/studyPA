@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>图表渲染验证（全量 25 图）</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  body { padding: 26px 0; background: var(--bg); }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  .diagram { margin: 14px 0 28px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h2>交易理论图谱 · TradingView 引擎渲染验证（全部 25 张）</h2>
+  <div id="mount"></div>
+</div>
+<script src="../assets/vendor/lightweight-charts.standalone.production.js"></script>
+<script src="../assets/diagrams.js"></script>
+<script src="../assets/chart.js"></script>
+<script>
+  var mount = document.getElementById('mount');
+  var keys = Object.keys(window.DIAGRAM_SPECS || {});
+  keys.forEach(function (k) {
+    var d = document.createElement('div');
+    d.className = 'diagram';
+    d.setAttribute('data-diagram', k);
+    mount.appendChild(d);
+  });
+  window.ChartModule.mountDiagrams(document);
+  window.__keys = keys;
+</script>
+</body>
+</html>

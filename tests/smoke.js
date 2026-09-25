@@ -26,7 +26,15 @@ window.addEventListener('error', (e) => errors.push('window error: ' + e.message
 const origErr = console.error;
 console.error = (...a) => { errors.push('console.error: ' + a.join(' ')); };
 
-const scripts = ['data/theories.js', 'data/glossary.js', 'assets/chart.js', 'assets/app.js'];
+const scripts = [
+  'data/theories.js',
+  'data/glossary.js',
+  'assets/vendor/lightweight-charts.standalone.production.js',
+  'assets/diagrams.js',
+  'assets/layers.js',
+  'assets/chart.js',
+  'assets/app.js'
+];
 try {
   scripts.forEach((f) => window.eval(read(f)));
   ok('四个脚本全部执行完成，无异常抛出');
@@ -93,17 +101,22 @@ SITE.pages.forEach((p) => {
     let msg = p.id + '  ' + p.body.length + ' 字符';
 
     const diagrams = mnt.querySelectorAll('.diagram[data-diagram]');
+    let nCanvas = 0, nFallback = 0;
     diagrams.forEach((d) => {
-      const svg = d.querySelector('svg');
-      if (!svg) throw new Error('示意图未生成: ' + d.getAttribute('data-diagram'));
-      msg += ' | svg ' + svg.getAttribute('viewBox');
+      const key = d.getAttribute('data-diagram');
+      const cv = d.querySelector('.lwc-host canvas');
+      const fb = d.querySelector('.diagram-fallback');
+      if (cv) { nCanvas++; return; }                                  // 真实浏览器：canvas 已渲染
+      /* jsdom 无 canvas，已注册 spec 的图退化成 .diagram-fallback；
+         只有「缺少图表定义」字样才说明 spec 真的缺失 —— 那才是失败 */
+      if (fb && !fb.textContent.includes('缺少图表定义')) { nFallback++; return; }
+      throw new Error('示意图未注册或渲染失败: ' + key + (fb ? ' (' + fb.textContent + ')' : ''));
     });
+    if (diagrams.length) msg += ' | 示意图 ' + diagrams.length + ' 张（canvas ' + nCanvas + ' / fallback ' + nFallback + '）';
 
     if (p.id === 'chart') {
       const w = mnt.querySelector('.chart-widget');
       if (!w) throw new Error('交互组件未挂载');
-      const svg = mnt.querySelector('.cw-canvas svg');
-      if (!svg) throw new Error('交互图 SVG 未生成');
       const btns = mnt.querySelectorAll('.layer-btn[data-l]');
       if (btns.length !== 6) throw new Error('图层按钮数 ' + btns.length + ' ≠ 6');
       const allBtn = mnt.querySelector('.layer-btn[data-all]');
@@ -112,33 +125,36 @@ SITE.pages.forEach((p) => {
       if (pressed.length !== 2) throw new Error('默认开启图层数 ' + pressed.length + ' ≠ 2');
       const legend = mnt.querySelector('.cw-legend').innerHTML;
       if (legend.length < 50) throw new Error('图例为空');
-      // 交互：点第一个关闭的图层按钮
+
+      // 交互：点第一个关闭的图层按钮 → aria-pressed 翻转（jsdom 无 canvas，只能校验 DOM 状态）
       const off = mnt.querySelector('.layer-btn[data-l][aria-pressed="false"]');
-      const before = mnt.querySelectorAll('.cw-canvas g[data-layer]').length;
+      const wasPressed = off.getAttribute('aria-pressed');
       off.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
-      const after = mnt.querySelectorAll('.cw-canvas g[data-layer]').length;
-      if (after !== before + 1) throw new Error('点击图层按钮未生效 ' + before + '→' + after);
-      msg += ' | 图层 ' + before + '→' + after + ' 切换正常';
+      const nowPressed = off.getAttribute('aria-pressed');
+      if (wasPressed === nowPressed) throw new Error('点击图层按钮未翻转 aria-pressed');
+      msg += ' | 图层切换 aria-pressed ' + wasPressed + '→' + nowPressed;
 
-      // 全部打开，检查收敛区
+      // 全部打开：6 层全开 + 文案「全部关闭」+ 空态图例消失
       allBtn.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
-      const all = mnt.querySelectorAll('.cw-canvas g[data-layer]').length;
-      const hasConv = mnt.querySelector('.cw-canvas svg').textContent.includes('五个体系共同指向的区域');
-      if (all !== 6) throw new Error('全部打开后图层数 ' + all);
-      if (!hasConv) throw new Error('多图层收敛区标注缺失');
-      if (allBtn.textContent !== '全部关闭') throw new Error('全部开关文案未切换');
-      msg += ' | 全开 ' + all + ' 层 + 收敛标注 ✓';
+      const all = mnt.querySelectorAll('.layer-btn[data-l][aria-pressed="true"]').length;
+      if (all !== 6) throw new Error('全部打开后开启图层数 ' + all + ' ≠ 6');
+      if (allBtn.textContent.trim() !== '全部关闭') throw new Error('全部开关文案未切换: ' + allBtn.textContent);
+      msg += ' | 全开 ' + all + ' 层 ✓';
 
-      // 全部关闭 + 空态图例
+      // 全部关闭：0 层 + 文案「全部打开」+ 空态图例
       allBtn.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
-      if (mnt.querySelectorAll('.cw-canvas g[data-layer]').length !== 0) throw new Error('全部关闭未生效');
+      const none = mnt.querySelectorAll('.layer-btn[data-l][aria-pressed="true"]').length;
+      if (none !== 0) throw new Error('全部关闭后仍有开启图层 ' + none);
+      if (allBtn.textContent.trim() !== '全部打开') throw new Error('全部开关文案未复位: ' + allBtn.textContent);
       if (!mnt.querySelector('.cw-legend').textContent.includes('所有图层已关闭')) throw new Error('空态图例缺失');
       msg += ' | 全关空态 ✓';
-      allBtn.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+      allBtn.dispatchEvent(new window.MouseEvent('click', { bubbles: true })); // 复位为全开
 
-      // 蜡烛数量
-      const candles = mnt.querySelectorAll('.cw-canvas rect.candle-up, .cw-canvas rect.candle-down').length;
-      msg += ' | 蜡烛/量柱 ' + candles + ' 个';
+      // 渲染目标：真实浏览器是 canvas，jsdom 退化为 fallback
+      const cv = mnt.querySelector('.lwc-host canvas');
+      const fb = mnt.querySelector('.diagram-fallback');
+      if (cv || fb) msg += ' | 图表 ' + (cv ? 'canvas' : 'fallback');
+      else throw new Error('图层图既无 canvas 也无 fallback');
     }
 
     if (p.id === 'glossary') {
@@ -158,7 +174,15 @@ const wkMnt = doc.createElement('div');
 wkMnt.innerHTML = wkPage.body;
 CHART.mountDiagrams(wkMnt);
 const wkIds = ['wyckoff-schematic', 'wyckoff-spring', 'wyckoff-sos-lps', 'wyckoff-utad', 'wyckoff-vsa', 'wyckoff-cause-effect'];
-const wkMissing = wkIds.filter((id) => !wkMnt.querySelector('.diagram[data-diagram="' + id + '"] svg'));
+const wkMissing = wkIds.filter((id) => {
+  const d = wkMnt.querySelector('.diagram[data-diagram="' + id + '"]');
+  if (!d) return true;                                            // 占位都不在
+  const cv = d.querySelector('.lwc-host canvas');
+  const fb = d.querySelector('.diagram-fallback');
+  if (cv) return false;                                           // 真实浏览器
+  if (fb && !fb.textContent.includes('缺少图表定义')) return false; // jsdom：spec 已注册
+  return true;
+});
 if (!wkMissing.length) ok('威科夫 ' + wkIds.length + ' 张示意图全部渲染（1 原有 + 5 新增 K 线图）');
 else fail('威科夫示意图缺失: ' + wkMissing.join(', '));
 const wkExtra = Array.prototype.filter.call(
@@ -525,7 +549,10 @@ else fail('概念卡未进搜索索引');
 /* ---------- 资源引用检查 ---------- */
 console.log('\n【资源引用】');
 const htmlSrc = read('index.html');
-['assets/style.css', 'assets/app.js', 'assets/chart.js', 'data/theories.js', 'data/glossary.js']
+['assets/style.css', 'assets/app.js', 'assets/chart.js',
+ 'assets/vendor/lightweight-charts.standalone.production.js',
+ 'assets/diagrams.js', 'assets/layers.js',
+ 'data/theories.js', 'data/glossary.js']
   .forEach((f) => {
     if (!htmlSrc.includes(f)) fail('index.html 未引用 ' + f);
     if (!fs.existsSync(path.join(root, f))) fail('文件不存在: ' + f);
@@ -534,8 +561,9 @@ ok('所有引用的文件均存在');
 
 const css = read('assets/style.css');
 ['.hero', '.concept', '.callout', '.step', '.table-wrap', '.gl-item', '.layer-btn',
- '.cw-canvas', '.sr-item', '.toc', '.card', '.rail', '.rail-group-head', '.rail-foot',
- '.rail-tab', '.rail-filter', '.rail-concept', '.rail-chap', '.rail-chap-head', '.rail-kids',
+ '.cw-stage', '.lwc-host', '.lwc-overlay', '.diagram-fallback', '.sr-item', '.toc',
+ '.card', '.rail', '.rail-group-head', '.rail-foot', '.rail-tab', '.rail-filter',
+ '.rail-concept', '.rail-chap', '.rail-chap-head', '.rail-kids',
  '[data-theme="dark"]', '@media print']
   .forEach((sel) => { if (!css.includes(sel)) note('CSS 缺少选择器 ' + sel); });
 ok('CSS 关键选择器检查完成');

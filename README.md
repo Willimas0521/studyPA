@@ -21,19 +21,29 @@
 
 ## 技术
 
-纯静态，零依赖，无构建步骤，无外部 CDN。直接用浏览器打开 `index.html` 即可。
+纯静态、无构建步骤、无外部 CDN。唯一运行时依赖是本地 `assets/vendor/` 下的
+[TradingView Lightweight Charts](https://github.com/tradingview/lightweight-charts)（v4.2.3，Apache-2.0，**已随仓库提交**），
+直接用浏览器打开 `index.html` 即可，无需联网或 `npm install`。
 
 ```
-index.html            页面外壳
-assets/style.css      设计系统（浅色 / 深色主题、响应式、打印样式）
-assets/app.js         hash 路由、细纲导航（章节 / 概念双视图）、全文搜索、主题切换
-assets/chart.js       交互式图层对照图 + 若干张内联 SVG 示意图
-data/theories.js      五个体系的正文内容
-data/glossary.js      术语库
-tests/smoke.js        jsdom 冒烟测试
+index.html                                                 页面外壳
+assets/style.css                                           设计系统（浅色 / 深色主题、响应式、打印样式）
+assets/app.js                                              hash 路由、细纲导航（章节 / 概念双视图）、全文搜索、主题切换
+assets/chart.js                                            图表模块：LWC 渲染 K 线 + 上层 canvas 叠加标注；含 jsdom 无 canvas 时的 fallback
+assets/diagrams.js                                         25 张教学示意图的规格（设计坐标 + 标注绘制函数）
+assets/layers.js                                           五体系图层交互图的图层定义与合成
+assets/vendor/lightweight-charts.standalone.production.js  本地 vendor 的图表引擎
+data/theories.js                                           五个体系的正文内容
+data/glossary.js                                           术语库
+tests/smoke.js                                             jsdom 冒烟测试（DOM / 交互 / 路由，无需浏览器）
+tests/_charttest.html                                      浏览器测试用的全量挂载页（被 _validate.js 加载）
+tests/_validate.js                                         真实浏览器（puppeteer-core + Chrome）校验全部 25 张图
+tests/_sitevalidate.js                                     真实浏览器校验交互图层图与整站集成
 ```
 
-图表全部由 JS 生成内联 SVG，数据为固定种子合成，不含任何真实行情。
+图表由 JS + Lightweight Charts 生成真正的 K 线 / 成交量 / 价格轴 / 十字光标（支持缩放、平移、双击复位），
+语义标注（Spring / SOS / LPS / UTAD / 区域框 / 价位线 / 箭头 / 波浪腿 / 圆点等）叠加在独立 canvas 上；
+数据为固定种子合成，不含任何真实行情。
 
 ## 地址结构
 
@@ -50,7 +60,7 @@ tests/smoke.js        jsdom 冒烟测试
 - slug 优先取英文名；没有英文名的卡片用中文，浏览器地址栏显示解码后的中文，照样可读。
 - 术语速查这类正文靠运行时拼装的页面切不出小节，点进去会退回整页并滚到那一组，不会点空。
 
-这是纯前端的 hash 路由，**不是**预生成的静态文件 —— 项目保持「零依赖、无构建」。
+这是纯前端的 hash 路由，**不是**预生成的静态文件 —— 项目保持「无构建步骤、无外部 CDN」（仅本地 vendor 一个图表库）。
 真需要文件（SEO、离线分发）时另外写个生成脚本即可，路由本来就是按这个结构设计的。
 
 ## 布局
@@ -91,12 +101,22 @@ npx serve .
 ## 测试
 
 ```bash
+# 1) jsdom 冒烟测试（无需浏览器，只验证 DOM / 交互 / 路由）
 npm install jsdom
 node tests/smoke.js . ./node_modules/jsdom
+
+# 2) 真实浏览器校验（puppeteer-core + 本机 Chrome）：25 张图渲染、坐标对齐、交互图层图、整站集成
+NODE_PATH=/path/to/node_modules node tests/_validate.js
+NODE_PATH=/path/to/node_modules node tests/_sitevalidate.js
 ```
 
-覆盖：脚本执行、10 个路由渲染、章节锚点、术语渲染、搜索中英文命中、
-图层开关、主题切换、资源引用完整性、细纲的组/节数量与展开折叠、锚点可达性。
+jsdom 测试覆盖：脚本执行、10 个路由渲染、章节锚点、术语渲染、搜索中英文命中、
+图层开关（aria-pressed 翻转 / 全开 6 层 / 全关空态）、主题切换、资源引用完整性、
+细纲的组/节数量与展开折叠、锚点可达性。
+
+浏览器测试覆盖：25 张示意图在真实 Chrome 下 0 控制台错误、各 2 层 canvas、
+标注与 K 线坐标对齐（步长误差为 0）、交互图层图 6 层开关与全部开/关、暗色主题重绘无异常、
+路由 `destroyAll` 重建无泄漏。
 
 ## 部署
 

@@ -345,6 +345,34 @@ else fail('章节树子项 ' + kidTotal + ' ≠ ' + EXPECT_CONCEPTS);
 if (!badKid.length) ok('概念链接全部指向独立页 #/体系/章节/slug');
 else fail('概念链接格式异常: ' + badKid.length + ' → ' + badKid[0]);
 
+/* 书籍章节：27 章各自可独立打开，细纲里嵌套出子章节链接 */
+console.log('\n【书籍章节独立页】');
+const wkTheory = SITE.theories.filter((t) => t.id === 'wyckoff')[0];
+const bookChaps = [];
+wkTheory.chapters.forEach((c) => (c.kids || []).forEach((k) => bookChaps.push(k)));
+if (bookChaps.length === 27) ok('威科夫原著共 ' + bookChaps.length + ' 章，嵌套在 8 个部分下');
+else fail('书籍章节数 ' + bookChaps.length + ' ≠ 27');
+
+const probeChap = bookChaps[0];
+go('wyckoff/' + probeChap.id);
+const cH1 = doc.getElementById('content').querySelector('h1');
+const cBlocks = doc.getElementById('content').querySelectorAll('p,h4,.book-fig').length;
+if (cH1 && cH1.textContent.trim() === probeChap.label && cBlocks > 0) {
+  ok('书籍章节独立页可达: ' + probeChap.id + '（h1 命中标题，含 ' + cBlocks + ' 个内容块）');
+} else {
+  fail('书籍章节独立页异常: ' + probeChap.id + ' h1=' + (cH1 && cH1.textContent.trim()) + ' 内容块=' + cBlocks);
+}
+// 任意抽一章（中部）再验证一次
+go('wyckoff/' + bookChaps[13].id);
+const cH1b = doc.getElementById('content').querySelector('h1');
+if (cH1b && cH1b.textContent.trim() === bookChaps[13].label) ok('中部章节 ' + bookChaps[13].id + ' 同样可独立打开');
+else fail('中部章节独立页异常: ' + bookChaps[13].id);
+
+go('wyckoff');
+const subChapLinks = doc.querySelectorAll('#railBody a.rail-subchap');
+if (subChapLinks.length === 27) ok('细纲里嵌套出 ' + subChapLinks.length + ' 条子章节链接（8 个部分下）');
+else fail('子章节链接数 ' + subChapLinks.length + ' ≠ 27');
+
 /* 展开 / 收起：点章节右侧的小箭头 */
 go('wyckoff');
 const firstHead = doc.querySelector('#railBody .rail-chap-head');

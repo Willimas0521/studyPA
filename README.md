@@ -35,12 +35,14 @@ assets/layers.js                                           五体系图层交互
 assets/vendor/lightweight-charts.standalone.production.js  本地 vendor 的图表引擎
 data/theories.js                                           五个体系的正文内容
 data/wyckoff_book.js                                       《威科夫方法的深度解析》逐章精读正文（由 tests/_gen_wyckoff_book.py 从 DOCX 生成，按 Part→Chapter→Section 分层，术语已归一化）
+assets/book-images/                                        从原著 DOCX 抽取的原书插图（168 张，jpg/png，被章节页 / 部分页内联引用）
 data/glossary.js                                           术语库
 tests/smoke.js                                             jsdom 冒烟测试（DOM / 交互 / 路由，无需浏览器）
 tests/_gen_wyckoff_book.py                                 从原著 DOCX 重新生成 data/wyckoff_book.js 的脚本（python-docx 解析扁平 DOCX，按字号+加粗+「第X章」模式分层）
 tests/_charttest.html                                      浏览器测试用的全量挂载页（被 _validate.js 加载）
 tests/_validate.js                                         真实浏览器（puppeteer-core + Chrome）校验全部 25 张图
 tests/_sitevalidate.js                                     真实浏览器校验交互图层图与整站集成
+tests/_bookval.js                                           真实浏览器校验原著章节页（27 章独立页可达、168 张插图 0 破损、细纲 27 条子章节链接）
 ```
 
 图表由 JS + Lightweight Charts 生成真正的 K 线 / 成交量 / 价格轴 / 十字光标（支持缩放、平移、双击复位），
@@ -53,9 +55,11 @@ tests/_sitevalidate.js                                     真实浏览器校验
 
 | 地址 | 打开后看到 |
 |---|---|
-| `#/wyckoff` | 威科夫体系总览（完整长页） |
+| `#/wyckoff` | 威科夫体系总览（完整长页，含原著逐章精读 8 个部分） |
 | `#/wyckoff/laws` | 章节页：只有「三大定律」这一节 |
 | `#/wyckoff/laws/law-of-supply-and-demand` | 概念页：只有「供求定律」 |
+| `#/wyckoff/bk-p1` … `#/wyckoff/bk-p8` | 原著「部分」页：该部分下的章节（含原书插图） |
+| `#/wyckoff/bk-c1` … `#/wyckoff/bk-c27` | 原著「章节」独立页：27 章各自可单独打开，含 h4 小节目录与原书插图 |
 
 - 概念页带面包屑、正文、上一个 / 下一个概念、同节其它概念。
 - 章节页带面包屑、整节正文、上一节 / 下一节。

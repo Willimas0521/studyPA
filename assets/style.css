@@ -461,6 +461,11 @@ a:hover { text-decoration: underline; }
 .rail-chap-head.open + .rail-kids { display: block; }
 .rail-kids .rail-concept { padding: 3px 7px; font-size: 12.3px; }
 .rail-kids .rail-concept .rc-en { font-size: 10px; }
+/* 书籍部分下的嵌套子章节（独立章节页入口） */
+.rail-subchap { padding: 3px 7px 3px 12px; font-size: 12.3px; }
+.rail-subchap .rc-zh { color: var(--text-2); }
+.rail-subchap:hover { color: var(--text); background: var(--surface); text-decoration: none; }
+.rail-subchap.active { color: var(--accent-text); font-weight: 620; background: var(--accent-soft); }
 
 /* 顶栏的细纲开关：只在 rail 收起为抽屉时出现 */
 .rail-btn { display: none; }
@@ -506,6 +511,15 @@ a:hover { text-decoration: underline; }
 .lede { font-size: 17.5px; line-height: 1.7; color: var(--text-2); margin-bottom: 22px; }
 .muted { color: var(--text-3); }
 .small { font-size: 13px; }
+
+/* 书籍原书插图：居中、限宽、轻边框 */
+.book-fig { margin: 22px 0; text-align: center; line-height: 0; }
+.book-fig img {
+  max-width: 100%; height: auto; display: inline-block;
+  border-radius: 8px; border: 1px solid var(--border-2);
+  background: var(--surface); box-shadow: 0 1px 3px rgba(0,0,0,.08);
+}
+.book-fig + .book-fig { margin-top: 0; }
 
 /* ---------- 理论页头 ---------- */
 .hero {

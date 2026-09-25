@@ -166,7 +166,10 @@
     if (heads.length <= 1) return { html: p.body || '', toc: '' };
 
     var chapIds = {};
-    (p.chapters || []).forEach(function (c) { chapIds[c.id] = true; });
+    (p.chapters || []).forEach(function (c) {
+      chapIds[c.id] = true;
+      (c.kids || []).forEach(function (k) { chapIds[k.id] = true; });
+    });
 
     var h2n = 0, h3n = 0;
     var top = [];
@@ -183,7 +186,7 @@
         h3n++;
         var kid = h.id || ('sec-' + h3n + '-' + (slugify(label).slice(0, 18) || 'x'));
         h.id = kid;
-        if (cur) cur.kids.push({ id: kid, label: label });
+        if (cur) cur.kids.push({ id: kid, label: label, chapter: !!chapIds[kid] });
       }
     });
 
@@ -206,25 +209,40 @@
     return { html: tmp.innerHTML, toc: toc };
   }
 
-  /* 章节页的「本节内容」目录。正文里的 h3 本来没有锚点，这里现补一个：
-     序号负责唯一性，标题片段负责可读性（地址栏里一眼能看懂跳到哪）。 */
+  /* 章节页的「本节内容」目录。正文里的 h3 / h4 本来没有锚点，这里现补：
+     - 若本页只有一个 h3（书籍章节页：那一个 h3 就是章节标题，已作为 hero），
+       则以 h4 小节生成目录；
+     - 否则以 h3 生成目录；其中 id 命中 ALL_CHAP_IDS 的（书籍章节）直接链到独立章节页，
+       其余走页内锚点。 */
   function sectionToc(bodyHTML, pageId, chapId) {
     var tmp = document.createElement('div');
     tmp.innerHTML = bodyHTML;
 
+    var h3s = tmp.querySelectorAll('h3');
+    var useH4 = h3s.length <= 1;
+    var heads = useH4 ? tmp.querySelectorAll('h4') : h3s;
+    var titleTxt = useH4 ? '本节内容' : '本章目录';
+
     var items = [];
-    Array.prototype.forEach.call(tmp.querySelectorAll('h3'), function (h, i) {
+    Array.prototype.forEach.call(heads, function (h, i) {
       var label = h.textContent.trim();
-      var id = 'sec-' + (i + 1) + '-' + (slugify(label).slice(0, 20) || 'x');
+      var id = h.id || ('sec-' + (i + 1) + '-' + (slugify(label).slice(0, 20) || 'x'));
       h.id = id;
-      items.push('<li><a href="#/' + esc(pageId) + '/' + esc(chapId) + '#' + esc(id) +
-        '" data-anchor="' + esc(id) + '">' + esc(label) + '</a></li>');
+      var href, cls = '', anchorAttr = '';
+      if (!useH4 && ALL_CHAP_IDS[id]) {
+        href = '#/' + esc(pageId) + '/' + esc(id);
+        cls = ' class="toc-chap"';
+      } else {
+        href = '#/' + esc(pageId) + '/' + esc(chapId) + '#' + esc(id);
+        anchorAttr = ' data-anchor="' + esc(id) + '"';
+      }
+      items.push('<li><a href="' + href + '"' + cls + anchorAttr + '>' + esc(label) + '</a></li>');
     });
 
     return {
       html: tmp.innerHTML,
       toc: items.length > 1
-        ? '<nav class="toc toc-sub"><p class="toc-title">本节内容</p><ol>' + items.join('') + '</ol></nav>'
+        ? '<nav class="toc toc-sub"><p class="toc-title">' + titleTxt + '</p><ol>' + items.join('') + '</ol></nav>'
         : ''
     };
   }
@@ -285,7 +303,10 @@
 
   function chapOf(p, chapId) {
     var hit = null;
-    (p.chapters || []).forEach(function (c) { if (c.id === chapId) hit = c; });
+    (p.chapters || []).forEach(function (c) {
+      if (c.id === chapId) { hit = c; return; }
+      (c.kids || []).forEach(function (k) { if (k.id === chapId) hit = k; });
+    });
     return hit;
   }
 
@@ -310,9 +331,19 @@
       '</div></section>';
   }
 
+  /* 扁平化章节（含嵌套 kids），供「上一节 / 下一节」用连续顺序遍历 */
+  function flatChapters(p) {
+    var out = [];
+    (p.chapters || []).forEach(function (c) {
+      out.push(c);
+      (c.kids || []).forEach(function (k) { out.push(k); });
+    });
+    return out;
+  }
+
   /* 章节页底部：同体系里的上一节 / 下一节 */
   function chapterNavHTML(p, chapId) {
-    var chaps = p.chapters || [];
+    var chaps = flatChapters(p);
     var at = -1;
     chaps.forEach(function (c, i) { if (c.id === chapId) at = i; });
     if (at < 0) return '';
@@ -348,6 +379,15 @@
     var label = chap ? chap.label : r.chap;
     var kids = CONCEPTS_BY_CHAP[r.id + '#' + r.chap] || [];
     var sec = sectionToc(body, r.id, r.chap);
+
+    /* 书籍章节页：正文首行的 h3 即章节标题，与 hero 的 h1 重复，去掉 */
+    var secTmp = document.createElement('div');
+    secTmp.innerHTML = sec.html;
+    var firstChild = secTmp.firstElementChild;
+    if (firstChild && firstChild.tagName === 'H3' && firstChild.textContent.trim() === label) {
+      firstChild.parentNode.removeChild(firstChild);
+    }
+    sec.html = secTmp.innerHTML;
 
     elContent.innerHTML =
       crumbHTML([['#/' + p.id, p.navLabel || p.title], [null, label]]) +
@@ -514,22 +554,52 @@
 
   var CHAPTER_HTML = {};   /* "pageId#chapId" -> 该节正文的 HTML */
 
+  /* 所有「章节页」id 集合（含嵌套 kids），供切片 / 目录判定哪些 h3 是独立页 */
+  var ALL_CHAP_IDS = {};
+  function buildChapIndex() {
+    ALL_CHAP_IDS = {};
+    SITE.pages.forEach(function (p) {
+      (p.chapters || []).forEach(function (c) {
+        ALL_CHAP_IDS[c.id] = true;
+        (c.kids || []).forEach(function (k) { ALL_CHAP_IDS[k.id] = true; });
+      });
+    });
+  }
+
   function sliceChapters() {
     SITE.pages.forEach(function (p) {
       var tmp = document.createElement('div');
       tmp.innerHTML = p.body || '';
-      var cur = null;
-      var buf = {};
+      var cur = null;            /* 当前 h2 */
+      var curH3 = null;          /* 当前 h3（若是独立章节页） */
+      var buf = {};              /* h2 id -> [node html] */
+      var h3buf = {};            /* h2 id -> { h3id: [node html] } */
       Array.prototype.forEach.call(tmp.children, function (node) {
         if (node.tagName === 'H2') {
-          cur = node.id || null;
-          if (cur) buf[cur] = [];
+          cur = node.id || null; curH3 = null;
+          if (cur) { buf[cur] = []; h3buf[cur] = h3buf[cur] || {}; }
+          return;
+        }
+        if (node.tagName === 'H3') {
+          /* 若该 h3 本身是独立章节页（书籍章节 bk-cN），单独切片 */
+          if (cur && node.id && ALL_CHAP_IDS[node.id]) {
+            curH3 = node.id;
+            h3buf[cur][curH3] = [];
+          } else { curH3 = null; }
+          if (cur && buf[cur]) buf[cur].push(node.outerHTML);
+          if (curH3) h3buf[cur][curH3].push(node.outerHTML);
           return;
         }
         if (cur && buf[cur]) buf[cur].push(node.outerHTML);
+        if (curH3) h3buf[cur][curH3].push(node.outerHTML);
       });
       Object.keys(buf).forEach(function (k) {
         CHAPTER_HTML[p.id + '#' + k] = buf[k].join('');
+      });
+      Object.keys(h3buf).forEach(function (h2) {
+        Object.keys(h3buf[h2]).forEach(function (h3) {
+          CHAPTER_HTML[p.id + '#' + h3] = h3buf[h2][h3].join('');
+        });
       });
     });
   }
@@ -563,7 +633,8 @@
       var rows = [];
 
       g.chapters.forEach(function (c) {
-        var kids = CONCEPTS_BY_CHAP[p.id + '#' + c.id] || [];
+        var kids = c.kids || (CONCEPTS_BY_CHAP[p.id + '#' + c.id] || []);
+        var isBook = !!c.kids;   /* 书籍部分：kids 是嵌套的子章节 */
         var chapHit = hit(c, q);
         var kidsHit = q ? kids.filter(function (k) { return hit(k, q); }) : kids;
         if (q && !chapHit && !kidsHit.length) return;   /* 自己没中、子项也没中，整节不显示 */
@@ -581,27 +652,34 @@
         /* 过滤时只展开命中的子项；纯章节名命中就只留章节本身，不铺开它的全部概念 */
         var show = kidsHit;
         var key = p.id + '#' + c.id;
-        var open = q ? show.length > 0 : !!CHAP_OPEN[key];
+        var open = q ? show.length > 0 : (on || !!CHAP_OPEN[key]);
 
         rows.push(
           '<div class="rail-chap-head' + (open ? ' open' : '') + '">' +
             '<a class="rail-chap-link' + (on ? ' active' : '') + '" href="' + href + '">' + esc(c.label) + '</a>' +
             '<span class="rail-chap-count">' + kids.length + '</span>' +
             '<button type="button" class="rail-chev-btn" data-chap="' + esc(key) + '"' +
-              ' aria-expanded="' + (open ? 'true' : 'false') + '" aria-label="展开这一节的概念">' +
+              ' aria-expanded="' + (open ? 'true' : 'false') + '" aria-label="展开子章节">' +
               '<svg class="rail-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>' +
             '</button>' +
           '</div>' +
           '<div class="rail-kids">' +
-            show.map(function (k) {
-              var kon = (p.id === r.id && c.id === r.chap && k.slug === r.slug);
-              return '<a class="rail-chap rail-concept' + (kon ? ' active' : '') + '"' +
-                ' href="' + conceptHref(p.id, c.id, k.slug) + '"' +
-                ' title="' + esc(k.zh + (k.en ? ' · ' + k.en : '')) + '">' +
-                '<span class="rc-zh">' + esc(k.zh) + '</span>' +
-                (k.en ? '<span class="rc-en">' + esc(k.en) + '</span>' : '') +
-              '</a>';
-            }).join('') +
+            (isBook
+              ? show.map(function (k) {
+                  var kon = (p.id === r.id && k.id === r.chap && !r.slug);
+                  return '<a class="rail-chap rail-subchap' + (kon ? ' active' : '') + '"' +
+                    ' href="#/' + esc(p.id) + '/' + esc(k.id) + '"' +
+                    ' title="' + esc(k.label) + '"><span class="rc-zh">' + esc(k.label) + '</span></a>';
+                }).join('')
+              : show.map(function (k) {
+                  var kon = (p.id === r.id && c.id === r.chap && k.slug === r.slug);
+                  return '<a class="rail-chap rail-concept' + (kon ? ' active' : '') + '"' +
+                    ' href="' + conceptHref(p.id, c.id, k.slug) + '"' +
+                    ' title="' + esc(k.zh + (k.en ? ' · ' + k.en : '')) + '">' +
+                    '<span class="rc-zh">' + esc(k.zh) + '</span>' +
+                    (k.en ? '<span class="rc-en">' + esc(k.en) + '</span>' : '') +
+                  '</a>';
+                }).join('')) +
           '</div>'
         );
       });
@@ -1074,6 +1152,7 @@
 
   initTheme();
   collectConcepts();
+  buildChapIndex();
   sliceChapters();
   buildIndex();
   route();

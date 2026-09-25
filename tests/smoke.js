@@ -151,6 +151,23 @@ SITE.pages.forEach((p) => {
   }
 });
 
+/* ---------- 威科夫 K 线示意图（显式校验） ---------- */
+console.log('\n【威科夫示意图】');
+const wkPage = SITE.pages.find((p) => p.id === 'wyckoff');
+const wkMnt = doc.createElement('div');
+wkMnt.innerHTML = wkPage.body;
+CHART.mountDiagrams(wkMnt);
+const wkIds = ['wyckoff-schematic', 'wyckoff-spring', 'wyckoff-sos-lps', 'wyckoff-utad', 'wyckoff-vsa', 'wyckoff-cause-effect'];
+const wkMissing = wkIds.filter((id) => !wkMnt.querySelector('.diagram[data-diagram="' + id + '"] svg'));
+if (!wkMissing.length) ok('威科夫 ' + wkIds.length + ' 张示意图全部渲染（1 原有 + 5 新增 K 线图）');
+else fail('威科夫示意图缺失: ' + wkMissing.join(', '));
+const wkExtra = Array.prototype.filter.call(
+  wkMnt.querySelectorAll('.diagram[data-diagram]'),
+  (d) => wkIds.indexOf(d.getAttribute('data-diagram')) === -1
+);
+if (!wkExtra.length) ok('威科夫正文无未注册的 data-diagram 占位');
+else fail('威科夫存在未注册占位: ' + wkExtra.map((d) => d.getAttribute('data-diagram')).join(', '));
+
 /* ---------- 交互测试 ---------- */
 console.log('\n【交互】');
 

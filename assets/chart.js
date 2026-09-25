@@ -623,6 +623,166 @@ window.ChartModule = (function () {
     return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="威科夫吸筹结构示意图">' + s + '</svg>';
   }
 
+  /* 威科夫扩展示意图：Spring / SOS+LPS / UTAD / VSA 单根量价 / 因果测量移动 */
+
+  /* Spring（弹簧效应）：跌破支撑扫止损后立刻回补 —— 威科夫最重要的买点 */
+  function wyckoffSpringDiagram() {
+    var w = 900, h = 372;
+    var x0 = 64, barW = 40, bw = 18, N = 18;
+    var t = 72, b = 250, pMin = 96, pMax = 156;
+    var vTop = 280, vBot = 348;
+    var SUPPORT = 112;
+    var closes = [150, 143, 137, 131, 125, 119, 113, 122, 131, 127, 121, 117, 115, 109, 107, 114, 123, 133];
+    var vol = [.30, .34, .38, .42, .50, .62, .95, .55, .50, .45, .50, .40, .36, .30, .52, .70, .85, .92];
+    var bars = synthBars(closes, 2.0);
+    function X(i) { return x0 + i * barW; }
+    function Y(p) { return t + (pMax - p) / (pMax - pMin) * (b - t); }
+    var s = '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="var(--surface)"/>';
+    s += note(w / 2, 42, 'Spring（弹簧效应）：跌破支撑扫止损后立刻回补 —— 威科夫最重要的买点', 'var(--d-amber-strong)', 'middle', 12);
+    s += dashLine(X(0) - 18, Y(SUPPORT), X(N - 1) + 18, Y(SUPPORT), 'var(--d-neutral)');
+    s += note(X(N - 1) + 22, Y(SUPPORT) - 6, '支撑（SC 低点）', 'var(--d-neutral)', 'start', 10.5);
+    s += '<line x1="' + r1(x0 - 30) + '" y1="' + r1(vBot) + '" x2="' + r1(X(N - 1) + 18) + '" y2="' + r1(vBot) + '" stroke="var(--border)" stroke-width="1"/>';
+    s += note(x0 - 34, vTop + 4, '成交量', 'var(--text-3)', 'end', 10);
+    vol.forEach(function (vv, i) {
+      var vh = vv * (vBot - vTop - 8);
+      s += '<rect x="' + r1(X(i) - bw / 2) + '" y="' + r1(vBot - vh) + '" width="' + bw + '" height="' + r1(vh) + '" rx="1.5" fill="var(--d-amber)" opacity=".5"/>';
+    });
+    s += barsSVG(bars, X, bw, Y);
+    s += ringDot(X(6), Y(113), 'var(--d-amber)', 'SC', Y(113) + 24);
+    s += ringDot(X(9), Y(131), 'var(--d-amber)', 'AR', Y(131) - 14);
+    s += ringDot(X(12), Y(115), 'var(--d-amber)', 'ST', Y(115) + 24);
+    s += ringDot(X(13), Y(107), 'var(--d-amber)', 'Spring', Y(107) + 24);
+    s += ringDot(X(15), Y(123), 'var(--up)', 'Test', Y(123) + 24);
+    s += note(w / 2, 366, '理想形态：Spring 跌破时不必放量，回归时迅速有力，随后的缩量回踩（Test）确认卖压枯竭', 'var(--text-3)', 'middle', 10.5);
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="威科夫弹簧效应示意图：跌破支撑后迅速收回">' + s + '</svg>';
+  }
+
+  /* SOS（强势信号）与 LPS（最后支撑点）：突破放量，回踩缩量守住 */
+  function wyckoffSosLpsDiagram() {
+    var w = 900, h = 372;
+    var x0 = 64, barW = 36, bw = 18, N = 20;
+    var t = 72, b = 250, pMin = 120, pMax = 200;
+    var vTop = 280, vBot = 348;
+    var RESIST = 156;
+    var closes = [128, 134, 142, 150, 144, 136, 140, 148, 152, 154, 162, 172, 182, 178, 170, 164, 162, 168, 176, 184];
+    var vol = [.32, .36, .40, .46, .40, .34, .38, .44, .48, .50, .90, .95, .92, .60, .40, .35, .38, .55, .70, .85];
+    var bars = synthBars(closes, 2.2);
+    function X(i) { return x0 + i * barW; }
+    function Y(p) { return t + (pMax - p) / (pMax - pMin) * (b - t); }
+    var s = '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="var(--surface)"/>';
+    s += note(w / 2, 42, 'SOS（强势信号）与 LPS（最后支撑点）：突破放量，回踩缩量守住', 'var(--d-amber-strong)', 'middle', 12);
+    s += dashLine(X(0) - 18, Y(RESIST), X(N - 1) + 18, Y(RESIST), 'var(--d-blue)');
+    s += note(X(N - 1) + 22, Y(RESIST) - 6, '阻力 → 突破后转为支撑', 'var(--d-blue)', 'start', 10.5);
+    s += '<line x1="' + r1(x0 - 30) + '" y1="' + r1(vBot) + '" x2="' + r1(X(N - 1) + 18) + '" y2="' + r1(vBot) + '" stroke="var(--border)" stroke-width="1"/>';
+    s += note(x0 - 34, vTop + 4, '成交量', 'var(--text-3)', 'end', 10);
+    vol.forEach(function (vv, i) {
+      var vh = vv * (vBot - vTop - 8);
+      s += '<rect x="' + r1(X(i) - bw / 2) + '" y="' + r1(vBot - vh) + '" width="' + bw + '" height="' + r1(vh) + '" rx="1.5" fill="var(--d-amber)" opacity=".5"/>';
+    });
+    s += barsSVG(bars, X, bw, Y);
+    s += ringDot(X(11), Y(172), 'var(--d-amber)', 'SOS', Y(172) - 14);
+    s += ringDot(X(15), Y(164), 'var(--up)', 'LPS', Y(164) + 24);
+    s += note(w / 2, 366, 'SOS 放量站上区间上沿是需求接管的标志；其后缩量回踩不破前高/支撑，即 LPS，是顺势最佳进场位', 'var(--text-3)', 'middle', 10.5);
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="威科夫 SOS 与 LPS 示意图：突破放量回踩缩量">' + s + '</svg>';
+  }
+
+  /* UTAD（上冲回落）：创新高却收弱，是派发区的多头陷阱 */
+  function wyckoffUtadDiagram() {
+    var w = 900, h = 372;
+    var x0 = 64, barW = 38, bw = 18, N = 18;
+    var t = 72, b = 250, pMin = 110, pMax = 170;
+    var vTop = 280, vBot = 348;
+    var RESIST = 150;
+    var closes = [128, 134, 140, 146, 150, 148, 144, 156, 144, 138, 158, 154, 146, 138, 128, 118, 112, 108];
+    var vol = [.30, .34, .38, .44, .55, .46, .40, .95, .50, .44, .85, .55, .60, .70, .82, .88, .80, .72];
+    var bars = synthBars(closes, 2.0);
+    function X(i) { return x0 + i * barW; }
+    function Y(p) { return t + (pMax - p) / (pMax - pMin) * (b - t); }
+    var s = '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="var(--surface)"/>';
+    s += note(w / 2, 42, 'UTAD（上冲回落）：创新高却收弱，是派发区的多头陷阱', 'var(--d-amber-strong)', 'middle', 12);
+    s += dashLine(X(0) - 18, Y(RESIST), X(N - 1) + 18, Y(RESIST), 'var(--d-blue)');
+    s += note(X(N - 1) + 22, Y(RESIST) - 6, '阻力（AR 高点）', 'var(--d-blue)', 'start', 10.5);
+    s += '<line x1="' + r1(x0 - 30) + '" y1="' + r1(vBot) + '" x2="' + r1(X(N - 1) + 18) + '" y2="' + r1(vBot) + '" stroke="var(--border)" stroke-width="1"/>';
+    s += note(x0 - 34, vTop + 4, '成交量', 'var(--text-3)', 'end', 10);
+    vol.forEach(function (vv, i) {
+      var vh = vv * (vBot - vTop - 8);
+      s += '<rect x="' + r1(X(i) - bw / 2) + '" y="' + r1(vBot - vh) + '" width="' + bw + '" height="' + r1(vh) + '" rx="1.5" fill="var(--d-amber)" opacity=".5"/>';
+    });
+    s += barsSVG(bars, X, bw, Y);
+    s += ringDot(X(7), Y(156), 'var(--d-amber)', 'BC', Y(156) - 14);
+    s += ringDot(X(10), Y(158), 'var(--d-amber)', 'UTAD', Y(158) + 24);
+    s += ringDot(X(13), Y(138), 'var(--down)', 'SOW', Y(138) + 24);
+    s += note(w / 2, 366, '判别关键在成交量：创新高时放量却收在低位、随后跌回区间，才是真 UTAD；放量站稳则是真突破', 'var(--text-3)', 'middle', 10.5);
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="威科夫 UTAD 上冲回落示意图">' + s + '</svg>';
+  }
+
+  /* VSA：单根 K 线的「量 × 振幅」组合，比形态本身更能说明谁在主导 */
+  function wyckoffVsaDiagram() {
+    var w = 900, h = 408;
+    var t = 70, b = 270, pMin = 90, pMax = 170;
+    var vTop = 305, vBot = 362, volMaxH = vBot - vTop - 6;
+    var bw = 46;
+    var cx = [120, 320, 520, 720];
+    var panes = [
+      { title: 'No Demand 无需求', concl: '上涨却缩量 · 无买盘跟进', up: true, o: 128, c: 150, hi: 158, lo: 122, vol: .30 },
+      { title: 'No Supply 无供给', concl: '下跌却缩量 · 抛压枯竭', up: false, o: 150, c: 128, hi: 158, lo: 120, vol: .32 },
+      { title: 'Stopping 止跌量', concl: '放巨量长下影 · 下跌中止', up: false, o: 152, c: 140, hi: 154, lo: 100, vol: .94 },
+      { title: 'Effort≠Result', concl: '巨量却不动 · 方向将变', up: true, o: 140, c: 144, hi: 150, lo: 132, vol: .95 }
+    ];
+    function Y(p) { return t + (pMax - p) / (pMax - pMin) * (b - t); }
+    var s = '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="var(--surface)"/>';
+    s += note(w / 2, 30, 'VSA：单根 K 线的「量 × 振幅」组合，比形态本身更能说明谁在主导', 'var(--d-amber-strong)', 'middle', 12);
+    s += '<line x1="' + r1(60) + '" y1="' + r1(vBot) + '" x2="' + r1(840) + '" y2="' + r1(vBot) + '" stroke="var(--border)" stroke-width="1"/>';
+    s += note(56, vTop + 4, '成交量', 'var(--text-3)', 'end', 10);
+    panes.forEach(function (p, i) {
+      var x = cx[i], color = p.up ? 'var(--up)' : 'var(--down)';
+      s += '<line x1="' + r1(x) + '" y1="' + r1(Y(p.hi)) + '" x2="' + r1(x) + '" y2="' + r1(Y(p.lo)) + '" stroke="' + color + '" stroke-width="2.6"/>';
+      var yTop = Math.min(p.o, p.c), yBot = Math.max(p.o, p.c);
+      s += '<rect x="' + r1(x - bw / 2) + '" y="' + r1(Y(yTop)) + '" width="' + bw + '" height="' + r1(Math.max(3, Y(yBot) - Y(yTop))) + '" rx="2" fill="' + color + '"/>';
+      var vh = p.vol * volMaxH;
+      s += '<rect x="' + r1(x - bw / 2) + '" y="' + r1(vBot - vh) + '" width="' + bw + '" height="' + r1(vh) + '" rx="1.5" fill="var(--d-amber)" opacity=".55"/>';
+      s += note(x, 58, p.title, 'var(--d-amber-strong)', 'middle', 11.5);
+      s += note(x, 286, p.concl, 'var(--text-2)', 'middle', 10.5);
+    });
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="VSA 单根 K 线量价组合示意图">' + s + '</svg>';
+  }
+
+  /* 因果定律：横盘越宽（因），后续测量移动越大（果） */
+  function wyckoffCauseEffectDiagram() {
+    var w = 900, h = 384;
+    var x0 = 60, barW = 24, bw = 12, N = 17;
+    var t = 76, b = 256, pMin = 100, pMax = 210;
+    var vTop = 286, vBot = 354;
+    var BASE_LO = 120, BASE_HI = 140, TARGET = 180;
+    var closes = [124, 130, 136, 140, 134, 126, 122, 128, 134, 140, 146, 156, 168, 180, 186, 190, 196];
+    var vol = [.30, .34, .40, .46, .42, .36, .32, .38, .44, .50, .70, .80, .88, .70, .62, .70, .85];
+    var bars = synthBars(closes, 2.0);
+    function X(i) { return x0 + i * barW; }
+    function Y(p) { return t + (pMax - p) / (pMax - pMin) * (b - t); }
+    var s = '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="var(--surface)"/>';
+    s += note(w / 2, 42, '因果定律：横盘越宽（因），后续测量移动越大（果）', 'var(--d-amber-strong)', 'middle', 12);
+    s += '<rect x="' + r1(X(0) - 14) + '" y="' + r1(Y(BASE_HI)) + '" width="' + r1(X(9) - X(0) + 28) + '" height="' + r1(Y(BASE_LO) - Y(BASE_HI)) + '" rx="6" fill="var(--d-amber)" fill-opacity=".08" stroke="var(--d-amber)" stroke-width="1.2" stroke-dasharray="5 4"/>';
+    s += note((X(0) + X(9)) / 2, Y(BASE_HI) - 10, '因：横盘蓄势', 'var(--d-amber-strong)', 'middle', 10.5);
+    s += dashLine(X(0) - 14, Y(BASE_HI), X(N - 1) + 18, Y(BASE_HI), 'var(--d-neutral)');
+    s += note(X(N - 1) + 22, Y(BASE_HI) - 6, '区间上沿', 'var(--d-neutral)', 'start', 10);
+    s += dashLine(X(0) - 14, Y(BASE_LO), X(N - 1) + 18, Y(BASE_LO), 'var(--d-neutral)');
+    s += note(X(N - 1) + 22, Y(BASE_LO) + 18, '区间下沿', 'var(--d-neutral)', 'start', 10);
+    s += dashLine(X(11), Y(BASE_HI), X(11), Y(TARGET), 'var(--d-cyan)');
+    s += note(X(11) + 8, (Y(BASE_HI) + Y(TARGET)) / 2, '测量移动 = 区间高度 → 目标 ' + TARGET, 'var(--d-cyan)', 'start', 10);
+    s += dashLine(X(9), Y(TARGET), X(N - 1) + 18, Y(TARGET), 'var(--d-cyan)');
+    s += note(X(9) - 6, Y(TARGET) - 8, '目标（果）', 'var(--d-cyan)', 'end', 10);
+    s += '<line x1="' + r1(x0 - 30) + '" y1="' + r1(vBot) + '" x2="' + r1(X(N - 1) + 18) + '" y2="' + r1(vBot) + '" stroke="var(--border)" stroke-width="1"/>';
+    s += note(x0 - 34, vTop + 4, '成交量', 'var(--text-3)', 'end', 10);
+    vol.forEach(function (vv, i) {
+      var vh = vv * (vBot - vTop - 8);
+      s += '<rect x="' + r1(X(i) - bw / 2) + '" y="' + r1(vBot - vh) + '" width="' + bw + '" height="' + r1(vh) + '" rx="1.5" fill="var(--d-amber)" opacity=".5"/>';
+    });
+    s += barsSVG(bars, X, bw, Y);
+    s += ringDot(X(10), Y(146), 'var(--d-amber)', 'SOS', Y(146) - 14);
+    s += note(w / 2, 372, '传统上用点数图（P&F）横向数格估算目标；这里用「区间高度」作简化版测量移动，结果一致', 'var(--text-3)', 'middle', 10.5);
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="威科夫因果定律测量移动示意图">' + s + '</svg>';
+  }
+
   /* 8.2 艾略特 5-3 结构示意图 */
   function elliott53() {
     var w = 900, h = 360;
@@ -1721,6 +1881,11 @@ window.ChartModule = (function () {
 
   var DIAGRAMS = {
     'wyckoff-schematic': wyckoffSchematic,
+    'wyckoff-spring': wyckoffSpringDiagram,
+    'wyckoff-sos-lps': wyckoffSosLpsDiagram,
+    'wyckoff-utad': wyckoffUtadDiagram,
+    'wyckoff-vsa': wyckoffVsaDiagram,
+    'wyckoff-cause-effect': wyckoffCauseEffectDiagram,
     'elliott-53': elliott53,
     'trend-up': trendUpDiagram,
     'trend-channel': trendChannelDiagram,

@@ -1186,6 +1186,10 @@ window.SITE = (function () {
       '</div>',
       '<div class="callout insight"><div class="callout-body"><p class="callout-title">第三条定律是威科夫的精髓</p><p>绝大多数技术分析只看价格。威科夫的独特之处在于把<strong>成交量提到与价格同等的位置</strong>。同样的横盘，缩量的横盘和放量的横盘，含义完全相反。</p></div></div>',
 
+      '<h3 id="measured-move">把因果变成目标：测量移动</h3>',
+      '<p>因果定律最实用的落地，是把横盘区间的<strong>宽度（高度）</strong>直接复制成突破后的目标幅度。蓄势越久、区间越宽，后续行情越大——这就是"因"与"果"的量化对应：</p>',
+      '<div class="diagram" data-diagram="wyckoff-cause-effect"></div>',
+
       '<h2 id="accum">吸筹五阶段</h2>',
       '<p>威科夫吸筹示意图是理解整套方法的关键。下图是抽象化的结构，实际行情不会这么规整：</p>',
       '<div class="diagram" data-diagram="wyckoff-schematic"></div>',
@@ -1204,11 +1208,15 @@ window.SITE = (function () {
         '<div class="concept"><p class="concept-term">弹簧效应</p><span class="concept-en">Spring</span><p>价格<strong>向下假突破区间支撑</strong>，扫掉所有止损后迅速拉回。这是威科夫体系里最重要的买点。判定标准：跌破时<strong>成交量不必放大</strong>，回归时迅速且有力。</p></div>',
         '<div class="concept"><p class="concept-term">测试</p><span class="concept-en">Test</span><p>Spring 之后的缩量回踩。若成交量极小且价格不再下跌，即为<strong>成功的测试</strong>，确认卖压已尽。</p></div>',
       '</div>',
+      '<div class="diagram" data-diagram="wyckoff-spring"></div>',
+      '<p class="muted small">Spring 是威科夫体系里风险回报最好的买点：向下假突破扫掉所有止损盘后，若买盘立刻把价格收回区间内，说明浮筹已被清洗、供给枯竭。随后的缩量回踩（Test）是最后一道确认。</p>',
       '<h3>Phase D —— 走强</h3>',
       '<div class="concept-grid">',
         '<div class="concept"><p class="concept-term">强势信号</p><span class="concept-en">SOS — Sign of Strength</span><p>放量向上突破区间上沿（AR 高点）。这是需求完全接管的证据，也是趋势启动的客观标志。</p></div>',
         '<div class="concept"><p class="concept-term">最后支撑点</p><span class="concept-en">LPS — Last Point of Support</span><p>SOS 之后的回踩。回踩<strong>缩量</strong>且守住前低，是最好的顺势进场位——相当于 ICT 的溢价回踩 / PA 的突破二次进场。</p></div>',
       '</div>',
+      '<div class="diagram" data-diagram="wyckoff-sos-lps"></div>',
+      '<p class="muted small">SOS 是"需求完全接管"的客观信号，LPS 则是顺势加仓位。注意：SOS 必须在放量中突破区间上沿，而 LPS 的回踩必须<strong>缩量且守住前低</strong>，否则趋势质量存疑。</p>',
       '<h3>Phase E —— 离开区间</h3>',
       '<p>价格彻底脱离区间进入趋势。此时成交量随上涨温和放大，回踩不再回到区间内。威科夫建议在 Phase C 的 Spring 或 Phase D 的 LPS 建仓，Phase E 则是持有与加仓阶段。</p>',
 
@@ -1227,6 +1235,8 @@ window.SITE = (function () {
         '</tbody>',
       '</table></div>',
       '<div class="callout tip"><div class="callout-body"><p class="callout-title">UTAD 是最容易被误读的形态</p><p>UTAD（Upthrust After Distribution）看起来像突破新高，实际上是大资金把最后的买盘倒给它。<strong>判别点是成交量</strong>：创新高时放量却收在低位、随后迅速跌回区间，才是真正的 UTAD；若是放量收在高位并站稳，那是真的突破。</p></div></div>',
+      '<div class="diagram" data-diagram="wyckoff-utad"></div>',
+      '<p class="muted small">UTAD 是吸筹 Spring 的镜像：同样是假突破，但方向相反、发生在顶部。两者共同的判别钥匙都是<strong>成交量</strong>——真陷阱必然"价不动量先衰"或"创新高却收弱"。</p>',
 
       '<h2 id="vsa">VSA 量价分析</h2>',
       '<p>Tom Williams 把威科夫的思想发展成 VSA（Volume Spread Analysis），更专注于单根 K 线的量价关系。常用信号包括：</p>',
@@ -1243,6 +1253,8 @@ window.SITE = (function () {
         '</tbody>',
       '</table></div>',
       '<p class="muted small">注：VSA 的判定对成交量的相对水平非常敏感，在不同市场（股票 vs 外汇）与不同周期下表现差异很大。外汇等分散市场没有统一成交量，应用时需谨慎。</p>',
+      '<div class="diagram" data-diagram="wyckoff-vsa"></div>',
+      '<p class="muted small">VSA 的精髓不在单根 K 线的涨跌，而在"成交量 × 振幅"是否匹配：放量却不涨（Effort≠Result）、缩量却能止跌（No Supply），这些背离才是资金行为的真实语言。</p>',
 
       '<h2 id="pitfalls">实战与误区</h2>',
       '<h3>实战步骤</h3>',

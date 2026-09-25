@@ -1,0 +1,503 @@
+==== PART bk2-p4 ====
+RAW_LABEL: PART 4. THE IMPORTANCE OF VOLUME
+
+
+---- SECTION bk2-c18 ----
+RAW_LABEL: 4.1 AUCTION MARKET THEORY
+4.1 AUCTION MARKET THEORY Auction theory, as it is known in English, was born mainly from thestudies
+by J.P. Steidlmayer on the Market Profile. Subsequently, togetherwith other authors such as James
+Dalton and Donald L. Jones, he defineda series of concepts that constitute this theory. It is based
+on the fact that the market, with the priority objective offacilitating negotiation among its
+participants and under the principles ofthe law of supply and demand, will always move in search of
+efficiency,also known as equilibrium or fair value. Efficiency means that buyers and sellers are
+comfortablenegotiating and neither has clear control. That comfort comes because,based on current
+market conditions, the valuations of both are verysimilar. The way this equilibrium is visually
+observed on a price chart iswith a continuous rotation (price ranges). This price
+lateralizationrepresents this equilibrium. It is evidence of the facilitation of trading andis the
+state in which the market is always looking to be. On the other hand, we have the moments of
+inefficiency orimbalance and these are represented in the trend movements. When newinformation
+reaches the market, it can cause the value perceived by both buyers and sellers of the asset to
+change, generating a disagreementbetween them. One of the two will take control and move the price
+awayfrom the previous equilibrium zone, offering a profitable tradingopportunity. What is evident in
+this context is that the market is notfacilitating trading and is therefore considered an
+inefficient condition.
+[FIG 070]
+The market will be constantly moving in search and confirmationof value; in situations where buyers
+and sellers are in a position toexchange stock. When this happens it is because the valuations that
+theseparticipants have on the price are very similar. At that moment thenegotiation will again
+generate a new equilibrium zone. This cycle willrepeat itself over and over again in an
+uninterrupted manner. The general idea is that the market will move from oneequilibrium area to
+another through trend movements and that these willbe initiated when the market sentiment of both
+buyers and sellers aboutthe current value differs causing the imbalance. The market will nowbegin
+the search for the next area that generates consensus among themajority of participants about the
+security. It should be noted that the market spends most of its time duringperiods of equilibrium,
+which is logical due to the nature of the marketbased on favoring negotiation among its
+participants. This is where theaccumulation and distribution processes take place, which as we all
+knowis where the Wyckoff methodology focuses. 4.1.1 VARIABLES The auction process in the financial
+markets is fundamentally basedon value. In order to try to decipher where such value is found,
+threeadditional elements need to be evaluated: In the auction mechanism price is used as a discovery
+tool. Thefacilitation of trading is carried out by price movement, which fluctuatesup and down
+exploring different levels with the objective of seeing howparticipants react to such exploration.
+These price movements herald opportunities. If the participantsrespond to this exploration by
+observing the price as fair, it will provokenegotiation between them. Conversely, if these
+discoveries of new pricelevels are not perceived as attractive to both participants, it will lead
+torejection. TIME When the market promotes an opportunity (reaches an attractivelevel), it will use
+time to regulate the duration that the opportunity will beavailable. The price will spend very
+little time in those zones that areadvantageous to one of the two sides (buyers or sellers). A zone
+of efficiency or equilibrium will be characterized by ahigher consumption of time; while a zone of
+inefficiency or imbalancewill be represented by a short consumption of time. Volume represents the
+activity, the amount of an asset that has beenexchanged. This quantity suggests the interest or
+disinterest at certainlevels. Based on volume there are areas that are more valuable than others.The
+basic rule is that the more activity a certain area sees, the higher thevalue assigned to it by
+market participants. Pr ice + Time + Vo lume = Va lue These three elements are responsible for
+giving us a logicalperspective on, based on current conditions, where market participantsconsider
+the value of a particular asset to be. Through price the market discovers new levels, time
+consumptionsuggests that there is some acceptance in that new area and finally volumegeneration
+confirms that participants have created a new value zone wherethey trade comfortably. As we know,
+conditions are changeable and therefore continuousre-evaluation of these elements is needed. Knowing
+where the value is akey as it defines the market condition and based on this we will be able toput
+forward different trading ideas. 4.1.2 PERCEPTION OF VALUE The market is constantly rotating between
+two phases: horizontaldevelopment (equilibrium) or vertical development (imbalance).Horizontal
+development suggests agreement among participants whilevertical development is a market in search of
+value, in search ofparticipants to negotiate with. The fact that the price is moving comfortably in
+a trading range(horizontal development) represents acceptance in that zone, it is a contextwhere
+price and value coincide according to the participants. When themarket is in a trending state
+(vertical development) price and value do notcoincide; in this context price will move ahead and
+value will follow ornot (as a sign of acceptance and rejection).
+[FIG 071]
+In an equilibrium area the fairest price will be located in the middleand the extremes both above
+and below will represent levels that areunfair or not accepted by the participants. Since the
+fairest value is located in the middle of the range, a moveto the upper end will be seen by buyers
+as an expensive price and at thesame time sellers will consider it cheap, so their actions will lead
+to sendthe price back to the fairest zone. Similarly a visit to the lower end of therange will be
+seen as cheap by buyers and expensive by sellers, leading to a further turn to the upside. It is
+nothing more or less than the typical range trading that we allknow where you look to buy at lows
+and sell at highs hoping that the pricewill continue to reject those extremes. And normally the
+market willcontinue to do so until its condition changes. The interesting thing comes when an
+imbalance occurs and theprice leaves the value zone. What will happen then? When the price leaves a
+trading zone achange in the perception of value can happen. The trader's task is now to assess
+whether these new price quotelevels are accepted or rejected. Price is ahead of the other two
+variables indetermining potential areas of value, but it is time in the first instance andvolume in
+the last instance that will confirm whether that new area isaccepted or rejected. We interpret
+acceptance to a new area when the price manages tohold (time consuming) and contracts begin to be
+exchanged betweenbuyers and sellers (volume), all this represented as a certain lateralizationof the
+price. Conversely, we would identify rejection when the pricequickly reverts back to its old value
+area denoting lack of interest andevidenced by a sharp turn. All horizontal developments end when
+there is no longer agreementamong the participants about the value; while all vertical
+developmentsend when the price reaches a zone where there is agreement among themagain. This is the
+continuous cycle of the market. This idea in itself is verypowerful and with the right approach
+trading strategies could be builtaround it. As with one of the universal principles of technical
+analysis (pricediscounts everything), we do not need to go into what actually producesthis change in
+the participants' perception of value. We know that basedon the current conditions, based on the
+information available at thatprecise moment, all participants give a valuation to the price of the
+asset.Subsequently, something may happen at a fundamental level that changesthis perception, but the
+beauty of this approach is that it removes us fromthe need to know and interpret what has happened
+to change theparticipants' perception. It is important to emphasize that this auction theory is
+universal andcan therefore be used to evaluate any type of financial market, regardlessof the time
+frame used. 4.1.3 THE FOUR STEPS OF MARKET ACTIVITY This is a process with which Steidlmayer
+represented the differentphases through which the market passes during the development of
+itsmovements. The four phases are: 1. Trend phase. Vertical development, price in imbalance in
+favorof one direction. 2. Stopping phase. Traders begin to appear in the oppositedirection and the
+stop of the previous trend movement occurs. The limits of the upper and lower range are established.
+3. Lateralization phase. Horizontal development. Trading aroundthe stop price and within the limits
+of the new equilibrium range. 4. Transition phase. The price leaves the range and a newimbalance
+begins in search of value. This movement may be areversal or a continuation of the previous trend
+movement.
+[FIG 072]
+Once the transition phase is over, the market is in a position to starta new cycle. This protocol
+will run uninterrupted and is observable in alltime frames. Visually up to step three a P or
+b-shaped profile would be observed.The formation of this type of profile as well as the proposal of
+a type ofoperative based on it will be seen in more depth later. Structural traders will be familiar
+with this four-step protocolbecause it is essentially exactly the development from Phase A to Phase
+Eproposed by the Wyckoff methodology: 1. Stop the previous trend 2. Build the cause 3. Assess the
+opposition 4. Initiate the trend movement 5. Confirm directionality
+[FIG 073]
+Although Richard Wyckoff, as well as his later students and othertraders who have contributed to the
+dissemination of his ideas were basedsolely on analytical tools and principles of technical
+analysis, we see thatthey already implicitly worked these concepts proposed in the auctiontheory
+even if they did not use such terms. That is why it is considered the only technical analysis
+approachbased on a real underlying logic: auction theory and the law of supply anddemand.
+
+
+---- SECTION bk2-c19 ----
+RAW_LABEL: 4.2 THE LAW OF SUPPLY AND DEMAND
+4.2 THE LAW OF SUPPLY AND DEMAND This is the basic law on which the auction theory is based and
+thereforegoverns all price changes. Initially the studies that Richard Wyckoffproposed on this law
+told us that: ❖ If demand was greater than supply, the price of the product would rise. ❖ If supply
+was greater than demand, the price of the product would go down. ❖ If supply and demand were in
+equilibrium, the price of the product would remain the same. 4.2.1 COMMON ERRORS OF INTERPRETATION
+This idea is very general and should be qualified since a series ofconceptual errors have been
+generated around this law of supply and demand. Error No. 1: Prices rise because there are more
+buyers thansellers or fall because there are more sellers than buyers. In the market there are
+always the same number of buyers andsellers; since for someone to buy, there must be someone to sell
+to him.No matter how much someone wants to buy, as long as there is no sellerwilling to offer the
+counterpart, it is impossible for the negotiation to takeplace. The key lies in the attitude
+(aggressive or passive) that traders takewhen participating in the market. Error No. 2: Prices go up
+because there is more demand thansupply or they go down because there is more supply thandemand. The
+problem with this statement is to call demand everything thathas to do with buying and supply
+everything that has to do with selling. Inreality they are different concepts and it is convenient
+to separate themwhen referring to one or the other. Supply and Demand are the limit orders that both
+buyers and sellersplace in the BID and ASK columns pending execution, which is known asliquidity.
+4.2.2 BID/ASK, SPREAD AND LIQUIDITY There is no single price in financial markets. This is obvious
+but notunderstood by many people. When a participant goes to the market, hefinds two prices: the
+buying and the selling price. BID. The BID column is the part of the order book where buyerscome to
+place their bid (limit buy orders) and where sellers come to matchtheir ask orders. The highest
+price level within the BID column is knownas the Best BID and represents the best price at which to
+sell. ASK. The ASK column is the part of the order book where sellersgo to place their pending sell
+(bid) orders and where buyers go to find thecounterpart for their purchases. The lowest price level
+within the ASKcolumn is known as the Best ASK and represents the best price at whichto buy.
+[FIG 074]
+Therefore, it is the order execution mechanism that determines theprice. The difference between the
+BID and the ASK is called the Spreadand is an indicator to be taken into account to assess the
+liquidity of the asset. The lower the Spread, the more liquid it is. Liquidity is an extremely
+important concept. It is the amount ofvolume that an asset trades. We should try to trade assets the
+more liquidthe better, as this will mean that it will be more difficult for a largeindividual trader
+to have the ability to move the price. It is therefore ameasure to avoid possible manipulation. If
+you are trading an asset thattrades very little volume, it is likely that if a large institution
+enters, it canmove the price with relative ease. These environments should be avoided. 4.2.3 TYPES
+OF PARTICIPANTS BASED ON THEIR BEHAVIOR The key element that clarifies the errors in the
+interpretation of theLaw of Supply and Demand is the behavior of traders, since they canparticipate
+in the market in different ways: ❖ Aggressive. Liquidity takers through the use of "at market"
+orders. They have urgency to enter and attack the Best BID andBest ASK where the limit orders remain
+located. This type ofaggressive orders is the real engine of the market since they arethe ones that
+initiate the transactions. ❖ Passive. Liquidity creators through the use of "limit" orders. Sellers
+create supply by leaving their orders pending execution inthe ASK column; and buyers create demand
+by leaving theirorders placed in the BID column.
+[FIG 075]
+4.2.4 HOW DOES PRICE MOVEMENT OCCUR? We come then to the moment of examining what must happen forthe
+price to move. The idea here is clear: it takes the aggressiveparticipation of traders to produce a
+change in price. Passive ordersrepresent intent in the first instance, and if executed they have the
+abilityto stop a move, but not the ability to make the price move. This requiresinitiative.
+INITIATIVE For the price to move upwards, buyers have to buy all the sell (bid)orders that are
+available at that price level and also continue to buyaggressively to force the price up one level
+to find new sellers to tradewith. Passive buy orders cause the downward movement to slow down,but by
+themselves cannot drive the price up. The only orders that have theability to move the price upwards
+are buy-to-market orders or thosewhose crossing orders become buy-to-market orders (such as stop
+losseson short positions).
+[FIG 076]
+For the price to move downward, sellers have to acquire all the buy(demand) orders that are
+available at that price level and continue to pushdownward forcing the price to go in search of
+buyers at lower levels. Passive sell orders cause the upward movement to slow down, butdo not have
+the ability to drive the price down on their own. The only orders that have the ability to move the
+price downward are market sellsor those whose crossing orders become market sells (Stop Loss of
+longpositions). The price needs aggressiveness to move, but it is very interesting totake into
+account also that the lack of interest from the opposite side canfacilitate this task. An absence of
+supply can facilitate the price rise just as an absenceof demand can facilitate its fall.
+[FIG 077]
+As supply withdraws, this lack of interest will be represented asfewer contracts placed in the ASK
+column and therefore the price canmore easily move upward with very little buying power. Conversely,
+if it is demand that withdraws, it will be visualizedwith a reduction in the contracts that buyers
+have placed in the BID andthis will cause the price to be able to move lower with very little
+sellinginitiative. 4.2.5 HOW DO MARKET TURNS OCCUR? Keep in mind that the market, in order to
+facilitate trading, will goup in search of sellers and down in search of buyers; in other words,
+itwill always move towards the equilibrium point where supply anddemand will be equalized.
+[FIG 078]
+Moreover, logic leads us to think that as the price rises, the interestof buyers decreases (they see
+the price as increasingly more expensive)and the interest of sellers increases (they see the price
+as increasinglycheaper); and as the price falls, the interest of sellers decreases and that ofbuyers
+increases. In a rising market, as long as the buying initiative is able toconsume all the liquidity
+(supply) found at higher levels, the price willcontinue to rise. On the other hand, in bear markets,
+as long as the sellinginitiative is able to consume all the liquidity (demand) found at lowerlevels,
+the price will continue to fall. At the moment of a market turn, we will normally always have
+athree-step process: 1. Exhaustion 2. Absorption 3. Initiative
+[FIG 079]
+To reverse an upward movement, the lack of interest (exhaustion)of the buyers to continue buying,
+the first entry of sale by the bigoperators in a passive way (absorption) and the aggressiveness
+(initiative)of the sellers will be combined. Oppositely for the bullish turn example: sellers'
+exhaustion, passivepositioning through absorption of sales and buying initiative withaggression in
+the ASK. In essence this three-step protocol is nothing more thanaccumulation and distribution
+processes regardless of the time scale onwhich they take place.
+
+
+---- SECTION bk2-c20 ----
+RAW_LABEL: 4.3 ORDER TYPES
+4.3 ORDER TYPES When participating in the market we can do so mainly by using fourdifferent types of
+orders.
+[FIG 080]
+❖ Market. Aggressive order that is executed at the best available buy and sell price (Best BID/ASK).
+Immediate execution thatguarantees the entry to the market but not the specific price atwhich it has
+been entered due to the constant change in thequotation and the application of the Spread. ❖ Limit.
+Passive order that is executed at a specific price. Entry at that specific price is guaranteed but
+execution is not guaranteed. That is, the price may never visit that level and therefore wewould not
+enter the market. As long as they are not executed,they can be removed at any time. ❖ Stop. A
+passive order that is executed at a specific price. When the price reaches it, it becomes a market
+order and is thereforeexecuted at the best available price (Best BID/ASK). ❖ Stop-Limit. Combines
+the features of Limit and Stop orders. Once a certain price level is reached (Stop orders function),
+anorder is generated at a specific level (Limit orders function).Operationally, it works exactly the
+same as Limit orders. Based on the four types of orders we have just seen, the followingis the full
+spectrum of basic orders available depending on the intentionand what it is used for: ❖ Buy Market.
+Aggressive order at the current price. It is used to: Enter the market on buy. Close a sell position
+(either at a profit or loss). ❖ Buy Stop. Pending order above the current price. It is used to:
+Enter the market on buy. Close a sell position (by Stop Loss). ❖ Buy Limit. Pending order below the
+current price. It is used for: Enter the market on buy. Close a sell position (by Take Profit). ❖
+Buy Stop Limit. Pending order below the price after reaching a level. It is used to: Enter the
+market to buy. Close a sell position (by Take Profit). ❖ Sell Market. Aggressive order at the
+current price. It is used to: Enter the market on sell. Close a buy position (either in profit or
+loss). ❖ Sell Stop. Pending order below the current price. It is used to: Enter the market on sell.
+Close a buy position (by Stop Loss). ❖ Sell Limit. Pending order above the current price. It is used
+to: Enter the market on sell. Close a buy position (by Take Profit). ❖ Sell Stop Limit. Pending
+order above the price after reaching a level. It is used to: Enter the market to sell. Close a buy
+position (by Take Profit). 4.3.1 ADVANCED FEATURES There are certain advanced instructions that can
+be applied,depending on the broker, to orders to enter and exit the market: One-Cancels-Other (OCO).
+Entering two orders to the marketwith one of them being cancelled when the other is executed. Order-
+Sends-Order (OSO). Instruction to execute secondaryorders when the initial one is executed. Market-
+To-Limit (MTL). Execution of a market order thatincludes an instruction to place a limit order at
+the same price with theremainder of the position if it is not fully executed. Market-If-Touched
+(MIT). Execution of a market order thatincludes an instruction to place a limit order at the same
+price with theremainder of the position if it is not fully executed. Limit-If-Touched (LIT).
+Conditional order to trade with a pendingorder (Limit) when a specific level is reached. It is used
+to buy above thecurrent price and to sell below the current price. Good-Til-Cancelled (GTC). It
+includes a temporary executionperiod which is usually the duration of the session. If at that point
+theorder has not been executed, it will be cancelled. Good-Til-Date (GTD). The order remains active
+until a specificdate. Immediate-Or-Cancel (IOC). Instruction to execute the orderimmediately. If any
+portion of the order remains unfilled, that portion iscancelled. Fill-Or-Kill (FOK). It does not
+allow partial execution. When theprice is reached, it either enters the market with full volume or
+is cancelled. All-Or-None (AON). Similar to the FOK orders with the differencethat in case the price
+reaches it and it is not executed because it cannotcover all its volume, it remains active until it
+obtains all the counterpart orit is cancelled by the trader. At-The-Opening (ATO). Instruction to
+execute an order at theopening of the session. If this is not possible, it is cancelled. At-The-
+Close (ATC). Instruction to execute an order at the close ofthe session.
+
+
+---- SECTION bk2-c21 ----
+RAW_LABEL: 4.4 TOOLS FOR VOLUME ANALYSIS
+4.4 TOOLS FOR VOLUME ANALYSIS Thanks to certain tools that analyze the flow of orders we can see all
+theinteraction between buyers and sellers who participate in the market indifferent ways. We will
+mainly distinguish them by the type of orders they dealwith as not all these tools are based on the
+same data: ❖ Analysis of pending orders: Order Book, also called Depth of Market (DOM). ❖ Analysis
+of executed orders: Time & Sales and Footprint. We will point out their most important
+characteristics in order toprovide the reader with a basic knowledge of the peculiarities of each
+one. 4.4.1 ORDER BOOK Identifies all pending orders for execution (liquidity) that arelocated in the
+BID and ASK columns; as we already know, the BID represents pending buy orders and the ASK
+represents pending sellorders.
+[FIG 081]
+As these types of software only have Level II of depth, mostmarkets can only show ten levels of
+liquidity above and below the currentprice. This is relevant because beyond those ten levels there
+will still beliquidity located, but it is only visible to those who have Level III of depth(mainly
+liquidity providers). The analysis of the order book presents some problems. One ofthem is that the
+visible liquidity is never the liquidity that is actuallylocated in those levels. The liquidity that
+can be seen in the order bookcomes only from limit orders. By their very nature, market orders
+cannot be seen anywhere, since they are born from an initiative and are executedinstantaneously. On
+the other hand, Stop orders, as they become a marketorder when their price is reached, are not
+displayed in the Order Bookeither. In addition to this, as we have seen in the advanced features
+ofsome orders, there are certain instructions that are not displayed in theOrder Book either, so
+that in reality we would be analyzing a not veryhigh percentage of the total orders pending
+execution. Another major problem with the analysis of the order book or anyother tool based on this
+liquidity data is that these orders that are pendingexecution can be removed by whoever placed them
+there at any timebefore they are executed. Due to this peculiarity different forms ofmanipulation
+carried out by algorithms emerged: This is the placement of huge amounts of contracts in the BID
+andASKS columns (limit orders) without the intention of actually executingthem. The aim is to give
+the impression of an "insurmountable barrier"and cause the price to move to the opposite side. They
+are false ordersbecause when the price is about to reach its level, they are cancelled andare not
+executed. It is an interesting concept that highlights the value of the ability oflimit orders with
+respect to price movement. As we have mentioned, limitorders by themselves and by their very nature
+do not have the ability tomove the market, but using this form of manipulative activity we see how
+the price can move influenced by them at certain times. Not directly basedon their execution, but
+indirectly based on their influence. Imagine that you normally see limit orders of around 50
+contractsper price level. What will the other participants think if you suddenly see500 contracts?
+Well, most logically they will see that this is a too highprice to pay for the price to cross that
+level and most likely cause a lack ofinterest to go against such orders. And of course, this will
+result in a movein the opposite direction of the huge order. Manipulation by large tradersto drive
+the price in the direction they want. This is the splitting of a large limit order into smaller
+portions. Themotivation for this type of action has to do with wanting to hide the actualsize of the
+original order. Mainly used by institutional traders who want to execute a hugenumber of contracts
+in a given price range and who use algorithmsprogrammed with this technology to be able to do so
+passively andwithout turning the price against them. It is important to note that there isonly one
+source behind such an order, just one large trader, not acollection of them. It is very visual to
+take the example of a real Iceberg. On thesurface what you see is a seemingly normal amount of
+contracts, but whatyou don't know is that this order is simply a part of a much, much largerone. And
+when this small part is filled by the market the large orderquickly replenishes it. This is the
+clearest example of what a takeover would look like.There may be many aggressive buyers pushing the
+ASK and all those BuyMarkets are crossing the Sell Limits of an Iceberg order which do notallow the
+price to move up. We will say that a takeover of these purchasesis taking place. 4.4.2 TAPE Thanks
+to Time & Sales we can see in real time all the crossing oforders already executed. The analysis of
+the tape becomes very complexdue to the speed at which the current markets move (mainly
+futuresmarkets).
+[FIG 082]
+Depending on the software we can access different types ofinformation. It usually includes at least
+the columns with the time ofexecution, the price level and the number of contracts. It can certainly
+be useful for the identification of large volumesexecuted in a single order, known as "big trade".
+More modern versionsalso allow the grouping of orders executed in blocks, pointing to the sametrader
+as the origin of different transactions spaced in time. A positive point of the Tape with respect to
+the Order Book is thatthe tape represents the past, the orders already executed and therefore is not
+susceptible to manipulation. Operating solely by analyzing the tape is not within everyone'sreach
+since it requires enormous experience as well as a great capacity forconcentration due to the speed
+at which it moves. 4.4.3 FOOTPRINT When most people refer to Order Flow they are actually referring
+tothis section of the order flow, the use of Footprint. Order Flow is a generalterm that, as the
+name suggests, is concerned with order flow.
+[FIG 083]
+The Footprint charts the data provided by the tape (orders alreadyexecuted) and represents them in a
+much more visual way. It would belike putting a magnifying glass inside the candlesticks and
+observing thenumber of contracts executed at each price level.. The advantage of analyzing the
+Footprint is that it allows us to quantify in maximum detail the interaction between buyers and
+sellers.Observing the balance and imbalance between participants as well asbeing able to identify in
+which column more volume is being traded cancertainly be useful at certain times. There are
+different types of footprint charting based on: ❖ The nature of the data: it can be set up with
+time, range, volume and rotation candlesticks. ❖ The representation protocol: Profile, Delta,
+Imbalance, Histogram, Ladder or BID/ASK. It is a very configurable tool that generally includes
+multiplefunctionalities although it basically analyzes the orders executed by pricelevels with the
+objective of looking for imbalances, takeovers, initiatives,unfinished auctions, clusters, big
+trades etc. Once you know in depth how the order crossing is executed, youwill come to the
+conclusion that its analysis is very subjective and thattrading based on this tool without taking
+into account anything else is notadvisable. 4.4.2 DELTA A more specific and popular tool in the
+world of Order Flowanalysis is the Delta. The delta is an indicator that simply measures
+thedifference between the volume traded on the BID and the volume tradedon the ASK in a given period
+of time. If the difference is positive the delta will be positive and vice versa if it is negative.
+In addition, the differencebetween deltas can also be visualized since the indicators will
+normallyshow them with different sizes. There is a common misconception that all volume traded on
+theASK "are buys" and all volume crossed on the BID "are sells", althoughin reality with that
+statement they mean that they are directional in origin;that is, they have an intention to add
+pressure towards one of the sides. Ifthis were so, why do we sometimes see bearish moves with
+positive deltasand bullish moves with negative deltas? Believe me it's not that simple. Ifit were,
+we would have found the Holy Grail. Again it has to do with thecrossover mechanism.
+[FIG 084]
+For the time being, let's keep in mind that it is visually observed ona horizontal axis with value 0
+and that depending on the column where thetransactions are executed, it will be displayed positively
+or negatively onthe axis. This representation would be for the example of the normal Deltasince
+there is another variant, the accumulated, where it is chartedcontinuously without taking into
+account the horizontal axis. The delta is updated at each executed order and therefore gives riseto
+the possibility that, as with the price, wicks are represented at itsextremes. If we observe a delta
+with a wick in its lower part, what itmeans is that at a certain moment of its development the
+difference infavor of the BID was extraordinarily large, and that at a certain point ithas begun to
+negotiate much more actively in the ASK column,generating that reversal that leaves its mark in the
+form of a wick. As it happens in general terms with the analysis of the footprint,although its
+interpretation is not as basic as I have explained above, it canprovide us with certain usefulness
+at certain specific moments.
+
+
+---- SECTION bk2-c22 ----
+RAW_LABEL: 4.5 THE ORDER FLOW PROBLEM
+4.5 THE ORDER FLOW PROBLEM As a basis, we must be clear about a series of ideas that will help us
+tounderstand the rest of the content: 1. A purchase is matched to a sale and vice versa. 2. An
+aggressive order is matched with a passive order. 3. In the columns of the BID and the ASK only the
+aggressivenessis reflected. Considering the different types of orders, it is now necessary
+tounderstand what mechanism is used to match orders between participantsand in which column this
+execution is reflected.
+[FIG 085]
+❖ Stop orders become Market orders when they are filled. ❖ Stop Limit orders become Limit orders
+when the price set by the Stop order is reached. When the trader executes a Buy Market order, the
+order processingmechanism kicks in and goes to the Order Book to find the first Sell Limitorder
+located in the ASK column to match this buy. The same happens when a Sell Market order is executed.
+Theprocessing mechanism directs that order to the most immediate price levelof the BID column to
+find the counterpart in the Buy Limit orders that arepending to be matched there. With limit orders
+the process is the same. A participant leaves hisorder pending execution in one of the two columns
+and it will stay thereuntil an aggressive trader arrives who needs to match his order. This is
+essentially what happens over and over again at high speed.Regardless of the type of order used to
+enter the market, the end resultwill always be that an aggressive order will cross with a passive
+one:
+[FIG 086]
+And the column on which those order crossovers will be displayedwill depend on the order that
+initiated it. Therefore: ❖ Buy Market crosses with Sell Limit and is displayed in the ASK column,
+since the order that initiated the transaction is theaggressive buy. ❖ Sell Market intersects with
+Buy Limit and is shown in the BID column since the initiation comes from the aggressive sell side.
+Now let's do a reasoning exercise using as an example a trader whoenters the market with a short
+position (sell). This trader has differentways to exit this position:
+[FIG 087]
+❖ Through a manual exit, either in loss or in profit by executing a buy Market order (and it would
+appear in the ASK). ❖ By executing the stop loss (stop loss), whose order will be a buy stop (and
+would appear in the ASK). ❖ By executing the take profit, whose order is a buy limit (and would
+appear in the BID). Similarly, a trader who enters the market with a long position (buy)can leave it
+through three options:
+[FIG 088]
+❖ Through a manual exit, either at a loss or at a profit by executing a sell market order (and would
+appear in the BID). ❖ By executing the stop loss, whose order will be a sell stop (and would appear
+in the BID). ❖ By executing the take profit, whose order will be a sell limit (and would appear in
+the ASK). The point of this example is that the same action, such as closing aposition, can be shown
+in different columns (BID and ASK) depending onthe type of order used for it. Understanding this
+information is of tremendous importancebecause many analyses of order crossing are erroneous because
+they startfrom wrong premises. The first conclusion should therefore be that not everything
+thatappears executed in the ASK column is buying with the intention of adding buying pressure to the
+market and not everything that appears inthe BID column is selling with the intention of adding
+selling pressure.Herein lies the problem when analyzing order flow in any of its variants. These
+programs based on the order crossing mechanism are set upto always reflect aggressiveness, the
+problem is that it is not possible todistinguish what intention is behind the executed orders. When
+we see a cross executed in the ASK it will always be a BuyMarket with Sell Limit order; while when
+we see a cross executed in theBID it will be a Sell Market with Buy Limit order, but what we will
+notknow is the origin/intention behind such a cross order:
+[FIG 089]
+The main source of error when dealing with order flow analysiscomes because there is the belief that
+everything executed in the ASK hasa buy initiative origin and everything executed in the BID has a
+sellinitiative origin, but as we have just seen, nothing could be further fromthe truth. This type
+of software makes a reduction to the execution ofaggressive orders with passive, but they cannot
+know what theorigin/intention of those orders is. What would happen if there is a crossing of orders
+of a Stop Loss of a Buy Market and a Take Profit of a Sell Limit? This type of crossoverwill be
+reflected in the ASK, but is there really an intention to add buyingpressure to the market?
+Obviously not, as we see in this example bothtraders would be out of the market and yet their
+transaction would bereflected in the ASK. This is the problem with Order Flow: it remains ahighly
+subjective tool. Even more so when you do not know perfectlyhow order crossing works.. The same
+problem is encountered for the BID column. There couldbe the possibility of a matching of orders
+from someone who has triggeredthe stop loss of a buy position (Sell Market) with someone who wants
+totake profit from a sell position (Buy Limit). This crossover would bereflected in the BID but both
+are out, there is no new selling pressure. I will now present two different contexts to exemplify
+again theOrder Flow problem: 4.5.1 PROBLEM #1 PRICE DIVERGENCE For example, if we analyze the chart
+of the footprint we see abullish development in which at the top there is an imbalance (greenbottom)
+in favor of the ASK with a downward turn immediately after; thisfact offers us different
+interpretations.
+[FIG 090]
+Some will say that they are trapped buyers (assuming thisimbalance in the ASK as aggressive buying
+with directional intent); otherswill say that they are executions of stop loss orders of long
+positions; stillothers will say that they are profit taking of long positions; and finallysome
+others may say that it is a passive entry of sellers (takeover throughsell limit orders). All of
+them are probably right. And the truth is that most probablythere is a bit of all of them. Also, at
+that point most likely the delta isnegative, showing us a divergence. This is where the problem
+becomes apparent when analyzing OrderFlow. The truth is that in real time we cannot determine
+exactly what thetrue origin of these executions is. In many cases, in order to justify aproposed
+scenario, one of these particular reasons will be alluded to. Forexample, someone who is looking for
+a bearish move or who is alreadypositioned short will see those large orders executed on the ASK
+andassume them to be "trapped buyers", as that is the reason that wouldjustify their bearish
+approach. The only objective in this example is that, as it appears in the ASKcolumn, it is a cross
+between Buy Market and Sell Limit orders; but to state categorically that it is any of the possible
+origins already describeddoes not seem to be a very solid approach. Hence the importance that, in
+the event of deciding to work withOrder Flow, the most logical thing to do would be to subordinate
+itsanalysis to the context provided by another approach such as, in our case,the Wyckoff
+methodology. The reason for this is that due to thecomplexity and nature of order matching we are
+going to find this type ofimbalance in any part of the chart and this does not offer us an
+advantage. 4.5.2 PROBLEM #2 DELTA DIVERGENCE What happens when the Delta is not in agreement with
+the price? Ina positive Delta its candlestick is expected to be bullish; and in a negativeDelta,
+bearish. Divergence would appear when we observe a negativeDelta on a bullish candlestick or a
+positive Delta on a bearish candlestick.
+[FIG 091]
+If all that appears on the ASK were market buying with theintention of adding upward pressure, it is
+impossible for a positive Deltato result in a bearish candlestick. Continuing with the same example
+as above, we see that the bearishcandlestick that originates the turn has a very positive delta
+(+235). The reasoning behind this situation could be as follows: Thepositive delta may be the result
+of many aggressive buys (Buy Market)that have been blocked with passive sells (Sell Limit) and have
+notallowed the price to rise. All these crossing orders appear in the ASK.Subsequently, if there is
+little demand in the BID (few Buy Limits), a fewaggressive sales would cause the price to move
+downwards. And this isone way in which a positive delta with a bearish candle would eventuallybe
+observed.
+[FIG 092]
+As you have probably concluded, delta divergences implicitlyidentify a takeover so if they appear in
+the right place they usuallyanticipate interesting turns. This does not mean by any means that
+alldivergences will establish turns since sometimes these will occur over anarea of little interest
+and without that intention of takeover behind, hencethe problem of its use arbitrarily. 4.5.3 PRICE
+AND VOLUME TRADER In the end, our task as traders is to identify when imbalancesbetween supply and
+demand occur and these will eventually show up onthe price and volume chart. A trader who only takes
+into account the price and volume actionmay enter the market with some delay and may not have
+certaininformation available (the real interaction between the participants) buthis trading will be
+much calmer as he will not have to interpret those order crosses. In the previous example of price
+divergence, the trader who simplyanalyzes the price action and volume will only focus on the fact
+that ananomaly has occurred in that action, a divergence effort result. That largenumber of executed
+orders will most likely be accompanied by anincrease in volume and a narrow range already denoting
+some divergence.In addition, a subsequent downward turn would confirm this anomaly. Beyond assessing
+whether there has been a jump of stops, profittaking, entry of short positions or that buyers have
+been trapped, which aswe have already mentioned is probably a bit of all of the above, what
+isrelevant is the final action and the trader who does not observe the flow oforders but knows how
+to interpret the chart will eventually reach the sameconclusion, albeit with less stress. 4.5.4
+CONCLUSION In addition to everything discussed with respect to order matching,it is the precise
+moment to also recall the different types of agents thatoperate in the market and the intention
+behind their actions (hedging,speculation and arbitrage). The orders executed by these participants
+arealso displayed on the BID and ASK, and as we have seen, not all of themhave directional
+intentions which are ultimately those seeking pricemovement. This is no small matter as the only
+ones who will show up again todefend their position in case they have aggressively entered the
+market seeking a profit from the price move will be the speculative traders. Wemay see the execution
+of a large order at a price level and it may comefrom an institution with the objective of covering
+a position held inanother parallel market, or it may be the activation of an arbitragestrategy, to
+name a few possibilities. We therefore add a new layer of opacity and subjectivity. We haveon the
+one hand that not all participants come to the market with aspeculative interest; and on the other
+hand that the matching of orderscannot determine the origin of such trading. We come to the
+conclusion therefore that the use of Order Flowindependently could be totally meaningless since in
+no case can it offer uswhat is the most important aspect to determine in the market: the
+context;knowing exactly where we are going to look for trades and in whichdirection. Trying to
+understand this is vital in order to be able to performsolid analysis and scenario planning.
+

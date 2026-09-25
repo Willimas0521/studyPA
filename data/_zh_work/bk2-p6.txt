@@ -1,0 +1,269 @@
+==== PART bk2-p6 ====
+RAW_LABEL: PART 6. ORDER FLOW
+
+
+---- SECTION bk2-c31 ----
+RAW_LABEL: 6.1 FOOTPRINT READING
+6.1 FOOTPRINT READING
+[FIG 140]
+The first thing to be clear about is that the reading of the order flow isdone diagonally and not
+horizontally. This is due to the very nature of themarket in which participants can trade in
+different ways. Buyers can participate either passively by leaving their demands onthe BID or
+actively by attacking the ASK. Sellers can enter either byplacing their bids at the ASK or by
+assaulting the BID with orders to market. Participants therefore have two prices at which to trade:
+the BIDand the ASK. There is no single price at which all participants can trade atthe same time. If
+there were, it would make more sense to analyze thefootprint horizontally rather than diagonally.
+That is why to assess the existing strength or weakness amongmarket participants at a given price
+level we will always compare ordersexecuted diagonally upwards: one level of the BID with respect to
+ahigher level in the ASK column.
+
+
+---- SECTION bk2-c32 ----
+RAW_LABEL: 6.2 IMBALANCES
+6.2 IMBALANCES A large part of the key actions that we try to identify in order flowanalysis have to
+do with unbalances. This behavior is composed of hightrading (high number of contracts traded) in
+one of the columns and at thesame time low trading in the opposite column (diagonally). It should be
+noted that this unbalance should meet certain minimumparameters to be determined as such. The fact
+that there is simply a highervolume than in the opposite column is not enough, there needs to be
+adisproportionate difference in volume. And this difference can beparameterized by configuring the
+platform to show such unbalances whenthere is a 200%, 300% or 400% disparity between the levels to
+becompared. This means that 2, 3 or 4 times more volume has been tradedon a column than on the
+opposite column. Many traders also add a minimum number of contracts to calibratethe imbalance. If
+you have a deep knowledge of the market you areworking in this filter will help you to refine the
+identification of suchimbalances even further. Using these rotations in percentages allows the
+analysis to betteradapt to market conditions and adds some confidence as they are objective values.
+[FIG 141]
+In this example chart we see imbalances in favor of the BID with adifference of 400%; in other
+words, 4 times more contracts have beentraded in the BID than in the ASK in relation to the diagonal
+oppositelevel. The analysis to detect possible imbalances is carried out bypropinquity nature in
+comparative terms for two reasons: 1. Because it takes into account the level of the opposite
+columnto determine that there really is an imbalance. 2. Because it will depend on the volume traded
+on that particularcandle. Had such an action occurred at another time (wheregenerally higher volume
+was traded) it might not have beenseen as such an imbalance.
+
+
+---- SECTION bk2-c33 ----
+RAW_LABEL: 6.3 TURNING PATTERN
+6.3 TURNING PATTERN Order flow analysis involves many concepts. In an attempt to simplify andtry to
+objectify its reading, and since we are only going to proceed to itsanalysis in potential trading
+situations, we will be looking for the eventsthat suggest an effective market turn: potential
+takeover and initiative. This is a blockade through limit orders. There are large traders whodo not
+want the price to move further in that direction and initially enterthrough passive orders to cause
+the movement to stop. What is interesting is to see that after this high trading the price haslittle
+or no movement in that direction. Sometimes these processes willtake longer and large traders will
+be forced to take such action repeatedlyover a price range, visualizing possible takeover over more
+than onefootprint.
+[FIG 142]
+When determining a potential absorption we initially want to see itappear on relatively high volume.
+This will minimize the possibility thatwe are at the wrong time in the market where no such action
+is actuallytaking place. On the other hand, although the color of the candlestick isindifferent, its
+closing price must be against the imbalance. To treat suchbehavior as potential takeover buying we
+want to see the imbalancesremain above the closing price; and below the closing price for theexample
+of potential takeover selling. This is the greatest demonstrationof blocking and refusal to move
+further in that direction. As with any other market action, it is confirmed or rejected by
+thesubsequent reaction. If we observe high volume, a potential takeover andthe inability of the
+price to continue moving in that direction, the oddsincrease that we are actually looking at a
+takeover. Although such takeovers may appear leaving wicks, this is not a necessary characteristic
+as they can also appear on candlesticks that closeat the same end. The key here is to see that the
+price does notsubsequently continue in that direction. As we have already mentioned, the execution
+of passive ordersalone does not have the ability to move the price, aggressiveness isneeded. If the
+analysis is correct and we are in the right place, after seeing apossible takeover, the appearance
+now of initiative will be the definitivesignal to confirm the market turn we were looking for.
+[FIG 143]
+This initiative is represented as large trades executed with marketorders on the column in which we
+are looking to enter the market: If wewant to buy we will look to see aggression in the ASK column
+and if wewant to sell we will look for aggression in the BID. Again we quote the principle that
+every action must be confirmedor rejected by the subsequent market reaction. If we see a
+possibleinitiative which is followed by a subsequent and immediate price move inthat direction, we
+will be in a position to confirm that action. This initiative, this large volume executed will be
+very easy toidentify on the trace as the imbalance with respect to the rest of the levelsof that
+same period will be very evident. Some authors use this term torefer to several imbalances together.
+While it is true that the moreimbalances we observe, the stronger the approach will be,
+theconfiguration of the imbalance greatly influences its representation sinceit is not the same to
+configure the software to show imbalances of 400%than 150% where the latter will appear much more
+frequently. As with the takeover, we must take into account the volume tradedon that candlestick. In
+order to add confidence to the reading, we want tosee that the volume is relatively high. Unlike the
+takeover, in case of the potential initiative we want tosee that the closing price is in favor of
+the imbalance; that is, in case of abuy initiative we want to see the imbalances in the lower part
+of thecandle; and in the upper part in case of a sell initiative. This trace suggeststo us that
+there is harmony between that action and the subsequent andimmediate price movement. In essence this
+candlestick that denotes initiative is the same as theSOS/SOWbar that we work under Wyckoff
+methodology, and shouldtherefore comply with their common characteristics:: ❖ Relatively high
+volume. ❖ Wide range. ❖ Close at the extreme. Sometimes such a market turn pattern may be observed
+in one ortwo candlesticks (V-turn). At other times, after visualizing a possibletakeover, the market
+will need more time consumption before theinitiative appears. In the event that the market needs to
+consume that timebefore the actual turn occurs, what we want to see to add strength to thetakeover
+idea is some sideways movement of the price where we can seethe inability of the market to continue
+in the direction it was going, this isa very evident sign of the takeover action at times. Another
+interesting detail that would add strength to the reversalpattern is if the market leaves a finished
+auction at the end. This wouldsignal to us the refusal of traders to continue trading in that
+direction andsuch lack of interest would facilitate the turn in the opposite direction. Ifwe are not
+able to identify the finished auction through footprint analysis,we can use the Volume Profile as we
+have already seen. 6.3.1 BEARISH TURN PATTER: BUYING ABSORPTION AND INITIATIVE SELLING If we are
+currently waiting for a bearish trigger to develop, we willlook to the left of the chart in order to
+identify any traces that suggestpossible aggressive takeovers. As we have already seen with order
+crossing, aggressive buyingcrosses with limit selling and this interaction appears in the ASK
+column. Therefore, what we want to see as a sign of possible takeovers are largetrades in the ASK
+column on or near the trading area. But not just any location of these large trades would not be
+enough,the ideal would be to see them on the top of the candlesticks because incase that really big
+traders want to enter with limited sales, these will be ata high price level (buy low and sell
+high). This possible takeover alone is not enough to enter the market. Weneed to see aggressiveness
+that suggests selling intent, and we identifythis with the appearance of large trades in the BID
+column. This BID traceis objectively the execution of aggressive Sell Market orders and giventhe
+context in which we find ourselves, we could interpret that the originand intentionality of such
+orders is to enter the market directionally byadding selling pressure. The ideal location where we
+want these large trades to show up isover the top of the footprint. If in addition to this we see a
+subsequentdownward price movement, we would be facing another footprint thatwould suggest the
+aggressive entry of sellers, visually and bymethodology it would appear on the chart as a Sign of
+Weakness bar(SOWbar).
+[FIG 144]
+In this example we see how this pattern of potential takeover ofpurchases plus sellers initiative
+appears during the development of twocontiguous candlesticks. It would be the exact theoretical
+representationof what we are looking for: an approach to the trading zone with a movethat denotes
+lack of interest, a quasi weather action where ASKimbalances occur on the high side of the
+candlestick, followed by acandlestick with BID imbalance also on its high side that achieves
+somedownward displacement and closes at candlestick lows (SOWbar). Wealso see a significant rotation
+in the Delta from +197 to -171, suggesting achange of control in favor of sellers, confirmed by the
+subsequent bearishreaction. 6.3.2 BULLISH TURN PATTERN: SELLING ABSORPTION AND INITIATIVE BUYING In
+a context of waiting for the development of the bullish trigger,we will be looking for traces that
+suggest a takeover of sales. Converselyto the above, this takeover should show up as strong activity
+in the BIDcolumn. Takeover is a simple blockade where in this case the price is notallowed to fall.
+All sell orders assaulting the BID are matched with buylimit orders making it impossible to move the
+price down. This is a veryimportant footprint of professional accumulation. With respect to the
+location of these large trades we want to seethem at the bottom of the footprint as a true
+reflection of the blockade. Ifwe see those huge volumes at the top it would make little sense to
+think about possible takeover selling. Subsequently what we want to see is buying initiative:
+aggressionto the ASK suggesting the intention to enter the market directionallydriving the price up.
+We want to see these imbalances remain below theclosing price of the candlestick, which will suggest
+that this aggressionhas had some continuity to the upside. In essence a SOSbar is exactly that,
+aggression by large traders whoget a large price move. The difference is that through candlestick
+analysiswe see the final representation and not the order crossover that occurswithin it.
+[FIG 145]
+Here is a genuine theoretical chart of a bullish reversal. If we lookat it, before the turn we can
+already see a potential takeover on thecandlestick that marks a -536 Delta. It is a very good
+example to highlightthe importance of the Delta. After that -536 is followed by a
+bullishcandlestick, this is a first indication that we are possibly facing a takeover because if the
+executed there were really aggressive sales, the price wouldhave continued to fall. Instead, the
+price reacts by rising; but this bullishcandlestick does not have much commitment behind it since on
+the onehand it does not leave any imbalance to support its movement, and on theother hand the delta
+is not very significant in relation to what we haveseen previously. Most likely the market is not
+yet ready to go up. And that is when it develops the effective turn in a two candlestickpattern. New
+takeovers can be seen in that great first bearish candle whichis accompanied by a delta of -312 to
+later appear a bullish initiative candlewith imbalances in the ASK, a relatively high volume and a
+delta of +607evidencing now a clear rotation in favor of buyers.
+
+
+---- SECTION bk2-c34 ----
+RAW_LABEL: 6.4 CONTINUATION PATTERN
+6.4 CONTINUATION PATTERN The continuation patterns serve us mainly to confirm the
+directionalityoriginated in the previous turn in addition to allowing us to identify pointswhere to
+look for incorporation when a trend movement is underway. This pattern is composed of two actions:
+the creation of the controland its subsequent test.. This pattern is the clearest signal of interest
+in favor of a direction.It is visualized on the track by imbalances. It is essentially the same
+asinitiative with the only difference being that it occurs once the movementhas been initiated.
+Although we could determine a control with a single imbalance, itis advisable to wait for the
+appearance of at least two imbalances. Thelogic is that the more imbalances the traders are able to
+generate, thestronger the zone will be. Again, it must be taken into account thatdepending on how
+demanding it is to parameterize the software, it will show more or less imbalances. For this reason,
+it is not necessary toconfine oneself to theoretical definitions that are not totally objective.
+Thefact that a single imbalance occurs instead of two or three together doesnot mean that this event
+cannot be treated as a control. This is because the control action is not only about
+imbalances;other characteristics such as candlestick range, candlestick closing leveland volume
+traded must be met. We therefore identify a bullish control when we see imbalances inthe ASK column
+on a candle with good volume that manages to close inthe upper third of the total range. Preferably
+the further down thecandlestick range the imbalances are, the stronger the stock. Similarly, we
+identify a bearish control on imbalances (the higherthe range of the candlestick, the better) in the
+BID column on a bearishcandlestick with high volume that closes in the lower third of its range. If
+we have not had the possibility to enter the turning pattern afterseeing the takeover plus
+initiative, the creation of the controls will offer usa new possibility to join as long as there is
+still a considerable distancefrom the level where we will set the target. The participants
+generating the pattern have had the ability toexceed in an exaggerated way the number of contracts
+traded aggressivelywith respect to the traders in the opposite column. This action is veryrelevant
+as this is not just a single, isolated imbalance, but they haveenough momentum to create three
+imbalances in a row at different pricelevels. If after seeing a reversal pattern we observe such an
+occurrence onthe print it will give us greater confidence that we are positioned in favor of the
+majority of the professional money. This is a move that is going to test a previous area where
+aggressivetraders (controls) have potentially entered. Controls naturally identify a strong zone
+where it is assumed thatthe traders who caused the previous imbalance will reappear again shouldthe
+market revisit the zone. That is the underlying logic behind that particular action. We aregoing to
+favor the fact that those traders are going to defend their positionby not letting the price move
+against them, thus offering us a goodopportunity. So what we will be looking for is the development
+of a newreversal pattern over the zone. A zone that will encompass the price levelsidentified in the
+control. In this context, the takeover action may not be soremarkable since the big effort has
+already been made previously. Whatshould be evident is a new show of initiative suggesting the
+aggressiveentry of such traders defending their position. This should be thedefinitive signal to
+enter the market. Sometimes such a test will develop very quickly on the nextdeveloping candle. This
+will probably be seen as a wick that denotes alack of interest to trade in that area leaving a full
+reversal of thecandlestick afterwards. At other times there will be a small extension inthat zone
+where the price will temporarily appear to break it but eventually reverses leaving a rejection. And
+there will be the occasionaltime when the test leaves it practically ticking. The key here is to
+keep anopen mind and be flexible with respect to the representation of such a test. A It should be
+noted that the lack of interest should be manifest in thisbehavior as in any other known test action
+under price and volume analysis.Clear evidence of this inactivity as we already know would be
+observablethrough relatively low volume.
+[FIG 146]
+In this example the price comes from generating a bullish turn andis in the middle of the movement.
+The bullish control is created in thisbullish candlestick with a wide range, good volume and
+positive delta. Weidentify the imbalance level that also coincides with the VPOC of thecandlestick
+and we extend it to the right as a potential long search tradingarea. The price then pulls back
+above this level and generates a twocandlestick reversal with good delta rotation. It is interesting
+to note howthe bearish candlestick reaches this level with a decrease in volumedenoting rejection
+and how the bullish candlestick subsequently generatesa large volume leaving a new imbalance in the
+ASK. From there the pricecontinues its bullish development.
+[FIG 147]
+In this other example we see how the bearish control is generatedon a candle with large displacement
+and high volume with a largenegative delta suggesting strong aggressive entry of sellers. If we
+look, the imbalance in the BID is generated along with otherlevels that have had a high trading so
+we can assume that area as a HighVolume Node; and this will be the one that we will project in the
+future tolook for the bearish continuation on it. In this case the chart is 15 minutes so if we want
+to refine the entrywe could lower the time frame to 5 minutes to look for the bearishreversal
+pattern: takeover of purchases and sellers' initiative. In case wewant to continue maintaining the
+time frame, we would wait for theclosing of the candle that tests this control to evaluate if
+sellers haveentered again and our entry trigger is activated. The key, as discussed above, ahead of
+two or more imbalancesbeing generated together to treat such action as the control is that even if
+itis only one, it appears on a candle with a wide range, close near theextreme and relatively high
+volume as these are the traces that suggest tous the entry of large traders. For the continuation
+pattern, we could also treat as the control onwhich to look for the test that initial imbalance that
+we identified in theinitiation of the reversal pattern. Most likely it meets all the
+characteristicswe are looking for so it would be the first area to project in which to lookfor the
+entry.
+
+
+---- SECTION bk2-c35 ----
+RAW_LABEL: 6.5 FRACTALITY
+6.5 FRACTALITY Although basically the reading of this type of pattern is intraday oriented,this
+logic can be extrapolated in the same way to higher time frames. In the turning pattern observable
+in the Order Flow fingerprint,takeover and initiative is nothing more than a minuscule-
+scalerepresentation of what in another temporality would be a cumulative ordistributive scheme. The
+same turning pattern could be observed in aslightly larger perspective (during the development of
+one or severalsessions) and would be visualized in the form of P and b, where the bell isnothing
+more than a takeover process within it, with the initiative beingsubsequently represented as the
+movement of the breakout of the valuezone. Assuming it on an even larger scale we would have the
+mediumand long term structures composed from several days to weeks. Thesestructures again represent
+exactly the same behavior, where the takeoverprocess would be the accumulation/distribution range,
+and the initiativewould be the trend movement albeit on a larger scale. The only difference is the
+time consumption needed by the marketto complete such a takeover process. In the following example
+we see how in the chart on the left it develops in a three candlestick pattern; inthe central one it
+does it during the development of a session; and in thechart on the right it needs to consume
+several days to carry out the processleaving a clearer structure.
+[FIG 148]
+The same is true of continuation patterns. In essence a control willbe part of an impulsive move
+while a test to that control will be part of acorrective move. This is the natural dynamic of trend
+movements:impulses and reversals. Looking at it on a higher scale, such a control can be identified
+inthe VPOC if we launch a profile over the entire impulsive leg. This VPOCwould represent the
+control zone of the whole movement. That is whythese are levels to be taken into account on which to
+look for the end of apossible retracement and the beginning of a new impulse. And on a longer term
+scale, where we try to analyze the overallcontext, we assign the control function on the high volume
+nodes (HVN),which represent accumulation/distribution structures over other timeframes. In the
+following chart we see an example of this concept offractality with controls. We launch a profile of
+the last impulse andidentify the VPOC of that leg. This VPOC can be considered as the sellerscontrol
+zone so a good strategy would be to try to go short in a future testof the zone. The key to
+understanding the concept is to be clear that if this bearish momentum was part of a single
+candlestick, the most traded levelwithin it would be that VPOC. We also see how this control is
+generatedby a minor redistribution scheme which causes the creation of the HighVolume Node.
+[FIG 149]
+This is the best explanation to understand the fractality of themarket. As we can see, the behaviors
+are always the same regardless ofthe time variable. Here lies one of the advantages of this
+methodology.Once this is internalized, we can be in a position to cover with a greatersolidity the
+trade in different timeframes.
+

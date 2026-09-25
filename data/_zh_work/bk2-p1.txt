@@ -1,0 +1,565 @@
+==== PART bk2-p1 ====
+RAW_LABEL: PART 1. ADVANCED CONCEPTS OF THE WYCKOFF METHODOLOGY
+
+
+---- SECTION bk2-c1 ----
+RAW_LABEL: 1.1 THE LABELS
+1.1 THE LABELS All the theoretical section seen in the first book is necessary andindispensable
+content to master this approach and truly understand howthe market moves, but the Wyckoff
+methodology, or my way ofunderstanding it, goes much further. It is not simply a matter of labeling
+a chart almost robotically andthat's it. We have learned what underlies each event; how it is
+formed,how it is represented on the chart, the psychology behind it and so on. Butas I say, the
+method is much richer. I say this because, by the very nature of the market, it is
+practicallyimpossible for any two structures to be completely the same. While it istrue that on a
+daily basis we see "textbook" schemes, which are verygenuinely adapted to classic examples, on most
+occasions the market willdevelop less conventional structures, where the identification of
+suchevents will be more complex. It is therefore essential not to focus on the exact search for
+events(mainly the stop events that make up Phase A) and to keep in mind thatwhat is really important
+is the action as a whole. In other words, in manycharts we will see that a trend movement stops and
+starts a lateralization process, but we are not able to correctly identify those first 4
+stoppingevents. In view of this, we may discard the asset and miss a future tradingopportunity. This
+is a mistake. As I say, the important thing is not that weknow how to identify those 4 stop events,
+but that the market hasobjectively produced the stop of the trend movement. You may notidentify the
+Climax, the Reaction and the Test in a genuine way, but theobjective is that the market has stopped
+and has initiated a change ofcharacter (migration from trend to sideways).
+[FIG 002]
+As we can see in the examples, although these structures do notlook anything like the classic
+structures already studied, if we open thegraph and we find ourselves at the point marked with the
+arrow, it is notunreasonable to think that possibly a process of accumulation hasdeveloped below. It
+will be more or less difficult to identify the events ofthe methodology, but what is objective is
+that we see a level where theprice is that we see a level where the price has rejected on
+severaloccasions (Creek) and has finally managed to break it and position itselfabove. This is the
+key.
+[FIG 003]
+Surely if we force ourselves we can label each and every movementbut I repeat that this is not the
+important thing. The important thing aboutthe methodology is the logic behind it: that for the price
+to go up theremust first be an accumulation; and for it to go down there must be adistribution. The
+form or manner in which they develop these processesshould not be the determining factor. The level
+of open-mindedness required is very great. Maybe evensome people's heads have exploded, but this is
+the reality. Fortunately, weoften see classic structures, but the continuous interplay between
+supplyand demand means that these processes can develop in infinite ways, andwe have to be prepared
+to see them all the same.
+[FIG 004]
+Rather than thinking about labeling each and every pricemovement, we are going to focus on trying to
+identify according to thetraces we observe who is probably gaining market control based on thetheory
+studied.
+
+
+---- SECTION bk2-c2 ----
+RAW_LABEL: 1.2 PRICE VS. VOLUME
+1.2 PRICE VS. VOLUME In our way of conceiving market analysis, we initially do not value
+thepossibility of not taking into account either of these two data points, priceand volume. But as
+you delve deeper into the ecosystem that surroundsthe financial world, some obstacles start to
+arise. Without beating around the bush, I have to say that in my viewprice data is certainly more
+relevant than volume data. And I will nowreason this assertion on the basis of two elements. On the
+one hand, the intraday volume that we can analyze in anyasset can be very misleading depending on
+the time of the session. Forexample, at the opening of the American session of the S&P500 in
+itslocal time (ETH), we will always see a large volume, much higher thanthat seen prior to that
+opening during the regular time (RTH). And ofcourse, all the previous analysis will be biased in a
+certain way.
+[FIG 005]
+As we can see in the chart of the ES (SP500 future), the highestvolatility and therefore price
+movement occurs during the Americansession, with a very clear lack of participation during regular
+tradinghours. It would not make much sense to make analysis taking into accountglobally all price
+action and volume as it could lead to confusion. It is not that during regular trading hours we have
+identified amovement with a lack of interest (low volume); it is that this low volumeis due to an
+absence of traders at that time. The same would be true forother times during the session, such as
+at the mid-day stop or just beforethe start of the final stretch of the day, when there is also a
+significantincrease in volume. Once we know this, we have two ways to deal with this situation: ❖ If
+we want to continue trading on intraday time frameswe must necessarily analyze the price and volume
+in comparativeterms; on the one hand the one observed during local hours andon the other hand the
+one seen during regular hours. ❖ Furthermore, the best way to avoid confusion is toanalyze the daily
+chart. As this temporality covers both sessions (ETH and RTH), there is no need to distinguish them
+for analysis.But of course, this would already require a total change of tradingstyle. If there is
+one piece of data that already incorporates all theinformation, it is the price. The price is the
+graphical representation of allthe orders already executed. We could be analyzing an asset at any
+timeand the price action would be faithfully reflected without having to beaware of the time of the
+session and perform comparative analysis. This isthe advantage of price. Although without volume we
+lose a large part of the availableinformation, the continuous interaction between supply and
+demandleaves its traces in the price and it develops some certainly repetitivepatterns (not in form
+but in substance). Obviously I am not recommending trading without analyzingvolume data, it is not
+necessary; I simply wanted to highlight theprevalence of price over volume for our way of
+understanding and tradingthe markets. Later on we will also see another drawback of volume data due
+tothe Over the Counter (OTC) and Dark Pools markets.
+
+
+---- SECTION bk2-c3 ----
+RAW_LABEL: 1.3 TYPES OF ADVANCED CHARTS
+1.3 TYPES OF ADVANCED CHARTS In recent times, other forms of representing market activity have
+alsoappeared. Among these types of charts are tick, volume and range charts. The main advantage of
+these charts is that they reduce the noisepresent in time charts. These three types of charts have
+the commonpeculiarity that they eliminate the time variable, which can be very usefulprecisely for
+conditions such as those described above, where the marketspans different activity environments.
+1.3.1 TICKS CHARTS
+[FIG 006]
+A tick represents a transaction, a negotiation between two parties.Therefore, the tick chart will be
+updated (the current candlestick will beclosed and a new one will be opened) when a certain number
+oftransactions (ticks) have taken place. The configuration of the chart (the number of ticks) will
+vary frommarket to market as volatility differs from one market to another. This iswhy you will have
+to make different tests until you find the most suitableone. Generally the volume will be very
+similar in all the candlesticksgenerated, but there will be subtle differences that can give us
+interestinginformation since this type of chart measures the activity in terms oftransactions, but
+does not take into account the volume or amount tradedin those transactions. That is, a chart set at
+1000 ticks will generate a new candlestickwhen those 1000 ticks occur, but the amount traded in
+those 1000transactions will differ. It is possible that 1 contract or several contractsare traded in
+one transaction. 1.3.2 VOLUME CHARTS
+[FIG 007]
+The difference between tick and volume charts has to do with theamount traded. While the tick chart
+measures the number of transactionswithout taking into account how many contracts, shares or units
+have beentraded in each transaction, the volume charts measure the number ofcontracts, shares or
+units traded before the generation of a newcandlestick. For example, a chart set to 1000 volume will
+generate a newcandlestick when that amount is traded, regardless of the number of tradesthat were
+necessary for its completion. The main negative aspect of using this type of chart is that
+itdisables the use of volume analysis techniques. 1.3.3 RANGE CHARTS
+[FIG 008]
+While the two types previously presented based their representationon volume data, the range chart
+is based on price data. This type of chart represents market activity from the point of viewof price
+movement. All its bars will be displayed with the same size,regardless of the time it took for their
+formation. In high volatilityenvironments more bars will appear and vice versa for low
+volatilityenvironments. In case the chart is set to range 15, new bars will appear when theprice
+moves 15 ticks in one direction or another
+
+
+---- SECTION bk2-c4 ----
+RAW_LABEL: 1.4 ACCUMULATION OR FAILED DISTRIBUTION
+1.4 ACCUMULATION OR FAILED DISTRIBUTION When the analysis of all the traces observed on the chart
+suggests that theimbalance is occurring towards one side but at the moment of truth theopposite side
+presses more aggressively, we will be talking aboutcontinuity failure or failed structure. During
+the development of the structures, the control of the marketis at stake and the market may be
+changing sides (in favor of buyers orsellers) continuously, depending on the types of traders and
+the valuationsthey make of the asset. As we know that until we visualize the effect of a cause we
+cannotdetermine what it is (accumulation or distribution), it would almost bemore logical to avoid
+using the term failed structure, since a failedaccumulation will always be a distribution structure
+and vice versa. But itis a very interesting concept that helps us to understand an importantmarket
+dynamic, which is none other than the knowledge of the differenttypes of traders and how they
+intervene based on temporality
+[FIG 009]
+When the price makes a potential Spring at the lows of the structureand from there manages to reach
+the top of the structure again, it isobvious that buyers have entered with some aggressiveness down
+there;but we do not know when they will decide to close their positions. It maysimply be that they
+are very short-term traders who take advantage of thevisit to some liquidity zone (either at the
+highs of the structure or at someintermediate zone) to find the counterpart with which to match
+theirorders and to close their positions there obtaining profit. This closing ofbuying positions
+would cause a loss of bullish momentum and possibly anew downward turn. Or it may be that traders
+who have bought at the Spring have alonger-term perspective and will do everything possible to stay
+in themarket and defend their position if necessary, producing the fulldevelopment of the
+accumulation. In addition, we also do not know if there may be longer-term traders, with a greater
+ability to move the markets pending this upwardmovement to take advantage of it and enter
+aggressively short. On the other hand, it should also be remembered that not all largetraders win
+systematically and recurrently over time. Sometimes many ofthem are forced to take losses and this
+failed structure context could be aperfect example. As Al Brooks rightly says in his books on Price
+Action,in liquid markets every slightest price movement is generated because onebig trader is buying
+and another is selling. It is a battle between theselarge capitals and therefore there will be part
+of them that will generate aloss in some of their trading. The key to determine that we are in front
+of a failed structure is thatit has absolutely all the traces in favor of one direction but at the
+decisivemoment (in the test after the break); it fails and generates an imbalance infavor of the
+opposite side. As for the example of failed accumulation, we would have to seethat all the traces
+suggest that the market is controlled by the buyers, thatthe price has to develop a Spring
+potential, that the bullish breakout isgenuine from the point of view of price action and volume;
+but that finallyin the BUEC potential position the price fails to continue rising, and animbalance
+in favor of the sellers is provoked, leaving the structure asdistributive.
+[FIG 010]
+Exactly the same but in reverse we would need to see to determinea failed distribution: traces in
+favor of sellers, development of potentialUpthrust, genuine bearish breakout and that in test
+position after breakoutaggressive buying enters and rotates the structure as accumulation. It is
+important to be aware that we do not know the ability oftraders to continue to control the market
+because at any time a trader witha greater capacity can appear and cause the rotation. What at
+thebeginning seemed to be unbalanced to one side, finally with this newappearance, the imbalance is
+confirmed to the opposite side. So we have these two very important casuistries to evaluate: ❖ We do
+not know the intention of the traders who are supporting the current movement. If they are short
+term traderswho will close positions in the next liquidity zone or if on thecontrary they have a
+longer term perspective and will continueuntil the complete development of the structure. ❖ We do
+not know if traders with a higher capacity can step in. At the moment of truth, in the test after
+the breakout thatwould confirm the directionality of the structure, aggressivetraders with a greater
+ability to move the market by pushing in theopposite direction may appear, since in the longer term
+they mayhave a different vision. Obviously we encounter this difficulty continuously, that is whyour
+advantage is to operate in favor of the last imbalance and for this it isvital to identify the
+dominant event: the shock. The shakeout, as already discussed, is the most determining action in
+market functioning. Its underlying logic is so powerful that it leads usto always bias in favor of
+it. Then, if the rest of the traces go along with it,we will always favor trading in the direction
+of the last shock, i.e. longafter seeing a potential Spring; and short after seeing an Upthrust.
+[FIG 011]
+Some may conclude that waiting for price at extremes and tradingonly potential Upthrust/Spring
+situations is the most convenient way tosimplify the whole analysis; and it's not entirely out of
+line. That's thebeauty of the Wyckoff methodology, that by offering a way to understandas
+objectively as possible how the market moves, each trader can use itsprinciples to develop their own
+strategies. From my point of view, the traces offered by the development ofthe structures from their
+inception are significant and help us to establishscenarios with a higher probability. For example,
+if I observe certaindistributional characteristics in a structure and it is subsequently in
+aposition of potential bearish breakout and potential Spring, the analysis ofthe context will lead
+me to favor the bearish breakout; while the traderwho only trades the shocks at the extremes without
+evaluating anythingelse will do the opposite. And generally the market will develop (in thisexample)
+in favor of the distributive continuation since the imbalance is latent and has been evident during
+the development of the range.
+
+
+---- SECTION bk2-c5 ----
+RAW_LABEL: 1.5 STRUCTURAL FAILURE
+1.5 STRUCTURAL FAILURE It is a very simple concept that can help us to evaluate the dynamics of
+themovements. This failure can be found in all types of structures; in structureswith bullish or
+bearish slopes as well as in horizontal, convergent ordivergent structures. The first thing to do is
+to identify the structural logic that the pricedecides to follow. This will be determined by the
+successful touches thatrespect a structure formed by two zones of supply and demand. This is
+theinitial key: identify the structure that the price has validated. The moretouches it has, the
+more confidence that structure will give us. At that point, and under the principle of favoring the
+continuity ofwhat the price has been doing, it would be logical to think that the marketwill
+continue to move respecting that structural logic, moving fromextreme to extreme. In the event that
+the price fails to develop a new test on the oppositeside and instead generates a turn before
+reaching that zone, we will saythat it has developed a structural failure since it has not continued
+with thedynamics that it was bringing and this signal adds strength to the scenario in favor of that
+last turn.
+[FIG 012]
+From this concept, it is understood that the event of the last supportof supply or demand (Last
+Point of Support and Last Point of Supply) arestructural failures in which the price is blocked in
+its attempt to go afterthe shakeout event to start from that point the subsequent movement tobreak
+the structure. 1.5.1 WEAKNESS The example of structural failure that denotes weakness is foundwhen
+the price, after validating a structure on several occasions, is unableto continue moving under that
+logic of movements and cannot reach thetop of the structure. This inability to continue moving as it
+had been doing up to thatpoint denotes underlying weakness. Buyers are no longer in control of
+themarket and it is the sellers who have begun to appear more significantly.
+[FIG 013]
+This indication does not suggest an immediate reversal to thedownside; rather, it is one more
+element to take into account whencorrectly reading the market context. It could simply be a
+temporary halt of the previous trend to developfrom there a period of consolidation during which to
+reaccumulate stockand continue rising. 1.5.2 STRENGTH The action that would denote bottom strength
+would be obtainedwhen we see that the price cannot reach the bottom of the structure it hasbeen
+working on. That is, if the price has been developing a series of lower highs andlower lows whose
+action fits perfectly within the upper and lower limits,we will favor that the market continues to
+behave in the same way andtherefore we will look for a new test on the opposite side of the
+structure.If, for example, it comes from a test on the high side of the structure, thedynamics
+suggest that it should now test again on the low side. If duringthe development of such a move the
+price turns around without reaching the bottom, we will say that the market has generated a
+structural failureand it is a sign of market strength as buyers have not allowed the price tofall
+further down.
+[FIG 014]
+If in addition to this footprint such a move manages to shake outsome relevant previous low we would
+be in a potential Spring situationwith greater underlying strength because it conflates with that
+structuralfailure. The reasoning behind such action is that buyers have enteredaggressively
+unbalancing control in their favor. These buyers have ahigher interest rate and are blocking the
+price from falling. They don'twant the price to go down. They don't want anyone else to be able to
+ridethe upward move. This indication does not suggest an immediate reversal to theupside; rather it
+is one more element to take into account when readingthe market context correctly.
+
+
+---- SECTION bk2-c6 ----
+RAW_LABEL: 1.6 SHORTENING OF THE THRUST (SOT)
+1.6 SHORTENING OF THE THRUST (SOT) It could be translated into English as "Shortening of the
+Thrust". It is apattern of change of direction. It is an analytical tool originally used byWyckoff
+to measure the loss of momentum or exhaustion of an impulsivemotion or thrust. Visually it is
+observed how each new extreme travels a shorterdistance than the previous extreme and therefore it
+is said that the thrust isshortening. ❖ For the uptrend example, we would observe how each new high
+travels a shorter distance than the previous high; suggesting somedeterioration in demand and
+signaling a possible bearish turn. ❖ For the downtrend example, we would observe a decrease in the
+distance the new low travels relative to the distance the previouslow traveled, suggesting some
+deterioration in supply andsignaling a possible upward turn. The main idea is a lack of continuity
+in that direction; anexhaustion of the forces that so far seemed to be in control of the market.The
+loss of momentum anticipates a major pullback and sometimes even areversal of the trend.
+[FIG 015]
+For this behavior to be valid, a minimum of three thrusts in thedirection of the trend is required.
+From three or four momentum moves, itis useful to start looking for this shortening pattern in the
+final push. ❖ When the price advance shortens but there is strong volume, it means that the big
+effort got little reward: Effort/ResultDivergence. In the case of a bearish example, demand would
+beappearing; and in a bullish example, supply would be appearing. ❖ When the price advance shortens
+and there is also weak volume, it means exhaustion. In the case of a bearish example, supplywould be
+withdrawing; and in a bullish example, it would bebuyers withdrawing from the market. When there are
+more than four pushes and shorting persists, thetrend may be too strong to trade against. What would
+confirm the change in direction would be a strongimpulsive move in the opposite direction. After the
+shortening of thethrust, we want to see the new impulse in the opposite direction have highvolume,
+denoting intentionality. After this impulse that changes directiondirection we could wait for a
+pullback to seek to join in the direction ofthe new impulsive movement. Always keep in mind the
+context in which the shortening of the thrust takes place:
+[FIG 016]
+If the price breaks the top of a range and reverses, this action is apotential Upthrust. If after a
+few bearish waves a shortening of the thrustoccurs and suggests a buy trade; you should keep in mind
+that the pricehas just developed an Upthrust and will most likely continue to fall. Anybuy trade
+should be avoided, and if taken, closed quickly after a weakresponse. The same thing would happen in
+case of observing the bearishpattern after a potential Spring, the directional bias would be marked
+bythe shakeout so the SOT short trade idea would have to be questioned. The Shortening of the Thrust
+pattern can also be seen in individualbars as well as in moves. In this case, one would observe how
+successivebars make less and less progress. If it also coincides in an operating zonewhere we would
+be in a position to look for a counter trade for context,the situation would be ideal.
+[FIG 017]
+
+
+---- SECTION bk2-c7 ----
+RAW_LABEL: 1.7 OTHER TYPES OF STRUCTURES
+1.7 OTHER TYPES OF STRUCTURES Initially, structures with horizontal development have been presented
+as abasic schematic. They are the easiest to identify and for the operator whobegins to deepen for
+the first time in the Wyckoff methodology I wouldrecommend to work this type of schemes almost
+exclusively. As we have already mentioned on several occasions, the market is aliving entity that is
+constantly changing due to the continuous interactionbetween supply and demand. This interaction is
+what causes thegeneration of structures, which can be developed in different ways. It would make no
+sense to approach the market thinking that it mustbehave as established by the basic schemes
+initially studied. The reality isthat every moment is unique and will be different from any future
+one,since it is practically impossible for the same circumstances to occur attwo different moments.
+For two structures to develop in the same way, the sameparticipants should be present at both
+moments and behave in exactly thesame way, which is impossible. This is why it is important to be
+open-minded and try to go a stepfurther in understanding the methodology. Wyckoff gave us some
+guidelines to follow highlighting above all: how markets move; theprocesses of accumulation and
+distribution; and the three fundamentallaws. This is the theoretical framework that underpins the
+methodology.The Wyckoff trader relies on these tools to analyze the chart in order totry to
+elucidate who is in control of the market and thus be able to comeup with judicious scenarios. The
+next step is to be able to identify the development of a structureeven if it does not look ideal. On
+many occasions we will be able to workin real time with structures that are very genuinely adapted
+to the classicstructures studied, but there will be other occasions when this will not bethe case.
+And this should not be a cause for disappointment. AdvancedWyckoff traders understand that these
+accumulation and distributionprocesses can play out differently depending on how balanced
+orunbalanced the market is in favor of buyers and sellers. This is the key to everything. Based on
+the condition of the marketat that moment (who has the most control), the price will develop one
+typeof structure or another. We will now look at some types of unconventional structures. 1.7.1
+SLOPING STRUCTURES Although they are certainly more difficult to see, they actually develop in
+exactly the same way as horizontal structures. Do a test; takeone of the examples and mentally try
+to rotate the image to fit thestructure as if it were horizontal. You will see that the general
+behavior,events and phases have an identical development to the horizontal ranges.The only element
+that varies is the market condition, and that is that therewill be situations where either buyers or
+sellers will initially have morecontrol. Generally speaking, we are going to take the view that a
+structurewith an upward slope suggests some underlying strength, i.e. greaterbuyer control; and that
+structures with a downward slope suggest someweakness, i.e. greater seller control.
+[FIG 018]
+Initially, when identifying the stop Phase A we will establish thelimits of the range horizontally.
+If we observe that in Phase B the pricedoes not respect these extremes and begins to move out of the
+structure, itwill be time to start thinking about a possible sloping structure. We willconnect these
+extremes and observe if the price really respects the limitsof the structure. At other times we will
+simply open a chart and it will be very visualhow the price has respected the extremes of a sloping
+structure. Connectthe lows and highs of Phases A, B and C. You can draw one end first andclone the
+line at the opposite end. The important thing is that the channelcontains virtually all of the price
+action within it. The more touches theseextremes have, the more strength that the structure is being
+worked(respected).
+[FIG 019]
+It is important to note that we do not need to see perfect pricetouches at these extremes to
+determine that the price is working thatstructure. It does not need to be something totally precise,
+the key is that itshould be something that jumps out and allows us to connect all theextremes even
+if it is necessary to draw a zone of a certain width, ratherthan a line. Similarly, I would always
+recommend not to discard horizontallevels altogether. In particular, they offer me greater
+confidence and thereis a chance that the price will re-enter the original structure and we
+cancontinue to work it. There are four possible sloping structures that we can find: ❖ Accumulation
+structure with an upward slope. ❖ Accumulation structure with bearish slope. ❖ Bearish sloping
+distribution structure. ❖ Distribution structure with upward slope.
+[FIG 020]
+This is the variant that denotes the greatest underlying strength.After the stop Phase A, the price
+begins to fluctuate up and down duringthe development of the structure, clearly showing a series of
+rising highsand rising lows. Buyers have certain aggressiveness; they value the asset price athigher
+levels and do not allow it to fall into oversold areas in order toprotect their position. These
+structures are not easy to operate mainly because the overcoming of any previous high will seem to
+us that we are facing apotential shock that will turn the market down. But in reality it is the
+verynature of the movement: impulses and reversals. And this impression will be even more present in
+the BUECpotential zone. Although this is the most conservative entry and gives usgreater security,
+visually we see the price trading at very high levels and itdoes not seem to us (subjectively) an
+optimal entry point. The market, oblivious to all this, will continue its course and if it isreally
+an accumulation process, it will start from there the trendmovement out of the range in search of
+higher levels of liquidity. This example of the BTC is very instructive as we can identify oneof the
+concepts presented, the structural failure of strength.
+[FIG 021]
+We see how after the abrupt fall the price accumulates quickly(green box) to start a new structure a
+few levels higher. This in itself is asign of underlying strength. We see that there is a very high
+volumetraded in that fall and the fact of seeing a subsequent reaction to the risealready suggests
+that at least in principle the sentiment is bullish. Ifanalyzing the context we see that below the
+current price there are high volumes we could make a simple interpretation as in such volume
+haveentered aggressively buyers as otherwise the price could not have movedupwards. Other
+interesting footprints that suggested accumulation to us is thedecrease in volume during the
+development of the structure and thepredominance of the bullish waves of the Weis indicator. In
+addition to this, the key element that marks a before and after inthe reading of the control in this
+structure is the Upthrust action. At thetop of the structure it develops a minor distribution
+scheme. This patterncould very well have acted as a function of UTAD and triggered thebearish
+breakout. This is the behavior we expect to happen after ashakeout, but what we see is a total
+inability to fall. After this minordistributive scheme the price fails to even reach the bottom of
+that upwardsloping structure it has been working on, and this is nothing more or lessthan a
+structural failure of strength. Then it develops an internal shakeout that acts as a test event
+inPhase C causing the final imbalance and continuation to the upside. Also noteworthy is the
+location of the High Volume Node and theVPOC of the structure. How the price is unable to cross this
+high tradingzone, suggesting the control of the bulls. We will talk about these VolumeProfile zones
+later.
+[FIG 022]
+Here we see another example of a bullish sloping cumulativepattern. In this case the slope is quite
+steep suggesting that the currentmarket condition is quite strong. We see the final stop without
+climatic volume (Selling Exhaustion)and how from then on the price starts a clear succession of
+rising highsand rising lows. Decreasing volume during the development of Phases Aand B suggesting
+absorption. It finds it difficult to position above theHigh Volume Node but once it gets it after
+the shakeout continues toshow strength and manages to break to the upside with good
+bullishcandlesticks (SOSbar). Very interesting as the Back Up develops over the top of thestructure
+(Creek) in confluence with an operating level of volume (weeklyVWAP).
+[FIG 023]
+This is the cumulative variant with the greatest weakness. Thebearish slope, that dynamic of
+declining highs and lows, already denotes atotal control of bearish traders. Weakness is latent, but
+even so, buyersfinally appear and provoke the cumulative denouement. After observing the appearance
+of the first trend stop events, theweakness will be so high that the market will not be able to
+withstand thedevelopment of a horizontal structure and instead signs of weakness willbegin to
+appear, generating lower and lower lows. Structurally, the price will respect the bearish dynamics,
+fluctuatingbetween the upper and lower extremes of the channel. The new lows willtravel a decreasing
+distance, visually observing a very common pattern oftrend exhaustion (Shortening of the Thrust). In
+addition, quite possibly the market will develop some kind ofstructural failure where at a certain
+point in time the price abandons thedynamics that would lead it to visit the bottom of the structure
+and insteadfinds support somewhere in between. Possibly it has made a floor and isready to start the
+uptrend movement. What would confirm the SOT pattern and structural failure wouldbe for price to now
+develop strong upside momentum. Preferably wewould want to see this momentum effectively break the
+bearish structurechanging the market dynamics. Now it would be the time to wait for abearish
+pullback to look to join in favor of the imbalance caused by thebuyers. In this example we see how
+the price is respecting the extremes byturning up and down. As we have already said, the
+identification of thistype of structures is subjective so they should be very visual and notforced.
+The idea is that they contain most of the price action.
+[FIG 024]
+A detail to highlight in this chart is how the monthly VWAP acts.This is the darkest dynamic level
+and as can be seen the price reacts on itevery time it interacts. From the first touch on the
+Secondary Test, theprice stays consistently above it, a trace that would suggest some controlon the
+part of the buyers. As always, the key event is the total Shakeout that causes thedevelopment of the
+effect built on that cause. After said Shakeout theprice develops a LPS above the VPOC of the
+structure, which is followed by the JAC and the Back Up that again is going to look for a
+confluencezone (weekly VWAP and Value Area High) to from there continue thedevelopment in Phase E
+out of the range. These zones and volume operating levels will be discussed in detailbelow. Here we
+observe another clear cumulative structure with a bearishslope full of details.
+[FIG 025]
+After the Phase A stop we see how the price mainly trades at thebottom of the range being unable to
+make any kind of test to the top,which suggests some underlying weakness. Gradually the
+volumedecreases with respect to that seen in the SC and after the appearance ofthe Shakeout a sign
+of strength is now able to send the price to the top(minor Sign of Strength). At that point we can
+already see how the lows of Phases A, B and Ctravel a ridiculous distance to the downside,
+suggesting the appearance ofthe Shortening Of the Thrust (SOT) pattern and its bullish implication
+inthis case. Although the first upward move is not strong enough to break thestructure, it is
+already a certain change of character to have succeeded inmaking such a test. At that point the
+price develops an internal shock to aprevious high in confluence with the weekly VWAP but this time
+themarket is unable to test the bottom of the structure, developing a structuralfailure of strength
+evidenced in that LPS. Objectively we already have theShakeout, the strength sample and the
+structural failure = potentialimbalance in favor of buyers. From then on and through two shows of
+strength the price managesto break the range and we see how it will look for a confluence zone
+todevelop the test after the breakout (Back Up). This zone is composed ofthe Creek of the broken
+structure, the weekly VWAP (green dynamic line)and the Value Area High of the profile. Another
+example of thefunctionality of this type of operating levels supported by the context.
+[FIG 026]
+This is the distributive structure with the greatest weakness. Afterthe identification of the first
+events that suggest the stop of the previoustrend movement, the strong condition of weakness that
+floods the marketwill cause the development of the subsequent movements in the form ofdeclining
+highs and lows. Visually, a bearish channel will be observed where the pricebounces at its extremes
+respecting the dynamics. The key, as always, will be in the correct identification of the Testevent
+in Phase C that gives rise to the bearish breakout movement. Wewill constantly be looking for this
+test event to do so in the form of ashakeout (in this case, Upthrust After Distribution -UTAD-). It
+hasalready been mentioned countless times that it is the event that can givegreater confidence to a
+trader when proposing scenarios and therefore inmost cases we should wait for its appearance. This
+final shakeout can be expected either in the form of anovershoot at the top of the structure
+suggesting an overbought condition;or as a local shakeout to some relevant previous high. The more
+showyand exaggerated the shakeout, the more confidence it will give us as itwill suggest that it has
+captured greater liquidity and therefore thesubsequent move will have greater momentum. The main
+difference with respect to the cumulative structures thatalso have a bearish slope is that in this
+case we will not observe that lossof momentum characteristic of the Shortening Of the Thrust
+pattern, norwill we see any kind of structural failure. It is certainly a difficult type of scenario
+to trade as subjectively thetrader observes how the price is relatively low and may determine that
+itis not the place to go short. But we must work to eliminate subjectivities and remain with the
+certain objectivity that this type of reading provides. Due to the almost total control that sellers
+have, the price will movewith great speed. We must be fully focused otherwise we will most
+likelymiss the move. And this is not bad news because if you have been able tomake a correct reading
+and see that the imbalance is in favor of thebearish, you may lose the trading opportunity for not
+being quick in yourdecisions, but at least you will not be in a position to enter on the wrongside
+of the market (buying) thus avoiding a loss.
+[FIG 027]
+In this example of redistribution with bearish slope we see that thestop occurs with a large volume
+during the entire development of Phase Aand that during Phase B we also observe unusual volume
+peaks,characteristic footprint of distributive schemes. In addition to that thebearish waves Weis
+predominating at all times. The price manages to position itself below the high volume nodeand a
+subsequent upward retracement movement will test this area leavingthe Last Point of Supply event to
+generate the effective bearish breakout(SOW) from there. Once below the structure, a new test to the
+lower partof the structure and continuation of the fall. A trader who does not take into account
+this dynamic of structuresand who does not know how to analyze judiciously all the traces
+withinhimself would most likely see the price fall, away from the VWAP, in apossible oversold
+condition and perhaps have a bullish bias. But the truthis that the market at all times was flooded
+with weakness and this wasreflected in the price action and volume.
+[FIG 028]
+New example of distributive scheme with very characteristicfootprints. Volume spikes, predominant
+Weis and a Phase C jerk thatoriginates the bearish breakout movement. The UTAD test happens at a
+very important location, at the VPOCof the range. It is the most traded price level. Moreover, it
+converges withthe top of the structure. It is the ideal location to look for a short trigger.Another
+example of how the Volume Profile can help us to better analyzethe market context. Such was the
+underlying weakness that there was no possibility of atest after a breakout (LPSY) on the lower part
+of the structure. UPWARD SLOPING DISTRIBUTION STRUCTURE
+[FIG 029]
+This type of dynamics initially presents certain backgroundstrength, evidenced by that succession of
+rising highs and rising lows untilin its final development the aggressiveness of the sellers becomes
+evidentrotating the structure as distributive. As discussed in the previous structures, a useful
+tool for itsevaluation can be the identification of the Shortening of the Thrustpattern. In this
+case, the price may make new highs but travel littledistance from the previous highs, denoting that
+lack of momentum. If it also leaves some kind of structural failure that denotesweakness (does not
+reach the top of the structure), it is a further indicationthat suggests that control may be
+rotating to the bearish. As always, the reading will be enhanced by observing a shakeout(UTAD)
+either to the upper end of the structure in the form of anovershoot reaching an overbought
+condition; or to some relevant priorhigh. Let's not forget the analysis of complementary tools that
+analyzevolume data, such as Volume Profile and Weis wave analysis either. Thelocation of the
+operating zones of the Volume Profile will always help usin making decisions, while the wave
+analysis will allow us to put themagnifying glass on the interest traded in the movements and
+willsometimes be key to a correct analysis.
+[FIG 030]
+Example of distributive structure with upward slope and withoutextreme shakeout. As more important
+details we see that climatic volumein the middle of the range. It is a warning sign as they should
+not appearas a general rule in cumulative schemes and therefore could be a footprintto add in favor
+of bearish control. Very visual also the Shortening of the Thrust pattern between thehighs set by
+the AR in Phase A, the UT in Phase B and the UTAD inPhase C. New highs but with little movement
+between them suggestingthat loss of momentum. On the Phase C UTAD we see how the price tries to
+leave the valuearea of the Composite profile and is rejected. The market is not interestedin trading
+at higher prices and a new signal is added in favor of sellers. This action could also be seen as
+the test event in Phase C where it shakesout highs from within the structure. No doubt this is a
+difficult scheme totrade in real time. After a first movement of weakness the price manages to
+positionitself below the VPOC of the profile and this action is accompanied with alarge bearish Weis
+wave. At that point the directional bias should be clearand we are already in a position to propose
+a short trade idea. Again we see the great importance of taking into account thevolume levels. The
+test after breakout (LPSY) is going to look for theconfluence zone of the broken structure and the
+VPOC to start from therethe bearish continuation in Phase E.
+[FIG 031]
+This time the test event in Phase C if it manages to reach the top ofthe structure shaking all the
+highs of the same. As we know, this actionadds further strength to the bearish scenario. It is very
+striking the degree of bullish slope, suggesting at thebeginning of the same a great strength in the
+background. Strength that isdissipated and blocked with the appearance of the volume peaks duringthe
+development of Phase C. Unquestionable sign of weakness that sends the price to the originof the
+movement in the AR and also manages to develop a new bearishleg. Not before going to visit twice the
+most traded volume level (VPOC)of the structure to continue trading down from there. Once again,
+this isan impressive demonstration of the effectiveness of these volume levels. All the concepts
+related to the Volume Profile and its tradingimplications will be explained in depth in the last
+part of the book. 1.7.2 UNUSUAL SCHEMES Within this category we will include all other structures
+that do notfollow a horizontal or sloping formation. If we wanted to get exquisite we could frame as
+Wyckoffmethodology structures practically all accumulation or distribution rangesregardless of their
+shape, including the classic charting patterns that we allknow such as head and shoulders, wedges,
+triangles and so on. From my point of view trying to justify every single move andstructure
+development under the Wyckoff methodology approach doeshim no favors. Wyckoff has little to do with
+those robotic patterns, Hisstudy is much deeper so the smartest thing to do would be to
+distanceoneself from that possible link that may associate the classic chartistpatterns with the
+Wyckoff method. With the benefit of hindsight, as they say, any range can be labeledwith some
+success. But this is operationally invalid. Labeling past charts is a very interesting exercise for
+initiated traders in order to put theirknowledge into practice and to feed their subconscious to
+prepare it forreal time trading. But once you have a certain level of study of themethodology,
+continuing to label past charts becomes meaningless The key is that any structure, if we force
+ourselves a little, can beturned into a nice structure that would fit perfectly into the events
+andphases of the Wyckoff methodology. But our focus should not be here,what good is it for me to
+know the location of the labels in a hypodermic(V-shaped) turn of the market if in real time I am
+not going to be able totrade it? As I say, it is a waste of time and energy to try to study
+unusualstructures, mainly because, as the name suggests, they do not appear withany regularity. Our
+advantage is to wait for classical structures to appear. Classic structures, with a strict
+development of their events andphases, but at the same time allowing certain fluidity based on
+theparticular conditions of the market. The perfect example of this statementwould be the structures
+with slope: classic formations where all eventsand phases are perfectly observed, and at the same
+time the backgroundcondition slightly modifies the final development (some bullish or
+bearishdynamics)
+[FIG 032]
+This chart of the FDAX is a very good example of what I amtalking about. Once its development is
+complete I can go back and labelevery single move if I want, but in real time it is virtually
+impossiblebehavior to trade. A structure locked at lows but developing rising highsin turn. It makes
+no sense to put the focus there. Besides this type of inoperable structures, it is a good time
+toremember that theory and practice in real time often do not go hand inhand and that it is
+necessary to have a sufficiently open mind.
+[FIG 033]
+In this chart of the SP500, while it is true that a very genuinestructure is observed in its final
+part, many in real time may haveencountered difficulties when trying to identify Phase A. Price
+comes up, develops a broad bearish move, and from thereanother further upward move that surpasses
+the previous high. Could thatsuccession be the BC, AR, ST? It could, but that is not what is
+relevant.What is relevant is that a change in character has occurred; that the pricehas moved from a
+trending to a sideways state and that a cause is going tobe built back up which will have an effect.
+This is all that matters, thecontext behind the price action. Many may still only look for
+"textbook" structures and, althoughwe see them appearing all the time, the reading offered by
+themethodology is much more interesting than just staying there
+[FIG 034]
+Here is another example of exactly the same. If we observe themarket from a strict point of view
+seeking to identify the perfectmovements framed within the proportionality that in theory there
+shouldbe between phases, we may have problems in identifying them when wesee this type of
+development. If we treat these three movements that I mark as the SC, AR andST, Phase B would have
+very little duration since the only objective eventthat is observed on the graph is the s shakeout
+of Phase C. What do we dothen if the theory tells us that Phase B should be longer than Phases A
+andC? Well then nothing, theory is all very well for generalizing events, butreal time trading and
+analysis will require a much more open mind. Once the trader reaches a certain degree of
+understanding of themethodology he should focus on seeing the market in terms of pricedynamics and
+not in terms of labels.
+

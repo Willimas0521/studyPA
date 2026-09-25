@@ -1,0 +1,700 @@
+==== PART bk2-p5 ====
+RAW_LABEL: PART 5. VOLUME PROFILE
+
+
+---- SECTION bk2-c23 ----
+RAW_LABEL: 5.1 AUCTION MARKET THEORY + VOLUME PROFILE
+5.1 AUCTION MARKET THEORY + VOLUME PROFILE The Volume Profile uses the principles of auction theory
+to put it intopractice and to visualize the areas of interest on the chart. Interest issimply
+measured by the activity that has been generated in a particularzone; and this activity is
+identified by the volume traded. This tool will therefore help us to identify the zones of greater
+andlesser interest and will help us to evaluate the price when interacting withthem in order to
+determine whether acceptance or rejection is takingplace. All these principles are based on the
+premise that the market has amemory and tends to repeat behavior. It is therefore expected that in
+thefuture certain areas will again behave in the same way as they did in thepast. One caution to
+keep in mind is that the market's memory isprimarily short term. This means that more recent trading
+zones are moreimportant than older ones. If the price initiates an imbalance the first zoneto be
+taken into account will be the most immediate previous balancezone. The longer the price has been
+away from a certain acceptance area,the less significant it will be. If we have no other reference,
+it will still beuseful to value it, but it is important to be aware that the most
+immediateequilibrium zones will most likely be the ones that the market will lookfor in the first
+instance since they are the ones that best represent the valueat the present moment.
+
+
+---- SECTION bk2-c24 ----
+RAW_LABEL: 5.2 VOLUME PROFILE COMPOSITION
+5.2 VOLUME PROFILE COMPOSITION Volume profiles are visually observed on the chart as a
+horizontalhistogram where their values are distributed according to the trading ateach price level.
+Depending on the number of contracts traded at each price level,the shape of the distribution will
+vary. The more trades, the longer thelength of the horizontal line; while a short horizontal line
+represents littletrading. As a reference we will take a normal or Gaussian Bell distributionto
+understand the most important statistical concepts:
+[FIG 093]
+❖ The data are symmetrically distributed with respect to the central point where mean, median and
+mode coincide. ❖ It has three standard deviations on each side, which are equally spaced and measure
+the amount of variability or dispersionaround an average. It is also a measure of volatility. ❖ The
+first standard deviation comprises 68.2% of the data and up to the second deviation it reaches
+95.4%.
+[FIG 094]
+This real example is in the form of a normal distribution where thevalues are distributed up and
+down around the central point. The data are organized by a vertical axis on which the price
+islocated and a horizontal axis representing the volume variable. The value area is determined
+between the Value Area High (VAH)and the Value Area Low (VAL), is part of the first standard
+deviation andrepresents exactly 68.2% of the total volume traded in that profile. It is themost
+traded area of the profile and is therefore considered the area ofacceptance. The volume traded
+outside the value area comprises the remaining31.8%. This is the least traded area of the profile
+and is thereforeconsidered a rejection area. The high and low levels of the value area (VAH and VAL)
+will actas support and resistance areas as some interaction is expected abovethem. The breadth of
+the value area leaves clues about market conditions.A wide Value Area suggests that there is a large
+participation of alltraders, everyone is buying and selling at the prices they want; while anarrow
+Value Area is a sign of low activity. This is the highest (High) and lowest (Low) price reached in
+thatprofile. These price levels should always be viewed as key referencepoints. Depending on the
+trading generated at these extremes we canconsider that they represent finished or unfinished
+auctions. Finished auction. It is visually observed with a decreasingnegotiation towards the end. It
+represents a lack of interest as the price reaches price levels further away from the value zone,
+finally suggesting aclear rejection of the market to trade in that zone. By its very nature it is
+aLow Volume Node. Prices have reached a point where some traders have considered itas an
+advantageous opportunity and have entered causing this rejection.The lack of participation from the
+opposite side is represented by thisdecrease in volume. It appears as a High Volume Node on the end
+of the profile.Implicitly it represents interest to negotiate in this zone and thereforesuggests a
+later visit of the price in case it has previously moved awayfrom it. In the future visit it will be
+necessary to evaluate the intentionbehind it since it could develop with the objective of finishing
+the auctionand turning around, or with the objective of continuing trading andcontinuing in that
+direction.
+[FIG 095]
+This concept of finished or unfinished auction can be very usefulbecause if, for example, we are
+assessing the possibility of the priceleaving an equilibrium zone upwards, we will want to see that
+at thebottom of that zone there is a finished auction that would suggest a lack ofinterest in
+trading there. In case of observing a possible unfinished auctionit would be convenient to
+quarantine the scenario since it is most likelythat before starting the upward movement there will
+be a visit of the pricein that low part with the objective of testing the interest in that zone.
+[FIG 096]
+When in doubt as to whether we are in a possible finished orunfinished auction, it is advisable to
+treat it as finished. Unfinishedauctions should be very visual and should not be involved in
+muchsubjectivity. Generally we are going to observe them as an abnormal cutin the distribution of
+the profile and in many occasions it will coincidewith one of the two limits of Value Area.
+[FIG 097]
+In Market Profile this concept is totally objective: an unfinishedauction (Poor High & Poor Low)
+appears at one end where at least twoTPOs are observed; in other words, a finished auction will be
+representedwith a single TPO at the price level (Single Print). This is the level of highest volume
+concentration in that profile. Itrepresents the price most accepted by both buyers and sellers
+(fairer) andsets the level from which the value area is calculated. Since most of the volume comes
+from large institutions, this iswhere these large traders have accumulated most of their positions.
+Theygenerally accumulate contracts in a range of prices but the VPOCrepresents a benchmark as it
+identifies where the most interest is. As it is a level that will attract a lot of trading, it is
+generallyadvisable to avoid trading in its vicinity. The broad consensus amongparticipants will
+cause fluctuations around this level. This behavior willcontinue until new information appears that
+unbalances the participants'perception. The VPOC allows us to establish who is in control of the
+market. Ifthe price is above it, we will determine that the buyers will be in control,so it would
+make more sense to trade long; if it is below it, the sellers willbe in control, so trading short
+would be a better option. Keep in mind that the VPOC, by its very nature, will always be aHigh
+Volume Node, but not all High Volume Nodes will be VPOCs. If there is one level widely used by large
+institutions it is VWAP.Huge transactions seek to execute at the price level where the VWAP isfound
+and that is why it has elevated its level of importance. The VWAP represents the average price of
+all contracts tradedduring a particular time period. The formula for obtaining it is as follows: ❖
+No. of contracts traded * price of the asset / Total contracts traded To understand it a little
+better, we can say that above the VWAPthere is the same volume traded as below it, i.e. it
+represents an importantequilibrium level. This equilibrium means that when the price reaches theVWAP
+there is the same probability that the price will go up or down. It is displayed on a chart like a
+traditional moving average and itsposition varies as trades are executed. Generally, depending on
+the tradingstyle, the VWAP of the session, the weekly or the monthly is used. The VWAP is used by
+institutional traders primarily as an averageto determine the value of the asset at that point in
+time so they considerthat they have bought low if the price is below and high if it is above.
+Institutions have taken the VWAP as a reference measure withwhich to judge the quality of their
+executions, hence its relevance and thefact that we treat it as an important trading level.
+[FIG 098]
+When they receive an order, they do not execute all the contractsthey need at one time, but will try
+to do so gradually, knowing that theirwork will be judged on the basis of this reference level.
+Since it represents an important equilibrium level or fair price, it isa good measure of whether we
+are buying too high or selling too low. Wecan tell this by adding one or two standard deviations to
+the mean. Justbecause the price is at some standard deviation does not mean that itcannot continue
+to move in that direction, we could simply use it as onemore footprint to add to our analysis. But
+be very careful because everything is subject to the valuation ofthe market at that moment. In a
+market in balance a price below theVWAP will be considered cheap and a price above it expensive; but
+justas the market becomes unbalanced to one side or the other the VWAP nolonger represents
+efficiency as now the perception of value has changed. Depending on the time frame we can make use
+of different levels ofVWAP. The most commonly used are the session VWAP for intradaytraders and the
+weekly and monthly VWAP for medium and long termtraders. High volume nodes. These are zones that
+represent balance andhigh level of interest by all market participants as both buyers and
+sellershave been comfortable trading there. It is observed as peaks in the volumeprofile.
+[FIG 099]
+Although we have used a composite profile for this example, the fundamentals are equally valid and
+applicable to all profiles. Past balance zones act as magnets attracting the price and keeping
+itthere. As in the past there was some consensus between buyers andsellers, in the future exactly
+the same is expected to happen. That is whythey are very interesting areas for target setting.
+Different High Volume Nodes can be identified within the sameprofile. Low Volume Nodes. These are
+areas that representimbalance/rejection. Neither buyers nor sellers have been comfortabletrading and
+therefore are considered in some way "unfair" prices. Theyare observed as valleys in the volume
+profile. As in the past there was no consensus, it is expected that in thefuture there will be no
+consensus either and cause some rejection, so theyare interesting areas of support and resistance
+where to look for potentialentries. It is important to understand that rejection can be represented
+by theprice in two ways:
+[FIG 100]
+V-TURN The perception of the value has not changed with respect to theprevious equilibrium zone and
+there is a rejection to trade at these levels.The market turns completely around to re-enter the
+previous zone inwhich buyers and sellers feel comfortable trading. What triggers this price reaction
+is firstly the placement of passiveorders waiting above that area to block the move, coupled with
+asubsequent aggression that confirms the V-turn and return to the previousvalue area. Visually it
+may be observed in the price as prominent wicks at theends of the candlesticks which will suggest
+such rejection. Participants' perception of value has changed and is represented inthe price by a
+violent movement. The market, based on the newinformation, rejects trading at these LVN levels and
+moves quicklythrough them. Technically, what causes this rapid movement is, on the one hand,the
+execution of stop loss orders by those who are positioned on theopposite side; and on the other
+hand, the activation of momentumstrategies that activation of momentum strategies that enter
+aggressivelywith market orders. Visually, it will be observed on the chart with wide
+rangecandlesticks generally accompanied with high volume. As with HVNs, more than one Low Volume
+Node can be displayedwithin the same profile.
+
+
+---- SECTION bk2-c25 ----
+RAW_LABEL: 5.3 TYPES OF PROFILES
+5.3 TYPES OF PROFILES The volume profile is a tool that can be adapted according to theoperator's
+needs. The main difference when using one type of profile or another willbe determined by the
+trader's timeframe and the context he needs to coverin his analysis. Basically we can differentiate
+three types of profiles: This type is very versatile. Its peculiarity is that it allows us tolaunch
+profiles manually on any particular price action. It is especially useful for identifying trading
+zones in two types ofcontexts: trend movements and ranges.
+[FIG 101]
+If we see a bearish movement we can launch a profile of the wholemomentum to identify the
+interesting zones over which the price is likelyto make some kind of bullish pullback. It is in
+those trading zones wherewe want to be prepared to evaluate the possibility of entering in favor
+ofthe trend. In the example we see how the price makes a test to the VPOCof the bearish momentum and
+from there it generates a turn that causesthe development of a new bearish movement. If what we have
+is a context of lateralization, a structure of thosewe work under the Wyckoff methodology approach,
+the profile will comein handy to identify mainly where is the VPOC that determines the marketcontrol
+and the value zone with its extremes (VAH and VAL). These willbe very interesting to take into
+account in order to look for the test afterthe breakout of the structure, as in the following
+example.
+[FIG 102]
+Unlike the other types of profiles, the fixed range is not updatedand only analyzes the volume
+traded in the area to be determined. Regardless of whether you are going to work with structures or
+notunder the Wyckoff methodology approach, it is very useful to pull profilesthat encompass several
+sessions in case we see an overlap between theirvalue areas. If we see more than one session
+generating value over acertain price range, it is best to launch a profile that includes all the
+priceaction, since the operating levels that such a profile can provide us withwill have by their
+very nature a greater relevance. This is the profile of the day. It is especially useful for
+intradaytrading where the most important trading zones of the session are takeninto account. It
+ranges from the beginning to the end of the session and isupdated as the day progresses.
+[FIG 103]
+Shorter-term traders use both the levels of the session and those ofprevious sessions to make their
+scenarios. If we are observing a bullish movement and a subsequentlateralization of the price, it
+would be interesting to look for theincorporation in favor of the trend movement on some operative
+level. Aswe know, the most important level of the whole profile is the VPOC sowe must take it into
+account to wait for our entry trigger on it.
+[FIG 104]
+Continuing with this same example, another interesting area onwhich to look for a test after a
+breakout could be an operating area ofprevious sessions. If we are above the value area of the
+previous session, the first operating level on which to expect a test to look for the
+bullishcontinuation will be the Value Area High of the profile of the previoussession. Originally
+the profiles were displayed only by sessions and thisidea of grouping them was introduced by Donald
+L. Jones in his book"Value-Based Power Trading" in what he called "The Overlay DemandCurve". The
+objective was to try to eliminate the noise of the shorter termand thus get a better understanding
+of the market condition, of the context. This type of profile can be set up in two ways: ❖ Fixed.
+Within the fixed mode we have the possibility to select the range of dates we want to include in the
+profile analysis. Youmay want to know the profile for the past week, the past month orthe current
+year, this mode is designed for this particularrequirement. ❖ Variable. The variable mode has the
+important peculiarity that it shows the traded volume of all price levels that are currently onthe
+chart. It is important to keep this in mind because if the chartis moved, the profile will change.
+The best use of this type of profile, regardless of the time frame inwhich we are trading, is to
+analyze the overall context and identify thetrading zones (mainly the high and low volume nodes)
+that we have bothabove and below the current price.
+[FIG 105]
+These zones will serve to indicate the bias of the market in a moremacro context as well as for the
+establishment of possible zones where tolook for entries and exits. If for example we are working on
+a structure, it is very interestingto analyze the profile of the Composite to identify the longest
+term HighVolume Nodes on which to establish targets for profit taking. Another use could be to
+identify in the macro context a large LowVolume Node and to encourage the development of a shock on
+it. Wecould be working a potential cumulative structure. If when analyzing thecontext we identify an
+LVN relatively close to the structure, it would beinteresting to take into account the possibility
+of the Spring that generatesthe imbalance of the structure.
+
+
+---- SECTION bk2-c26 ----
+RAW_LABEL: 5.4 DIFFERENCE BETWEEN VERTICAL AND HORIZONTAL VOLUME
+5.4 DIFFERENCE BETWEEN VERTICAL AND HORIZONTAL VOLUME Many who look with some suspicion at the
+Volume Profile allude that it isnot necessary to incorporate this type of tool in order to be able
+to makesolid analyses and approaches based on volume data. This is absolutely true; it is obvious
+that there is absolutely nothingnecessary. The problem is that they fail to understand what kind
+ofinformation they can acquire through their evaluation. The first thing that should be conveyed is
+that the Volume Profilewas not developed as a substitute for the classic volume. They
+providedifferent information and are therefore completely complementary. To really understand what
+information is provided by volume data,it is necessary to examine it from two points of view: ❖
+Volume in time: This is the classic volume that is observed vertically on the chart. It has to do
+with the number of contractsexchanged within a certain period of time. It tells us when themajor
+traders are active. ❖ Volume in price: This is the Volume Profile and is observed in the form of
+horizontal bars. It indicates the number of contractstraded within a certain price level. It tells
+us where the activity ofthe major traders has taken place. As we can see, both provide us with
+different information about thesame action (professional activity), volume in time has to do with
+when,while volume in price has to do with where. With the vertical volume we can know that during
+the developmentof a particular candle a specific number of contracts have been traded, buthow has
+the trading been distributed through the different price levels?This is the information that
+horizontal volume gives us and that classicalvolume cannot. It is quite another matter if you need
+to know thisinformation for your trading.
+[FIG 106]
+
+
+---- SECTION bk2-c27 ----
+RAW_LABEL: 5.5 DIFFERENCE BETWEEN VOLUME PROFILE AND MARKET PROFILE
+5.5 DIFFERENCE BETWEEN VOLUME PROFILE AND MARKET PROFILE The main difference between the two tools
+is that the Market Profile isdesigned based on time, while the Volume Profile is designed based
+onvolume.
+[FIG 107]
+The Market Profile represents the price data on the chart in letterformat, where each letter (called
+TPO or Time Price Opportunity) isidentified with 30 minutes of trading. So, the letter A will
+correspond tothe first 30 minutes after the opening of the session, the letter B to thenext 30
+minutes and so on, adding letters and minutes until the end of theday. Traders who base their trades
+on Market Profile analyze theopening of the day with respect to the value area of the previous day
+andthe evolution of the Initial Balance (range that covers the first hour oftrading) to determine
+the type of day that is likely to happen and proposescenarios based on this. It should be noted here
+that some tradersdetermine the Initial Balance based on the first half hour only. Although Volume
+Profile traders usually do not take the InitialBalance into account, the message it conveys can be
+very interestingmainly because: ❖ The narrower its range, the greater the probability of a trending
+day; and the wider the range, the greater the probability of asideways day. An interesting use that
+MP offers us is the objective determinationof acceptance or rejection on a price level. While in
+Volume Profile thiscan be shrouded in subjectivity, Market Profile analysis eliminates
+thisdiscretionality: rejection is visualized by 1 TPO; while 2 or more TPOsbegin to represent
+acceptance. The development of the distribution of the profiles of both toolswill tend to look quite
+similar if both tools will tend to look quite similaralthough they will not be exactly the same.
+This is obvious since they donot use the same data for their representation. An accumulation of TPOs
+will indicate that the price has spent a long time at that level, while anaccumulation of volume
+will tell us that a large number of contracts havebeen exchanged at that level. In Volume Profile,
+as it is designed according to volume, the mosttraded level will not necessarily be the level where
+the most time has beenspent; since the price may reach a level that in a few seconds accumulatesa
+large number of orders and turns around (as in the example). The timethat the price will have spent
+at that level is little but the volume traded isa lot so the Volume Profile POC will be at that
+level while the MarketProfile POC will not.
+[FIG 108]
+Due to the current ecosystem of financial markets where theimportance of volume is highlighted, it
+would seem more interesting touse the combination of price + volume (Volume Profile) rather than
+price+ time (Market Profile). This is not to say that the time variable is unimportant or
+lessimportant, nothing could be further from the truth. Obviously, time is akey element in
+establishing where participants decide the value of aparticular market is at a particular moment in
+time. The consumption oftime in a given area is an unquestionable sign of acceptance and
+thereforevalue building.
+
+
+---- SECTION bk2-c28 ----
+RAW_LABEL: 5.6 PROFILES SHAPES
+5.6 PROFILES SHAPES As is obvious, the market will not always develop D-shaped profiledistributions
+as this would mean that we are in an infinite equilibriumcontext. There is a lot of theory written
+in Market Profile about the differenttypes of days based on the shape of the profile (normal day,
+normalvariation, trend day, double-distribution trend day, non-trend day, neutralday, neutral day
+extreme). The truth is that identifying the shape of such profiles to determinewhat kind of day we
+have had may be valid for the human mind from thepoint of view that we always want to control
+everything and need to lookfor a logic to every behavior; but from a trading point of view it does
+notseem to be a very useful approach since the categorization is done by an aposteriori analysis.
+Furthermore, over time evidence has been provided that it is notpossible to consistently predict
+what type of day we are most likely tohave based solely on the previous day's categorization.
+Steidlmayerhimself eventually acknowledged this. Unsurprisingly, it is impossible toknow what shape
+the current session profile will have until the session has ended. It is exactly the same with the
+labeling of events, phases andstructures under the Wyckoff methodology approach. It may be useful
+forthe more novices to feed the subconscious with the various ways in whichthe market can represent
+accumulations and distributions; but it is totallyuseless from an trading point of view as the
+confirmation of all this isdone after the fact. It would therefore seem more sensible, for the
+purpose of setting uptrading scenarios, to focus on identifying the creation of a value zone(range)
+and to evaluate the price continuously as it interacts at itsextremes in order to identify
+acceptance or rejection. The analytical toolsoffered by the Wyckoff methodology help us in
+determining who is morelikely to be in control during the development of the range (buyers
+orsellers) and therefore in which direction the path of least resistance lies. During the
+development of the moves, profiles will be generatedand two very common ways in which trend and
+sideways behavior isgraphically observed are the b and P patterns. These patterns represent the
+first three phases of market activitythat Steidlmayer presented in his first studies and that by
+Wyckoffmethodology we identify as Phases A and B of the development ofstructures.
+[FIG 109]
+These patterns will alert us to the halt of the previous trendmovement as well as the new
+lateralization context. These two types ofprofiles show the same behavior but in both directions.
+Firstly, in the lowprice zone the price moves with a certain fluidity developing the trendmovement
+until it meets traders willing to trade in the opposite direction.At that point an equilibrium range
+begins to develop, a zone of highparticipation that generates the profile bell. As long as the price
+is during the trend movement, we should onlybe looking to trade in favor of that direction. We can
+rely on thedeveloping VPOC and the rest of the operating levels. 5.6.1 P-SHAPE PROFILE
+Characteristic of bullish movements and representative of futuredistributive and reaccumulation
+schemes. This type of profile suggests strength on the part of buyers whohave had the ability to
+push the price up with relative ease until it reachesa point where sellers begin to appear.
+[FIG 110]
+It is made up of two parts: a first one where the upward imbalanceis observed and a second one where
+the market starts a rotation process(range). This is important to keep in mind because if such a
+processoccurs in reverse (first a rotation and then a downtrend) visually we willstill see a P-type
+profile with the big difference that it will have difficulttrading validity. All the concepts and
+tools that are being proposed have anoperative sense; and in the case that concerns us with the P
+and b patternsthey are only interesting if the last price action is the creation of newvalue (range)
+since it will be from there where the next profitableimbalance will be generated. That is, if we are
+at the end of the bearishmovement at the point of having already identified the P pattern in
+mirror(with the imbalance to the right) completely, from the point of view ofoperating that
+imbalance we may be too late and the most likely thing isthat the price will generate a new
+equilibrium zone as the most immediateaction. On the contrary, if we have a theoretical P pattern
+(with theimbalance to the left) we will be able to take advantage of the subsequenttrend movement
+(which may be upward or downward).
+[FIG 111]
+Besides looking at it in isolation (session profiles), it is interestingto know that a longer-term
+uptrend will be composed of several of theseprofiles in its internal development. In this case they
+will simply bereaccumulative patterns that give rise to the continuous upwarddevelopment. In case
+this type of profile appears after a prolonged downtrend, itcould alert us to the imminent end of
+the downtrend at least temporarily.Here it is important again to note that it refers to see the
+theoretical Ppattern; because if what we see is a mirror P pattern what we wouldactually have would
+be a distribution and therefore the downtrend woulddenote strength. 5.6.2 b-SHAPE PROFILE
+Characteristic of bearish movements and representative of future cumulative and redistribution
+schemes. Individually, this type of profile signals an imbalance in favor ofsellers. Sellers are in
+control and have pushed the price stronglydownwards until finally some participants appear buying
+and a newrotation process is generated.
+[FIG 112]
+Within the context of a longer-term downtrend they will appearwith redistributive character being
+excellent areas where to look forincorporation in the trend. As with the P pattern, the theoretical
+type b is formed by a bearishimbalance as the first part and a value creation as the second. A
+rotationfirst and a subsequent bullish imbalance would also appear visually with ab-shaped profile
+but operationally we may not be able to take advantageof that first imbalance. On the other hand it
+would also not have the sameimplications when analyzing the health of the preceding uptrend,
+wherewhat we are looking for is upside rejection and value generation below.
+[FIG 113]
+In case of observing a b-shaped profile after a prolonged bullishmovement, it could signal the end
+of such movement and sometimes thebeginning of a new one towards the bearish side.
+
+
+---- SECTION bk2-c29 ----
+RAW_LABEL: 5.7 USES OF VOLUME PROFILE
+5.7 USES OF VOLUME PROFILE This tool offers us totally objective information that fits perfectly
+withinthe context provided by the principles of the Wyckoff methodology. Some of the most important
+uses we can make are listed below. 5.7.1 IDENTIFYING STRUCTURES There will be occasions where the
+delineation of the ends ofstructures will not be very visual, possibly because the price action
+hasgenerated unclean movements. In this context it can be very useful to usethe Volume Profile to
+pinpoint the high and low zones of the value area(VAH and VAL) assuming this area as the range that
+is generating thecause of the subsequent movement. By their very nature, the upper and lower limits
+of the structures wework with according to the Wyckoff methodology will always be lowtrading zones
+(LVN). The price turns that generate the creation of thesesupports and resistances are areas where
+the price has not wanted to trade and are therefore identified as rejection. That rejection we
+already know isvisualized within the volume profile as an LVN. In addition, sometimes the natural
+ends of the structures (Creek andIce) will coincide with the ends of the value area (VAH and VAL).
+Bypulling a profile of that structure we will be able to observe how all priceaction contained
+within the range will be part of the value area.
+[FIG 114]
+As can be seen in the chart below, the stop of the bullish movementdoes not show very clear price
+action where the stop events are genuinelyvisualized. If we are in the final part of the development
+of such astructure we could pull a profile of the whole structure to identify keylevels by Volume
+Profile. In this case we see how after the final shockfrom above the price quickly crosses the
+entire value zone including theVPOC and VWAP. At this point we should be favoring the
+distributionand therefore the first scenario in short would be to wait for the test afterbreakout
+(LPSY) on any of the operating levels. The first of these levelsto take into account would be the
+Value Area Low as it is the first that themarket would find. We see how it made this test to
+continue the bearishdevelopment from there. The next and last level to look for the potentialLPSY
+would be the VPOC of the profile. In this other example something similar happens. Stopping
+eventsmay not be the most visual and then there is the added difficulty offraming that bullish
+movement that leaves the value zone and then re-enters. The objective is that, if we find ourselves
+seeing an imbalanceafter the development of a structure already with a certain maturity, wecan
+launch a profile to identify the operating levels on which to expect theprice to develop the test
+looking for the continuation of the movement.Again we see how after the breakout movement, the test
+is done justabove the end of the value area of the profile, in this case above the ValueArea High;
+it is the perfect area for the search of the long entry trigger.
+[FIG 115]
+The scope of the profile should include all the price action fromthe time the rotation starts until
+just before the imbalance occurs. Thereare traders who may also include the breakout action within
+the profile,which is not to say that this is incorrect. Just keep in mind that from thetrading point
+of view what we are looking for is that this test afterbreakout is going to look for some trading
+level of the previousaccumulation/distribution and this would leave out both the imbalanceand the
+subsequent movement to the test. As we can see, most of the structures that develop in real time
+markets are not as genuine as shown in the ideal book examples, plus theyare all different from each
+other. But this does not mean that they are nottradable. This is where the levels provided by the
+Volume Profile toolcome into play. 5.7.2 DETERMINING MARKET BIAS BY ANALYZING THE TRADING ZONES We
+will always favor trading in the direction of the last hightrading node generated. And a scenario
+against this direction would onlyarise when the price has broken the zone that supported the last
+move. If the price is above a high volume node (HVN) we will determinethat the control is in the
+hands of the buyers and we will only raise a shortscenario when the price crosses this zone from
+below, which will suggestthat the control has changed in favor of the sellers. The logic is that at
+these nodes the price returns to a state ofequilibrium and we will not be able to determine in which
+direction it willmove subsequently. Only after confirming the effective breakout of thiszone would
+we be in a position to propose a scenario with somerobustness.
+[FIG 116]
+The above chart shows this concept very clearly. If we are in thefinal part of the bullish movement,
+above the last HVN, we should waitfor a breakout before looking for a short trade. The profile has
+been drawncovering only the bullish movement (from 1 to 2), since what we areinterested in knowing
+is where is the volume node that is supporting thismovement. When this is crossed downwards we can
+suggest that thecontrol has shifted to be in favor of the bearish and now we are in aposition to
+propose a short scenario for example to the test of this HVN.
+[FIG 117]
+In this other example we have the same dynamics but in reverse.We locate the HVN of the bearish
+movement in force and the idea is to continue favoring shorts until it is broken. Note, not until
+this HVN isbroken, but the last one to be generated. That is, if the trend continuesdownward, we
+must continue to update the profile to identify where thelast HVN is and only at the time of its
+break to the upside could long entrybe considered. It should be noted that not necessarily the HVN
+that determines thecontrol of the movement must also be the VPOC of the profile. We willsimply take
+into account the last one to develop, regardless of whether itis the VPOC or not. As a general rule,
+the most advisable is to trade with as manyoperating levels in favor as possible. That is to say, if
+I am considering along trading idea, I will want to have all the trading levels below the priceand
+vice versa if I am considering a short idea. This context will suggestthat the market is unbalanced
+in that direction and that it is therefore thepath of least resistance. If in addition to this we
+have the possibility to evaluate therelationship between VPOC, VWAP and price, it will be one
+morefootprint that will add strength to the analysis. A relatively close VWAP and VPOC is a
+footprint that confirms theoverall balance of the market. Possibly, price is in an extremely
+tightrange and the only trading approach here would be to look for reversal atthe extremes.
+[FIG 118]
+That is exactly what is happening on this day. The dark dotted lineis the VPOC of the developing
+session and the orange dynamic linecorresponds to the VWAP. Until a final imbalance to the downside
+occursboth levels remain relatively close and this generates constant fluctuationsbetween them,
+causing a range day. To determine an imbalance in favor of buyers we want to see theprice above both
+the VWAP and the VPOC; while for control in favor ofsellers we want to see the price below both
+levels.
+[FIG 119]
+In this chart we see an example of clear bearish control where at all times of the session the price
+is below both the VWAP and the VPOC,acting as resistance to originate new bearish movements. The
+temporality to use in these operative levels, as everything, willdepend on the trader. For an
+intraday trader the most advisable will be touse the levels of the previous session and of the
+current session. Longerterm traders may find it more useful to use such levels on a weekly
+basis(weekly VPOC and weekly VWAP). Particularly being a structure trader,I find it useful to take
+into account the weekly VWAP in conjunction withthe VPOC of the structure, thus eliminating the
+seasonality. It is a matterof taste and this configuration should be adapted to the trading style
+ofeach trader.
+[FIG 120]
+In this chart where we are analyzing a structure we could pull aprofile of it and add the weekly
+VWAP (green dynamic line). It is a verygood example to highlight the importance of the context above
+any otherelement. If we see a potential Spring that manages to position itself abovethe VWAP we
+would be ready to look for a long entry. But if we lookclosely, the VPOC of the profile we would
+still be against the VWAP that is marked. We are suggesting the possibility of trading in favor of
+themore operating levels the better, what do we do then? Context shouldprevail in cases like this.
+We know that VPOC is a very importantbalancing level, but we also know that the market will initiate
+animbalance sooner or later; and that shakeout from below suggests to us thepotential initiation of
+such an imbalance from the upside. In such acontext we should assign greater relevance to the
+development of thestructure above the VPOC. We would have reasoned very differently if the price
+after thepotential Spring had not even had the ability to move above the VWAP.That lack of strength
+would have suggested to us some bearish control andeven an entry in the opposite direction could
+have been priced in seeingSpring's labeled move as a genuine bearish breakout event. Any actionmust
+be confirmed or rejected with subsequent price action. That is just what we have in this example. In
+a potential Springsituation the price attempts to re-enter the range but is unable to positionabove
+the extreme of the structure, the profile VAL and the weeklyVWAP. This is a sign of significant
+weakness that would lead us to treatsuch a pattern as distributive.
+[FIG 121]
+When working with different levels it is also important to keep inmind that we can use several
+timeframes in conjunction, for example, twoVWAPs in weekly and monthly timeframes. This
+configuration is reallyinteresting if we decide to analyze a longer term context. 5.7.3 ANALYZING
+TREND HEALTH A very interesting footprint provided by the Volume Profile is thecontinuous analysis
+of the profile of the sessions. When we are observinga bullish movement, a symptom of the health of
+the movement would beto observe that the value areas (and therefore the VPOCs) of the sessionsare
+generated higher and higher. This suggests that the value of the assetis being accepted in the new
+trading areas, it is reaching and therefore thetrend is likely to continue. In this context of
+control by buyers, we shouldbe looking for a pullback to trading zones predisposed to go long. The
+same applies to downtrends. An unmistakable sign of its healthwould be to see that the value areas
+that leave the sessions are observedeach time at lower levels, denoting acceptance of the price. In
+thisscenario of bearish control, the most advisable thing to do is to identifyareas of potential
+resistance to look for short positions. Something that would alert us to the health of this movement
+wouldbe to observe overlapping between several areas of value as well as to seethat some of them are
+moving against the direction of the trend, losing thedynamics it had been carrying. We would already
+be observing aconsolidation of the price and it could alert us of a change of character. By Wyckoff
+methodology we could surely already identify a lateralizationprocess and it would be interesting to
+start analyzing the traces of thisstructure in order to try to determine in which direction the
+nextimbalance will occur. This potential change in the perception of value is very clearlyvisualized
+with the P and b patterns. If the market is in the middle of abearish trend leaving the value zones
+lower and lower and then suddenly abP pattern appears, this could be the end of the bearish movement
+or atleast a temporary halt. The fact that the market has developed this Ppattern after the b
+pattern suggests a change in the perception of value. Atleast temporarily it no longer wants to
+trade at lower prices and we couldeven be facing the beginning of an uptrend.
+[FIG 122]
+Rather than seeking to clearly observe the ideal pattern, what isinteresting is the evolution of the
+value generation, i.e. the rotation of theValue Areas. In this example the participants have had
+enough capacity togenerate value above the previous one and this alone should alert us to thehealth
+of the bearish movement and even put us on alert for a possibleaccumulation. The same would be true
+in reverse. If we are looking for a bearish market turn, a signal that would add strength to such
+analysis would be toobserve a Pb pattern.
+[FIG 123]
+This example is a bit more complex and interesting to analyze. Thefirst thing that is striking is
+that the pattern does not occur in tandem, butrather two sessions in between. On the other hand, we
+can see how profileb does not generate value below the Value Area of the profile P. This is a real
+example; the market behaves erratically most of thetime so looking for the appearance of perfect
+patterns can be a waste oftime. It would seem more interesting to stay with the dynamics withinthem;
+what they implicitly suggest to us. After the appearance of the P-type profile there is a change
+incharacter and the market begins a rotation process. The following twodays the value areas are
+overlapped, showing the acceptance of these pricelevels by the vast majority of participants.
+Finally, the creation of the typeb profile triggers the bearish imbalance. At that precise moment
+when theprice is below the value area of profile b and after seeing all that has beenanalyzed
+previously, a short scenario could be proposed, seeking theeffect of this potential distributive
+structure. If we look closely at b, the imbalance does not occur at thebeginning of the session as
+theory suggests, but rather in the last part ofthe session. The key is that this imbalance is
+rejected and re-enters thevalue area. In essence this is the implication behind the pattern: it
+makesno difference when the imbalance occurs as long as the price generates arejection and re-enters
+the value area. For trading purposes what would beless interesting for us would be to observe the
+imbalance at the end of thesession and whose close is established outside the value area. Although
+the ideal in potential distributive schemes would be toobserve first the rejection to continue
+rising plus the generation of valuebelow the previous sessions, the appearance of this protocol in
+reverse(first the generation of value below and then the rejection to trade athigher prices)
+implicitly suggests the same reading of change in theperception of value. In the end, all cumulative
+and distributive schemes implicitly carrythis change in the perception of value; and to a greater or
+lesser extentthese P and b turn patterns will always be visualized. ❖ A bearish turn with pattern Pb
+is nothing more than a distribution that will have a greater or lesser duration which hasbeen
+confirmed with the generation of value in b and it is possiblethat lower prices will follow. ❖ A
+bullish turn with bP pattern tacitly is an accumulation whose change in the perception of value
+possibly gives rise to higherprices. 5.7.4 VPOC MIGRATION The current level of the VPOC represents
+agreement by both partieson the value of the asset, but What reading to do in the event of a VPOC
+migration? This issue has brought many traders upside down as the reading itoffers has two different
+points of view. On the one hand many advocatethat this is an unequivocal sign of the health of the
+movement andtherefore suggests continuity in the direction of the trend. Many othersadvocate the
+position that a turn in the market is possibly originating. The only objective is that it represents
+a value zone where price hasbeen accepted due to the high trading it has generated. The
+questionwould be to determine the meaning of this value migration, whether as acontinuation or as a
+reversal. Under the principle that every market action must be confirmed orrejected by its
+subsequent reaction, the key lies in evaluating thesubsequent price action following the checkpoint
+migration. As a generalrule, if we do not see a continuation in the direction of the precedingmove
+without consuming too much time we should question the health ofthat move. Since we cannot know in
+advance whether a VPOC migration will make continuation or reversal sense, it is most useful to be
+prepared forboth scenarios. To this end, we will develop two simple protocols in orderto establish
+some general guidelines. This section is focused on intraday trading, although the underlyingidea is
+equally valid for application to any other time frame. 1. VPOC migration. If the preceding trend
+movement is healthy,after the migration of the VPOC we want to see a new momentumdevelop without
+consuming too much time. 2. Non-continuity. If after the VPOC migration the price does nothave the
+ability to continue to move in the direction of the precedingtrend we would be in a position to at
+least begin to question thecontinuity of the move. 3. Time consumption. This is a fundamental
+footprint. The generalrule of thumb is that the longer the price goes without continuing infavor of
+the preceding trend movement after the VPOC migration, themore likely a market turn rather than a
+continuation is likely to occur.Ifwe want to look for the turn we will mainly observe that it starts
+tosideways consume a relatively large amount of time relative to what itwas doing previously during
+continuations. 4. The change of character. If migration occurs, an excessivelateralization without
+the ability to continue in the direction it had andin addition now appears an impulsive movement in
+the opposite direction we will be in disposition to raise an operative idea inreversion. 5.
+Operative idea. The first operative level that we will take intoaccount to wait for the price and
+look for the entry trigger will be theend of the broken value zone. If it breaks below, we will wait
+at theVAL and if it breaks above, at the VAH. As a second level, the VPOC.
+[FIG 124]
+In this example (Intraday reversal trade with pattern b) we havepulled a manual profile to see how
+the volume was distributed at thatparticular moment. We see that after starting the session the
+price falls andmigrates the VPOC (1), then begins to rotate on it showing the non-continuity (2) and
+time consumption (3). Then comes the change ofcharacter with the upward imbalance (4) to finally go
+to test the old VPOC zone (5), where we could be looking for the long entry. We have to keep in mind
+that if we are trading with the profile of acurrent session it will continue to develop as the day
+progresses so thatafter the breakout, we may identify the level of the Value Area where wewill wait
+for the price and then change its location. Although it is true thatit would not be the ideal
+context, the same trading area could bemaintained since from a logical point of view this is still a
+node of lowvolume and therefore an interesting area of potential rejection of the price.In addition,
+what the price is going to test is the previousaccumulation/distribution zone, so leaving the
+profile of the range istotally advisable.
+[FIG 125]
+In this example we see what would be a VPOC migration with areversal direction (we know this after
+seeing the subsequent movement) but which does not follow the proposed protocol. When they do it
+withthis urgency, with little preparation, it is practically impossible to operate.This is the
+problem with these V-turns. The incorporation of this example is intended to point out that notall
+migrations with reversal direction will follow the proposed protocol,far from it. With this series
+of steps what we are trying to do is toobjectify the turn and that it is based on the Law of Cause
+and Effect,since again this protocol does not cease to be cumulative/distributiveprocesses. In
+addition, it is a very interesting graph to deal with the concept ofacceptance and rejection. By
+definition, a VPOC migration suggests newacceptance at those price levels. The objective fact at
+that precise momentis that more contracts have been traded (more acceptance) and thereforethe
+migration has occurred. But what reading would it leave if it generatesa total reversal of the
+movement? Well, again, objectively, what we see isthat if the session finally closes away from those
+levels, such actionremains as a rejection even if that migration has occurred. The importance of the
+principle that every price action must beconfirmed or rejected by the subsequent action appears
+again. In this casethe first action has been the migration of the VPOC, but that change invalue has
+been rejected by the subsequent reaction, which has reversed theentire movement. If we recall, a
+change in the perception of value occurs when thevariables Price, Time and Volume work in
+consonance. In this case wehave the Price discovery movement, the Volume generation but the
+Timeconsumption that would confirm the Value fails. PROTOCOL TO FAVOR THE CONTINUATION: For intraday
+continuation trading the action protocol is muchsimpler: 1. VPOC Migration. Generally when the
+market intends tocontinue in the direction of the preceding movement, after themigration of the VPOC
+the price will start the new momentum withsome speed. The urgency to continue moving in that
+direction willcause relatively little time to be consumed before continuing in thatdirection. 2.
+Trigger search. We are therefore ready to enter the market. It issimply a matter of waiting for our
+setup to appear before entering.
+[FIG 126]
+In the example we see that on the third VPOC migration the priceinstead of continuing upward
+reverses downward leaving that price actionon the left as distributive. Thereafter the subsequent
+migrations makecontinuation sense as they are followed by bearish impulses with relativealacrity.
+Although this type of trade has been presented on an intraday basis,during the course of a session;
+it may appear on the chart at differenttimes and the underlying idea will remain the same. It may
+develop overthe course of a single session, form over more than one session, or evendevelop as a
+longer-term structure. Regardless of its duration, theunderlying logic is exactly the same. 5.7.5
+CALIBRATION OF POSITION MANAGEMENT The levels to use will depend on the type of profile used based
+onyour trading style, but generally speaking the logic will be exactly thesame for all of them: ❖
+Entry. Regardless of whether we are in a trend or range context, the identification of the operating
+levels, mainly theVWAP, VPOC and high and low zones of the value area (VAHand VAL) will be extremely
+useful for us to wait on them thedevelopment of our market entry trigger. ❖ Stop Loss. For the
+establishment of the stop loss we want to identify areas where there has been a previous rejection;
+andthese are the areas of low trading or Low Volume Nodes. Theprice generated a turn on them and we
+expect that in the futurethey will behave in the same way; therefore it is an excellent areato place
+our stop protection. In addition to the LVN, the moreoperating levels we have in favor, the better.
+❖ Take Profit. For the establishment of take profits we are going to look for zones of high previous
+negotiation. As we havealready mentioned, high volume nodes (HVN) produce certainmagnetism in the
+price and therefore are excellent areas for thelocation of targets.
+
+
+---- SECTION bk2-c30 ----
+RAW_LABEL: 5.8 TRADING PRINCIPLES WITH VALUE AREAS
+5.8 TRADING PRINCIPLES WITH VALUE AREAS Regardless of the type of trader you decide to be and
+therefore thetemporality and structures to use, these principles are universal withrespect to the
+value areas of a given profile, be it that of a candlestick,session, movement or structure. 5.8.1
+TRADING RANGE PRINCIPLE
+[FIG 127]
+If the price is within a value area, as long as the market conditiondoes not change the market is
+likely to continue to generate value aroundthe center point so the price will most likely be
+rejected when theextremes are reached. Buy low and sell high. In the following chart we see a real
+example of the principle ofrange trading. It can be any asset or timeframe; what we do have to
+takeinto account is a reference profile to work on. For an intraday approach itis recommended to
+work on the profile of the previous session. Forlonger-term approaches, weekly profiles or
+Composite-type profiles thatinclude more price action may be useful.
+[FIG 128]
+What is interesting in this case is that the price is within theprevious day's value area,
+suggesting a balance in the market. With thisbasic idea, and as long as the sentiment of the
+participants does notchange, any operative idea should be to wait for the reversal at theextremes of
+its value area, as seen in the chart. The minimum target for this reversal at extremes is a test to
+thecontrol zone (VPOC), with the most ambitious target being a move thatcompletely traverses the
+value area and reaches the opposite extreme. As always, the trades that will give us the most
+confidence will bethose whose trigger is located in confluence on more than one operatinglevel. In
+the example of the reversal that occurs on the VAL we see thatthe price also tests the weekly VWAP
+(green line) and a former controlzone (DevelopingVPOC). 5.8.2 REVERSION PRINCIPLE
+[FIG 129]
+[FIG 130]
+If price attempts to enter a value area and succeeds, it will mostlikely go to visit the opposite
+end of that value area. The market hasrefused to trade at those price levels so it returns to the
+previous valuearea. Adaptation of Market Profile's 80% rule.
+[FIG 131]
+This chart shows the opening of the last session away from theprevious day's value area at the top,
+indicating an imbalance to the bullishside and therefore initially suggesting a buying control. This
+control mustbe confirmed by the acceptance of the imbalance and we see how at themoment of truth, in
+a position of potential bullish continuation above theValue Area High, the price fails, re-entering
+again to the previous valuearea. This is a very instructive example to visualize the importance
+ofkeeping in mind both buy and sell scenarios in order to be prepared andreact in time when the
+market tells us to do so. Initially in this case wewould be looking for such a bullish continuation
+above the upper end ofthe value area; but seeing its inability and subsequent re-entry, the
+readingnow is that the bullish price discovery has not been accepted and thereforethe probability
+now is that the price will visit the opposite end of the valuearea. After the initial re-entry, an
+inside test occurs above the VAH at theconfluence with the weekly VWAP (green line) to initiate from
+there thebearish movement that runs through the entire value area. At this point theprice returns to
+a condition of total balance evidenced by this continuous bounce between the extremes of the Value
+Area. 5.8.3 CONTINUATION PRINCIPLE
+[FIG 132]
+[FIG 133]
+If the price tries to enter a value area and fails to do so by beingrejected at the VA end or
+elsewhere, it will most likely initiate animbalance in favor of that direction. This is the test
+trade after a breakout. Price leaves a value zone andgenerates acceptance. This acceptance puts the
+direction in favor of theprevious breakout as the most probable direction. It should be noted that
+the price can come from outside that valuearea or from inside. The operating logic would be exactly
+the same. In the following example we see on a real chart the development ofthis operating principle
+of continuation in its variant in which the pricecomes from outside the working profile.
+[FIG 134]
+The opening occurs above the Value Area High of the profile, sothe first interpretation we must make
+is that there has been an imbalanceto the bullish side in which buyers have had enough capacity to
+move theprice away from its last value. With this basic reasoning in which the market seems to
+indicate thatthe buyers are in control, the first scenario approach would be to wait for some kind
+of test before continuing with the development in favor of theimbalance, in this case to the upside.
+The price opens the session and develops some lateralization andthen goes to look for the VAH zone
+where it generates the bullish turnthat could offer us a buying opportunity. The most astute Wyckoff
+traders will be able to identify even acumulative pattern from the beginning of the session, acting
+as a potentialSpring of this structure. This is a very good example to visualize theimportance of
+the context: in trading zones of purchase we want to seepotential accumulations, as is the case
+here. 5.8.4 FAILED REVERSION PRINCIPLE
+[FIG 135]
+[FIG 136]
+If the price tries to enter a value area and succeeds, but is stronglyrejected at the VPOC of that
+range, the reversal trade would be cancelleduntil further price action is seen. If it manages to
+recover the end of the value area, the continuationtrade would be activated; while if it finally
+breaks the VPOC effectively,the reversal scenario would continue to be active with the objective
+oftesting the opposite end of the value area.
+[FIG 137]
+The session opens below the previous value area so the first reasoning would be that the market is
+in imbalance and potential bearishcontrol that would need to be confirmed. At the first zone above
+which to wait for such confirmation of sellercontrol (Value Area Low), the price overrides the
+scenario and re-entersthe value area, triggering the reversal trade. As we will see below, anytrade
+should be managed upon reaching the first relevant trading level;and in this case, a potential
+purchase on the VAL should necessarily bemanaged on the VPOC of the previous session. After reaching
+this level, sellers appear, unbalancing the marketagain and provoking the development of a strong
+bearish movement. Thisaggressive reaction pushes the price out of the value area again, changingthe
+market sentiment again and triggering at that point the failed reversalplus bearish continuation
+trade variant. Now it does develop a successful test above the Value Area Low toinitiate from there
+the bearish movement with possible targets at theweekly VWAP and at a nakedVPOC below. 5.8.5 SUMMARY
+TABLE OF THE OPERATING PRINCIPLE WITH VALUE AREAS
+[FIG 138]
+[FIG 139]
+

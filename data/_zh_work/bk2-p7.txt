@@ -1,0 +1,441 @@
+==== PART bk2-p7 ====
+RAW_LABEL: PART 7. WYCKOFF 2.0
+
+
+---- SECTION bk2-c36 ----
+RAW_LABEL: 7.1 CONTEXT ANALYSIS
+7.1 CONTEXT ANALYSIS The first thing to do when analyzing any chart is to determine the contextin
+which the price is: range or trend. Let's see a brief summary of thetrading possibilities depending
+on the context:
+[FIG 151]
+In this chart we have an ideal accumulation scheme. We see howthe operating context offered by the
+Wyckoff methodology convergeswith the operating principles by Volume Profile. Within the first three
+trading opportunities at extremes (1) of therange context would fit with the principle of trading in
+range by VolumeProfile. After the Spring the price recovers the value area and we see againthe
+confluence of both principles: by Wyckoff methodology we wouldlook for a test to the top of the
+structure while by Volume Profile we would activate the reversal trade where we would look for the
+visit to theopposite end of the value area of the profile. This movement to theopposite end we would
+be in a position to take advantage of it firstly onthe Spring and secondly if it leaves us a trading
+opportunity inside (2),either on the potential test of the Spring or on a higher LPS. Profile we
+would activate the scenario of continuation trading inwhich case we would do it on the end of the
+value area, in this bullishexample on the Value Area High. When the price is already in the middle
+of the trend movement wewould have to work with the context away from the value area (4) wherewe
+would wait for some kind of pullback to look for the incorporation tothe current movement.
+[FIG 152]
+7.1.1 TRADING RANGE CONTEXT This is the construction of the cause of the subsequent trendmovement
+which will be either upward or downward. This rotation phase can appear during the course of one or
+several sessions (even weeks). If it contains several sessions it is best to pull avolume profile
+together in order to identify the trading zones globally. 1. At extremes of the range. If we observe
+the stop of theprevious trend movement and some subsequent lateralization,we will determine that we
+are in a range context within anequilibrium zone and the trading here would be based on thesearch
+for reversals at the extremes of the structure; i.e., buy lowand sell high. 2. Inside the range.
+Inside the range. If we are in theinterior of a large range and we have enough space we can
+alsoraise some trade looking for the extremes. This is especiallyadvisable when we have seen a
+previous shock that provides uswith a clearer directional context. 7.1.2 TREND CONTEXT When a trend
+is identified, the trader should only trade in favor of itwaiting for pullbacks to try to join the
+market. 3. In trend interacting with the value zone if after beingsideways there is an inefficiency
+that throws the price out of anequilibrium zone, we must evaluate the possibility that it is
+aneffective break or a shock. If the previously analyzed footprintssuggest that it could be an
+effective breakout, the operative herewill be based on the search for the confirmation test on
+thebroken structure or at some more immediate trading level. 4. In trend away from the value zone.
+Once confirmed theeffective rupture of the previous equilibrium zone, the price willnow be in a
+trend context and the acceptance at these new levelswhere it is trading makes us base the trading in
+favor of thisdirection. The question we must constantly be asking ourselves is in whatcontext the
+market is currently in. Its answer will determine the type ofstrategy to apply. As we already know,
+the only two conditions in whichthe market can be in e balance or in imbalance. So basically we are
+goingto be working on range and trend trading. Next we are going to deepen in each of the operative
+contexts: 7.1.3 TRADING RANGE We will mainly distinguish two scenarios within range tradingdepending
+on the price in relation to the analyzed balancing zone: That the price is trading within a value
+area suggests that thebalance is total between buyers and sellers. Neither of the two has controland
+therefore the price is expected to continue to move in the same dynamic. The trading context here
+would be to favor reversals at theextremes: ❖ By Wyckoff methodology it would be to seek entry into
+the shakeout in Phase C. That is to say, if we are facing the upperpart of the structure we will
+favor the Upthrust; while if we are inthe lower part we will look for the Spring. Its
+genuinedevelopment will suggest the visit of the opposite end of thestructure. ❖ By Volume Profile
+we would try to operate the reversal on the limits of the value area. We would therefore look for
+the bearishturn over the Value Area High and the bullish turn over the ValueArea Low. A rejection
+over such areas would suggest the visit ofthe opposite end of the value area. On the other hand, if
+the range is wide enough some scenarioscould be posed inside it. By Wyckoff methodology, should we
+observethat the price has possibly developed the test event in Phase C, it would bethe entry into
+the trending move inside the range in Phase D. The onlynecessary filter would be that it had enough
+available trajectories to offera good risk/reward ratio. In that case, we would need to be
+positioned in favor of the moretrading levels the better. The fact that the price is able to reach
+one of these levels and effectively break it will suggest that there is some controlby traders in
+that direction. If we are also in favor of a High VolumeNode, we would already have identified the
+bias of the market. Within a wide profile we will be able to identify different high andlow trading
+zones. We must remember that the last High Volume Nodegenerated will determine the directional bias
+at least in the short term. Aslong as the price remains above it, we will only consider bullish
+scenariosand vice versa if it is below it. ❖ A High Volume Node is a lateralization of the price. By
+pure logic, if we find ourselves above it, we can suggest that this HVNis an accumulation.
+Therefore, to buy we want to be protectedwith an accumulation below it. ❖ The reverse is true for
+distributions. If we are below a HVN it will be identified as a distribution, which makes us think
+thatfavoring shorts would be the most appropriate. This type of trading inside the range will be
+subject to necessarilymanage the position when reaching the extremes of the balancing zone,since in
+principle we will have to continue favoring that none of the sideshas total control until the final
+imbalance is provoked. Supported by the trading principles of Volume Profile, in the eventthat the
+price comes from making a shock we would be in a context oftrading in reversal applying the adapted
+rule of 80% where theprobability, after re-entering the value area is in the visit of the
+oppositeextreme. 7.1.4 TRADING IN TREND After a movement of intentionality that breaks the balance
+andwhere the analyzed traces suggest us that the imbalance is on one side orthe other, we will seek
+to trade in favor of that direction waiting for a testat some relevant trading level. New
+information has entered the market causing the imbalance andthe first thing to evaluate is that it
+is not a failed breakout that generates ashakeout with re-entry back into the value zone. If the
+traces suggest that it is an effective breakout, our bias nowshould be to look for some trading idea
+in favor of that direction. ❖ Under Wyckoff methodology, if we see an impulsive move that
+intentionally breaks the structure we would look for entry on thePhase D breakout test. ❖ This type
+of trading is also useful for traders who do not trade structures. The logic is exactly the same.
+Based on pure VolumeProfile analysis we could wait for the price to leave a certainvalue area and
+wait for the entry in the test of the same, thiswould be the continuation trade under the trading
+principles ofVolume Profile. To try to determine if we are indeed in front of a potential genuine
+breakout we will analyze different footprints. It is time to recall thecontent seen in the section
+How to distinguish between accumulation and distribution? As main traces to try to clarify if the
+breakout will be genuine wewill take into account: 1. The shakeout. Key action, search for
+liquidity. The deeper theshakeout, the stronger the scenario. Although local shakeoutssometimes
+occur (on some high or low within the range), let'swait initially for the total shakeout as it gives
+us greaterconfidence. 2. Price action and volume after the shakeout and at thebreakout. Candlesticks
+with good displacement and highvolume denoting control by one side (buyers or sellers). At thetime
+of the breakout, since we are facing a liquidity zone it islikely that relatively high volume will
+appear and even visuallysome wicking will be observed. This is normal and should notinitially lead
+us to think that it could be a shakeout sincetakeover behavior has this characteristic: high volume
+and thepossibility of wicking. The key is what happens next. 3. The reaction after the breakout
+looking for the non-reentryto the range. After the breakout of a value zone we must waitfor the
+price to gain acceptance at those new levels where it willbe trading. This will initially be
+evidenced by a sidewaysmovement in the market out of the range. A sign that would add further
+strength to the acceptance scenariowould be to observe the migration of the VPOC to that new area or
+the creation of a new one (perhaps that of a later session). This initiallyrepresents acceptance but
+we would still have to wait to confirm theaction, as we saw in the section on VPOC migration. And
+the final fingerprint is obtained by visualizing the non-reentryback into the value area, into the
+range. At that point we will already havea change in the perception of value: price + time + volume
+where theprobability would be in the continuation in favor of the breakoutmovement. It should be
+noted that the time consumption after the breakoutshould not be excessive. Enough to generate a new
+VPOC or itsmigration, but at the moment this happens the price should start the trendmovement. The
+momentum behind the first imbalance should triggercontinuation with some alacrity. Once the price
+manages to position itself and stay out of the valuearea we will determine that an imbalance has
+occurred, that such a movehas not been rejected and therefore we will be in a position to look
+forentry in favor of that direction. ❖ If we are in a potential bullish breakout, all the volume
+seen below, as well as that previous balancing zone can now beidentified as a potential
+accumulation. As we know, the effect ofan accumulation will be a bullish movement and this is where
+wewant to be positioned. ❖ Conversely, when we find ourselves in a situation of a possible bearish
+breakout, if the price is able to hold that zone and not re-enter the previous balancing area, we
+will be able to identify such process as distributive and it will be the moment to look for
+thetrigger with which to enter into a sell position to take advantageof the subsequent bearish
+movement. We may begin to analyze a chart where the price is already out of acertain value area and
+is moving in search of a new balancing zone. In thiscontext of trend movement, it is advisable to
+wait for the development ofa test on one of the trading levels that we identify. At this point it is
+convenient to remember Richard Wyckoff'steachings on how markets move. It is well known that markets
+move inthe form of upward and downward waves: therefore, the scenarioproposed necessarily involves
+waiting for this wave, which will becorrective in nature, before continuing in the direction of the
+trendimbalance. The key now would be to identify possible zones over which towait for the price to
+develop this corrective movement. The Wyckoffmethodology would be to look for entry into the trend
+movement out ofthe Phase E range. It is a confusing context since this trading accordingto
+methodology goes through the search for new intentionalitycandlesticks (SOS/SOWbar), minor
+structures and new shakeouts(Ordinary Shakeout/Upthrust), but it does not suggest us the location
+overwhich to expect the development of such behaviors. Here we see the importance of working with
+these volume-basedtrading levels and zones. They help us determine clearer locations where it is
+viable for price to go as well as offer us one more footprint to analyzethe health of the trend. The
+ideal scenario, for example, would be to waitfor the development of a minor structure above the zone
+where an tradinglevel such as the weekly VWAP or any other is located. A very interesting concept is
+that we will continue to trade in favorof the last accumulation/distribution until the market
+develops a structurein the opposite direction or until it loses the last identified value zone. In a
+trending context we will point to the last relevant high volumezone that is supporting such a move.
+That is, if we are in an uptrend wewill have very present the last high trading node (HVN) below the
+currentprice and if we are in a downtrend we will have identified the last HVNjust above the price.
+These nodes will ultimately determine the change inmarket control. Therefore, we will only pose a
+counter-trend scenariowhen this zone is breached. To go deeper into this concept, review againthe
+determination of the market bias through the analysis of the tradingzones seen in the section on
+Volume Profile uses.
+
+
+---- SECTION bk2-c37 ----
+RAW_LABEL: 7.2 IDENTIFICATION OF TRADING ZONES AND LEVELS
+7.2 IDENTIFICATION OF TRADING ZONES AND LEVELS Once we already know the context and have determined
+what we want todo (buy or sell), the second has to do with where. This involvesidentifying the exact
+location where we expect the price to develop ourentry trigger. The trading logic is exactly the
+same for all contexts, profiles andtimeframes: identify the trading zones and levels and wait on
+them for ourtrigger to confirm the imbalance and enter the market. Depending on the type of trading
+you do, you can adapt these sameconcepts to your trading. ❖ If you are mainly an intraday trader,
+you may use the profile of the previous session as a basis for scenario building and theprofile of
+the current session as a support. ❖ If you are a longer term trader you may find it more interesting
+to analyze the profile of the previous week as a basisto identify the trading zones; or a Composite
+profile to coverweeks or months and to be able to identify the high and lowtrading zones; as well as
+to take into account the VWAP of higher time frames such as weekly and monthly. ❖ If you trade
+structures, it may be best to pull fixed profiles anchored to the working structures and set up
+scenarios based ontheir trading zones. Or maybe what works best for you is to do a mix of all of
+theabove. In the end each trader will have to do individual work to determinewhich way they feel
+most comfortable as there is no universal rule aboutwhich profile to work with. The important thing
+is that the concepts areexactly the same for different trading contexts. For this point it is useful
+to be clear that completed profiles have ahigher relevance than profiles in progress. By pure logic,
+a profile that isstill under development is susceptible to changes in its levels andtherefore the
+importance that we can give to these decreases. On the otherhand, completed profiles ultimately
+represent the final market consensusand their levels become more important. As to how much time
+period Composite profiles should cover, thereis no general rule. You may want to consider the last
+week, the currentweek, the last month, the current month or the current year. Here younecessarily
+have to decide on a discretionary basis. There is no one profilebetter than another and it is
+therefore the trader's job to determine whichone to work with. What is recommended is that these
+profiles coversufficient price action both above and below the current price in order tobe able to
+identify key trading areas, primarily high and low volumenodes. The search for the trigger to enter
+will therefore be madeexclusively on the zones already indicated, distinguishing between: ❖ Trading
+zones of structures under Wyckoff methodology. ❖ Trading zones: HVN and LVN. ❖ Trading levels: VAH,
+VAL, VPOC and VWAP. Depending on the trading context, we will favor waiting on one orthe other
+levels: This is the classic Wyckoff trade in the area of potential shakeoutof the highs/lows of the
+structure. Tradable the shakeout itself as a moreaggressive entry and the test of the shakeout as a
+more conservative entry. ❖ VAH/VAL. Taking into account the Volume Profile trading levels we will
+also be in a position to look for reversal over theextremes of the value area, which will sometimes
+coincide withthe extremes of the structure. Range trading. Always taking into account that we should
+be in favor of a HighVolume Node and with enough distance we will wait for the price over: LVN. Low
+Volume Nodes by their very nature establishexcellent areas over which to look for potential
+opportunities. In this context the ideal will be to identify such areas through aprofile that covers
+the entire range. VWAP and VPOC. Either that of the current session for moreintraday traders or that
+of a profile covering several of them forstructure traders. These are the levels that determine the
+controlof the market so we will wait for the price to produce theeffective break above them and we
+will look for the first entry totest them. Sometimes the price after producing such a break will not
+leave anytest and the momentum will quickly move the price so that a moreaggressive entry would
+occur after producing the movement ofintentionality that breaks these levels. After the beginning of
+the imbalance and having already evaluatedthe possibility of continuity of the movement we will wait
+for a pullbackto assess the entry on: ❖ Level of the broken structure. For the structure trader this
+is another of Wyckoff's classic entries: Entry to the test after abreakout. Initially we will wait
+for the price in the area of thebroken Creek/Ice, which by its very nature will be a Low VolumeNode.
+Out of the corner of our eye we will also be watching thenearby trading levels so as not to rule out
+entry in case the pricegoes for any of these, mainly the extreme of the value area. ❖ Extremes of
+the value area. The intraday trader or one who simply does not operate taking into account
+structures couldvalue the entry after leaving a certain value area (for example thatof the current
+session) and wait for the price to test the extremesof its Value Area to enter. Continuation
+trading. ❖ VPOC of the range. It will be the last trading level above which to wait for the pullback
+after the breakout. If it is far awayfrom the broken end, it is advisable to put the scenario
+inquarantine because at that point the price will have re-entered thevalue area and will already
+have some depth. In this case andunder the trading principles of Volume Profile it would benecessary
+to activate the type of of failed reversal trading thatmanages to recover the end of the value area.
+Context of imbalance so we will already have in favor a HVN(accumulation/distribution). We should
+expect some pullback at any trading level that the priceis at. If the first level is too close, it
+is likely that it will look for the nextone to develop a pullback with some proportionality in
+relation to theprevious momentum. ❖ Levels of the previous session profile. Generally, and due to
+the fact that we are in a trend context, the levels that the price willfind before will correspond
+to those of the previous session(Value Area, VWAP and VPOC extremes). As the day unfolds, we may
+also raise some scenario on the levels of the currentsession. ❖ Weekly VWAP. We will always be very
+attentive to the location of the weekly VWAP as it is especially useful in thesetrend contexts to
+look for the end of the pullback and thebeginning of a new impulsive movement. ❖ VPOC of the
+previous impulse. In addition, we can pull a fixed profile of the last impulse of the price and have
+located thelocation of its VPOC, as we already know that it is also a veryinteresting area on which
+to wait for the price. ❖ LVN. It is interesting to identify the low volume zones within the context
+we are trading. In this case we can use differentprofiles: composite to identify the general
+context; profile of theprevious momentum and profile of previous sessions. For all contexts we will
+want to trade in favor of the more tradinglevels the better. It is interesting to point out that the
+zones of confluenceof trading levels are highly recommended to look for entries above
+them,highlighting the combination of VPOC and VWAP.
+
+
+---- SECTION bk2-c38 ----
+RAW_LABEL: 7.3 SCENARIO PLANNING
+7.3 SCENARIO PLANNING Once we have the context clear, we know the type of strategy we aregoing to
+try to execute and we have identified the location on which towait for the entry trigger, it is time
+to set the scenario. Normally the scenario to look for the entry trigger is going to becomposed of
+one or two moves: The price will already be positioned in favor of our idea andtherefore we should
+only wait for a simple action that will take the pricetowards the trading area. If based on the
+context what we want is to buy, we will identify thetrading levels we have below where the price is
+likely to go. If, on the other hand, once the analysis of the context is done, wedetermine that the
+best option is to trade short, we will identify the mostimmediate trading levels above which to look
+for the short entry trigger.
+[FIG 153]
+In this example we see that we are in a range context and in asituation of potential Spring, so the
+scenario approach would be to waitfor a single movement to develop the test and look for the trigger
+of entryin purchase. We may only want to buy or sell if certain price action occurs. If, based on
+the analysis of the context, we want to buy, but theprice is below the trading zone, we should wait
+for a first positioningmove above this zone and a second test move. Now we would be in aposition to
+look for the entry trigger. The same would happen if we want to sell but the price is above
+thetrading zone; in this case we should wait for a first movement of recoveryof the zone and a
+second test movement. In this other example the reading we make is that we are in a rangecontext in
+which the price comes from developing a potential Spring andhas serious possibilities that it is a
+cumulative range.
+[FIG 154]
+At that precise moment and knowing the roadmap offered by themethodology we would be ready to wait
+for the entry in purchase afterseeing the bullish breakout (1) plus the subsequent test (2). For
+context wewant to buy but the price is not in an operationally attractive area (as it isgoing to
+face the key area) so it is appropriate to propose a two-movescenario. As we know, the price could
+leave in 1 an Upthrust and re-enter theprice back to the balancing zone, but initially we should be
+directionallybiased to the upside after seeing that the downthrust and the breakoutbullish movement
+meet the characteristics. The market obviously will not always follow our approach. A largenumber of
+occasions we will see how we are forced to change sentimentbased on what the price is doing. This is
+the key to continually analyzingthe reaction of participants as new information comes into the
+market. The best way to approach this scenario-building process is through a continuous validation
+protocol. This is about actively reacting to whatthe market does (If X, then maybe Y). This means
+"If the price does this,then let's expect that". It is an optimal approach to know at all times
+whatto expect the price to do and be prepared to act with the alacrity required. "If price breaks
+Creek, then I'm going to wait for it to test to lookfor buys. If on the other hand there is a failed
+breakout, then I'm going towait for a test in the opposite direction to enter short" The key here is
+to assess all the possible options that the market candevelop and, even if we are initially
+directionally biased to one side, weshould always also take into account an alternative scenario in
+theopposite direction that allows us to make a quick change of bias ifnecessary.
+[FIG 155]
+An example is when the market faces the top of a structure. We arein an trading zone, in a situation
+of potential bullish breakout or shakeout.It may be that by context we are directionally biased to
+favor the bullishbreakout and that we are therefore looking for purchases to test thebreakout; but
+when the time comes what we observe is that the price re-enters the range, strongly refusing to rise
+and leaves what looks like abullish jerk (Upthrust). At that point we should have enough capacity
+toread this in real time and change the scenario approach to look for theshort.
+
+
+---- SECTION bk2-c39 ----
+RAW_LABEL: 7.4 TRADING MANAGEMENT
+7.4 TRADING MANAGEMENT While it is true that the most important element of this combination
+isundoubtedly all that the Wyckoff methodology offers us, we have alreadyseen that the Volume
+Profile and Order Flow tools can certainly be usefulwhen it comes to improving our scenario and
+trading approaches. Thanks to the principles of the Wyckoff methodology, we will be ina position to
+set up scenarios; thanks to the identification of the zones andtrading levels by Volume Profile we
+will be able to refine with greateraccuracy where the price is most likely to go; and thanks to the
+precisionof Order Flow it will allow us to further confirm and calibrate the entrytrigger. 7.4.1
+ENTRY Regardless of the trading context, the market entry trigger willalways be an action that
+denotes intentionality on the part of the largetrader in favor of our direction. For pure price
+action analysis we will continue to work with thesignificant candlesticks: ❖ Sign of Strength bar
+(SOSbar). Wide range bullish candlestick with close in the upper third and relatively high volume. ❖
+Sign of Weakness bar (SOWbar). Wide range bearish candlestick with close in the lower third and
+relatively highvolume. For those who want to observe the Order Flow I would onlyrecommend working
+with the concepts already explained: ❖ Turning pattern: absorptions and initiatives. ❖ Continuation
+pattern: controls and tests. In essence what we would look for in the turning pattern would beto
+confirm that the SOS/SOWbar carries initiative; and in case of losingthe initial trigger we could
+look for a re-entry in the continuation pattern.
+[FIG 156]
+ENTRY ORDER As we saw in the section on order types, participants can enter themarket in different
+ways, basically with Market, Stop or Limit orders. In our case we are going to use Stop orders.
+Remember that theseare placed above the current price if we want to buy; and below thecurrent price
+if we want to sell. With the development of the significant candle we have an obvioussign of
+interest, but it is interesting to use Stop orders as a definitive filterthat suggests some
+continuity in the movement initiated with the triggercandle. Sometimes we will see the development
+of what initially looks likea candle of intentionality and just after its closing the price
+reversessharply in the opposite direction. What has happened is that internally atakeover process
+has taken place at all these price levels and traders withgreater capacity were positioning
+themselves on the opposite side. Byusing this type of order, although it is true that we are not
+saved from thispotential situation, in many occasions where this is happening, it willprevent us
+from entering the market. If we are really facing an imbalanced movement, this will have astrong
+momentum where it will continue to push in favor of that direction.With this type of limit order we
+will be entering in favor of themomentum, of the imbalance. In any case this section should be
+evaluated more in depth by thetrader. It may be preferable to enter with a market order after the
+closingof the trigger candle, after seeing an aggression in the track withoutwaiting for the closing
+of the candle or even use a limit order to enter on a possible pullback. Either option could be
+valid. Simply because you would be betting that the move you expect isgoing to happen, and if you
+remember, we are dealing in an environmentof total uncertainty so we don't know what is going to
+happen.
+[FIG 157]
+For example, you might see a chart in a potential Spring situation.If the analysis is correct, we
+know that the roadmap offered by themethodology goes through the search for at least the top of the
+structure;so maybe you think it is a good option to place a Buy Limit entry orderwaiting for the
+Spring test to develop. But such a test may never take place and instead the price willcontinue to
+fall, confirming that our analysis was not correct, which would cause us to add a loss. The problem
+is not in taking that loss, sinceit is part of the business, but rather that the basic approach was
+not themost solid.
+[FIG 158]
+At the point where you see the Spring potential and place the BuyLimit, you are betting that the
+price will develop two movements: thebearish movement to generate the test and the bullish one that
+will takethe price to the top of the range. And the key is that we can only proposethe development
+of one movement. In this case, we could initially propose the bearish movement as atest since we are
+in a potential Spring position; and once the price reachesthe area where it "should" turn, we have
+to analyze again the price actionand the volume to see if the imbalance that generates the bullish
+turnoccurs and then we can propose the next bullish movement up to theCreek. The underlying idea is
+that we must make a continuous analysis ofthe interaction between buyers and sellers; and even if we
+aredirectionally biased to one side based on the context, we must confirmwhen the time comes that
+the approach is solid and that the market itselfconfirms it. If in a potential Spring test position
+we see that aggressive buyersappear and push the price up, this is the footprint we would need to
+see toconfirm that our analysis appears to be correct and in such a case wouldoffer us an trading
+opportunity. It should also be remembered that seeingour entry trigger above the proposed zone has
+nothing to do with whetherthat trade then turns out in profit or loss. As we have already seen,
+newinformation is constantly entering the market and this could changeparticipants' perception of
+the security at any time. 7.4.2 STOP LOSS From a pure Wyckoff methodology point of view we will
+continueto recommend placing the stop loss on the other side of the significantcandlesticks (SOS/SOW
+bar) and structures. The logic is that if largetraders have actively entered these developments they
+will defend theirposition in case the price goes against them. Additionally, we will always want to
+place the stop loss on theother side of the more levels and trading zones the better. The first zone
+we will be looking for will be a low volume node(LVN). As we have already mentioned, by its very
+nature this low trading zone is likely to act as a rejection and that is exactly what we are
+lookingfor: that in case the price reaches this zone it will cause a V-turn and thatthis rejection
+will protect our position. It must be taken into account that the other way of representing
+therejection is that the price quickly crosses those price levels. If so, it wouldsurely reach and
+execute our protective stop. As we do not know whatmay happen, we must necessarily use this type of
+zone with the initialpremise that the type of rejection it represents in a possible future visit
+isthat of the V-turn. The logic of using the rest of the operating levels protecting theposition
+basically lies in the fact that a high amount of volume will betraded on them and could also act as
+levers that cause a turn in the price.Some might think that if these levels act as magnets due to
+the liquiditythat is located on them, why use them to protect the position? If we arebought and we
+have them below, based on the principle that they act asmagnets, wouldn't it be logical to think
+that the price will go looking forthem? The logic here is that at the moment of entry we are working
+infavor of a price imbalance looking for its continuity. And therefore it isthe moment when the
+price will move away from such levels thatgenerally represent equilibrium and acceptance by all. If
+at the moment oftruth the imbalance is not such, we still have the possibility of saving theposition
+if at these levels participants that turn the market re-enter.
+[FIG 159]
+If we are in a potential Spring situation and we see the appearanceof a SOSbar, we would be in a
+position to enter the market with a BuyStop order at the breakout above the candle leaving the Stop
+Loss locationeither below the trigger candle itself (#1) or below the entire structure(#2). At
+either of these two points the Stop Loss would be protected firstby the imbalances generated in the
+trigger candle; by any VWAP that hasbeen generated, and by the Value Area Low of the structure's
+profilewhich in essence is the Low Volume Node.
+[FIG 160]
+In this bearish example, if the SOWbar appears offering us theshort entry trigger, we would place
+the Sell Stop order below its low andwe would also have several locations for the Stop Loss: just
+above its high(#1), at the highest high generated in the turn (#2) and on the other side ofthe VPOC
+of the profile (#3). We would be protected by the candle itself, by some VWAP and bythe Value Area
+Low of the profile that besides being a Low Volume Nodein this case coincides as the ICE (support)
+of the structure. It would be necessary to make a point with respect to the VPOC ofthe profile. In
+this example we have it a little further away but it is still arelevant level to take into account.
+The trader should analyze if placingthe stop at that level would still have an acceptable
+Risk:Reward ratio. This is one of the peculiarities of discretionary approaches and thatis that we
+must adapt to market behavior. Sometimes all the levels willconverge in a very narrow range giving
+us greater confidence; while othertimes they will certainly be separated and we must evaluate
+whichlocation is more optimal and if the risk is worth it. 7.4.3 TAKE PROFIT In my first book "The
+Wyckoff Methodology in Depth" I alreadylisted the possible actions we could use to make profits. We
+mainly talkedabout: 1. Climatic bar evidence. Especially useful when we do not haveany reference to
+the left of the chart. 2. After the development of the Phase A stop of the previous trendmovement.
+3. In liquidity zones generated by relevant price turns (previoushighs and lows). Thanks to the
+addition of the Volume Profile we can add a newobjective way even more useful when we have price
+trading in thedirection where we want to take profits: It is about using the High Volume Nodes that
+we have in thedirection of the trade. We already know the magnetic nature of such areasand it is
+therefore that they provide us with some confidence to use themas targets. Supported by the auction
+theory, after an imbalance the market willlook to find traders with the opposite bias who are
+willing to trade again.This is why the price will move to those areas where there was previouslyhigh
+trading as the same thing is expected to happen again. Very important to remember again the short
+term mentality of themarket where the last trading areas will have a higher relevance in termsof
+price attraction than the older areas. The concept of High Volume Node when setting the target could
+besomewhat ambiguous. The HVN is an area, and the order to take profit isa specific price level,
+Where exactly to place it? For this purpose it is veryinteresting to take into account the VPOC of
+that particular value zone.The HVN serves us to identify the probable price visit zone and its
+VPOCfor the exact location of the target. For a more intraday trading it can be extremely useful to
+haveidentified the Developing Volume Point of Control (DVPOC). These are price levels that were at
+one point in time the VPOC for a session,whether or not they were the final VPOC for that session.
+As we know,the VPOC of the session is changing based on the negotiations that takeplace, and this
+level represents that footprint of change. In short, what weare dealing with is a level of high
+trading and therefore most likely tohave some magnetic behavior.
+[FIG 161]
+In this example we see how the price distributes in this profile inthe form of P and the bearish
+development is going to look for an oldDVPOC below (1) to turn back from there in the form of V to
+go to testagain another DVPOC of the current session above (2). It should be noted that we only take
+into account those DVPOCsthat have not been tested. In this example we see other DVPOCs that
+havealready been tested and therefore would not be valid for target setting, aswould be case 3. The
+same would be true for naked VPOCs. We have not discussedthis level before because its usefulness is
+focused almost exclusively as apossible target level. Naked VPOCs are VPOCs from previous
+sessionsthat have not been tested. Unlike DVPOCs, naked VPOCs were the finalVPOC of the session.
+There are statistics that claim that VPOCs from previous sessions are tested in the following days
+with a high probability.That is why they are very interesting to take into account. In the following
+example we see the magnetism exerted by theselevels attracting the price and even generating a
+subsequent turn. In both charts different configurations have been used to visualizespecifically one
+or the other level (DVPOC and nakedVPOC). It isrecommended to use both since by their very nature
+they both representprevious high trading zones.
+[FIG 162]
+7.4.4 WHAT TO DO WHEN THE PRICE GOES WITHOUT US? Sometimes we will have to see how even having made
+a goodscenario approach the price initiates the movement we were looking forwithout us, having had
+the possibility of entering the market. If there is something that is not recommended is to enter
+bymomentum guided by some kind of negative sentiment to have lost themovement. Entering in
+desperation is generally not a good strategy in thelong run. If the price goes without us absolutely
+nothing happens, it is partof the game just like stop loss jumps. If the underlying idea has
+notchanged, we can continue to look for entry in new trading zones. It is much more interesting to
+make another type of constructivereading in this situation, such as that you have made a good
+analysis. While it is true that we approach the market with the ultimate goalof obtaining
+profitability from its movements, the fact of being right in theanalysis should already be a reason
+to be certainly satisfied. The reading is that your analysis of who was in control of themarket and
+what was the most likely move was good and this istremendously important as an example that
+ultimately the knowledge isinternalized and that by following that line it is a matter of time
+before theresults appear. The only thing that has failed is either the exact visit to the areawhere
+you expected the price to be; or that the price has not left a genuinetrigger to generate the
+sending of the orders. In any case, it is necessary toremember that we have absolutely no control
+over the market and that ourtask is to set up scenarios with the highest possible probability. Also,
+we must also keep in mind that, having as one of the mainrules the conservation of capital, you may
+not have taken advantage of the movement you expected but at least you were not positioned on the
+wrongside of the market and therefore you do not add any losses.
+

@@ -1169,7 +1169,7 @@ window.SITE = (function () {
       { id: 'dist', label: '派发的镜像' },
       { id: 'vsa', label: 'VSA 量价分析' },
       { id: 'pitfalls', label: '实战与误区' },
-    ].concat(window.WYCKOFF_BOOK_CHAPTERS || []),
+    ].concat(window.WYCKOFF_BOOK_CHAPTERS || []).concat(window.WYCKOFF_BOOK2_CHAPTERS || []),
     body: [
       '<p class="lede">威科夫（Richard D. Wyckoff，1873–1934）是上世纪华尔街的传奇操盘手与观察者。他的方法在今天依然有效，原因很简单：<strong>它描述的是筹码转移的客观过程，而不是某一种图形。</strong>现代所有讲"机构行为"的体系，几乎都能在威科夫这里找到源头。</p>',
 
@@ -1273,7 +1273,7 @@ window.SITE = (function () {
         '<div class="concept"><p class="concept-term">事后拼贴</p><p>吸筹示意图是理想化的。真实行情里事件缺失、顺序错乱、甚至多重嵌套。别为了套模型而强行标注。</p></div>',
         '<div class="concept"><p class="concept-term">忽略大盘环境</p><p>再标准的吸筹结构，遇到系统性下跌也会失败。个股的威科夫结构需要放在市场整体背景里看。</p></div>',
       '</div>',
-    ].concat(window.WYCKOFF_BOOK_BODY || []).join(''),
+    ].concat(window.WYCKOFF_BOOK_BODY || []).concat(window.WYCKOFF_BOOK2_BODY || []).join(''),
   };
 
   /* ------------------------------------------------------------ 波浪理论 */

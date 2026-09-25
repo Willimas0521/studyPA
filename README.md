@@ -35,10 +35,18 @@ assets/layers.js                                           五体系图层交互
 assets/vendor/lightweight-charts.standalone.production.js  本地 vendor 的图表引擎
 data/theories.js                                           五个体系的正文内容
 data/wyckoff_book.js                                       《威科夫方法的深度解析》逐章精读正文（由 tests/_gen_wyckoff_book.py 从 DOCX 生成，按 Part→Chapter→Section 分层，术语已归一化）
+data/wyckoff_book2.js                                      《Wyckoff 2.0》原著（二）正文（由 tests/_gen_wyckoff_book2.py 从 PDF 抽取，8 部分 45 章 55 小节 176 张插图；重点篇章已译中文，其余保留英文）
+data/wyckoff_book2_zh.json                                 重点篇章中文译文（{unit_id: {html, label}}，由 tests/_build_zh6.py 写入并累加）
+data/wyckoff_book2_units.json                              按单元拆分的英文源（含插图），供逐段翻译对照
+data/wyckoff_book2_source.json                             结构化英文源（单元 id / 层级），供译文注入
 assets/book-images/                                        从原著 DOCX 抽取的原书插图（168 张，jpg/png，被章节页 / 部分页内联引用）
+assets/book2-images/                                       从《Wyckoff 2.0》PDF 抽取的原书插图（177 张，jpg/png）
 data/glossary.js                                           术语库
-tests/smoke.js                                             jsdom 冒烟测试（DOM / 交互 / 路由，无需浏览器）
+tests/smoke.js                                             jsdom 冒烟测试（DOM / 交互 / 路由，无需浏览器；同时校验两本原著章节）
 tests/_gen_wyckoff_book.py                                 从原著 DOCX 重新生成 data/wyckoff_book.js 的脚本（python-docx 解析扁平 DOCX，按字号+加粗+「第X章」模式分层）
+tests/_gen_wyckoff_book2.py                                从《Wyckoff 2.0》PDF 重新生成 data/wyckoff_book2.js 的脚本（PyMuPDF 抽文本+插图，按字号+编号分层）
+tests/_build_zh6.py                                        把重点篇章中文译文写入 data/wyckoff_book2_zh.json（可累加，便于分批翻译）
+tests/_diag_book2.py                                       诊断脚本：字号 / 标题命中分布
 tests/_charttest.html                                      浏览器测试用的全量挂载页（被 _validate.js 加载）
 tests/_validate.js                                         真实浏览器（puppeteer-core + Chrome）校验全部 25 张图
 tests/_sitevalidate.js                                     真实浏览器校验交互图层图与整站集成
@@ -60,6 +68,9 @@ tests/_bookval.js                                           真实浏览器校�
 | `#/wyckoff/laws/law-of-supply-and-demand` | 概念页：只有「供求定律」 |
 | `#/wyckoff/bk-p1` … `#/wyckoff/bk-p8` | 原著「部分」页：该部分下的章节（含原书插图） |
 | `#/wyckoff/bk-c1` … `#/wyckoff/bk-c27` | 原著「章节」独立页：27 章各自可单独打开，含 h4 小节目录与原书插图 |
+| `#/wyckoff/bk2-book` | 原著（二）《Wyckoff 2.0》落地页：含前言（Preface）等前置内容 |
+| `#/wyckoff/bk2-p1` … `#/wyckoff/bk2-p8` | 原著（二）「部分」页（进阶概念 / 成交量 / 成交量剖面 / 订单流 / Wyckoff 2.0 等重点篇章已译中文） |
+| `#/wyckoff/bk2-c1` … `#/wyckoff/bk2-c45` | 原著（二）「章节」独立页：45 章各自可单独打开，含原书插图；重点篇章含中文译文 |
 
 - 概念页带面包屑、正文、上一个 / 下一个概念、同节其它概念。
 - 章节页带面包屑、整节正文、上一节 / 下一节。

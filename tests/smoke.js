@@ -28,6 +28,7 @@ console.error = (...a) => { errors.push('console.error: ' + a.join(' ')); };
 
 const scripts = [
   'data/wyckoff_book.js',
+  'data/wyckoff_book2.js',
   'data/theories.js',
   'data/glossary.js',
   'assets/vendor/lightweight-charts.standalone.production.js',
@@ -345,13 +346,14 @@ else fail('章节树子项 ' + kidTotal + ' ≠ ' + EXPECT_CONCEPTS);
 if (!badKid.length) ok('概念链接全部指向独立页 #/体系/章节/slug');
 else fail('概念链接格式异常: ' + badKid.length + ' → ' + badKid[0]);
 
-/* 书籍章节：27 章各自可独立打开，细纲里嵌套出子章节链接 */
+/* 书籍章节：两本原著（bk 27 章 + bk2 45 章）各自可独立打开，细纲里嵌套出子章节链接 */
 console.log('\n【书籍章节独立页】');
 const wkTheory = SITE.theories.filter((t) => t.id === 'wyckoff')[0];
 const bookChaps = [];
 wkTheory.chapters.forEach((c) => (c.kids || []).forEach((k) => bookChaps.push(k)));
-if (bookChaps.length === 27) ok('威科夫原著共 ' + bookChaps.length + ' 章，嵌套在 8 个部分下');
-else fail('书籍章节数 ' + bookChaps.length + ' ≠ 27');
+const EXPECT_BOOK_CHAPS = bookChaps.length; // 含两本原著：bk 27 + bk2 45 = 72
+if (EXPECT_BOOK_CHAPS === 72) ok('威科夫原著共 ' + EXPECT_BOOK_CHAPS + ' 章（bk 27 + bk2 45），嵌套在部分下');
+else fail('书籍章节数 ' + EXPECT_BOOK_CHAPS + ' ≠ 72');
 
 const probeChap = bookChaps[0];
 go('wyckoff/' + probeChap.id);
@@ -370,8 +372,8 @@ else fail('中部章节独立页异常: ' + bookChaps[13].id);
 
 go('wyckoff');
 const subChapLinks = doc.querySelectorAll('#railBody a.rail-subchap');
-if (subChapLinks.length === 27) ok('细纲里嵌套出 ' + subChapLinks.length + ' 条子章节链接（8 个部分下）');
-else fail('子章节链接数 ' + subChapLinks.length + ' ≠ 27');
+if (subChapLinks.length === EXPECT_BOOK_CHAPS) ok('细纲里嵌套出 ' + subChapLinks.length + ' 条子章节链接（两本原著的部分下）');
+else fail('子章节链接数 ' + subChapLinks.length + ' ≠ ' + EXPECT_BOOK_CHAPS);
 
 /* 展开 / 收起：点章节右侧的小箭头 */
 go('wyckoff');
@@ -581,7 +583,7 @@ const htmlSrc = read('index.html');
  ['assets/style.css', 'assets/app.js', 'assets/chart.js',
  'assets/vendor/lightweight-charts.standalone.production.js',
  'assets/diagrams.js', 'assets/layers.js',
- 'data/wyckoff_book.js', 'data/theories.js', 'data/glossary.js']
+ 'data/wyckoff_book.js', 'data/wyckoff_book2.js', 'data/theories.js', 'data/glossary.js']
   .forEach((f) => {
     if (!htmlSrc.includes(f)) fail('index.html 未引用 ' + f);
     if (!fs.existsSync(path.join(root, f))) fail('文件不存在: ' + f);

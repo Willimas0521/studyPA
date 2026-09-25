@@ -12,7 +12,7 @@
 | 价格行为学 | 单根 K 线读法（收盘位置、影线、内包 / 外包线、五个实例）、三种市场状态、趋势的判定与强度分级、始终在场交易（Always In）、**交易区间**（即震荡区间，四种类型、边界消耗、震荡日的一天、实战清单）、**突破**（四种背景、开盘突破、二次突破、失败突破、测量移动）、**缺口**（跳空的本质、九成回补、突破 / 中继 / 衰竭三类缺口、岛形反转）、**通道**（画法与三种结局、窄通道 / 宽通道）、**楔形**（上升 / 下降楔形、收敛与突破）、**支撑与阻力**（角色互换、来源、实战清单）、**反转**（Always In 改变、HL/LH、假突破、典型形态）、**四种进场方式**、形态词典、读图流程、风险与仓位 |
 | ICT | 流动性、PD 阵列、Killzone、Power of 3、OTE、完整交易流程 |
 | SMC | BOS / CHoCH、订单块家族、诱因、与 ICT 的分野 |
-| 威科夫 | 复合人、三大定律（含「因果→测量移动」量化）、吸筹五阶段（Spring 弹簧 / SOS+LPS 示意图）、派发镜像（UTAD 上冲回落示意图）、VSA 量价（单根 K 线「量×振幅」示意图） |
+| 威科夫 | 复合人、三大定律（含「因果→测量移动」量化）、吸筹五阶段（Spring 弹簧 / SOS+LPS 示意图）、派发镜像（UTAD 上冲回落示意图）、VSA 量价（单根 K 线「量×振幅」示意图）；**另附《威科夫方法的深度解析》（Rubén Villahermosa Chaves, 2019）原著逐章精读**：8 个部分 / 27 章，机器翻译已做术语归一化（吸筹 / 派发、Spring / SOS / SOW / LPS / LPSY、震仓 / 上冲 / 自动反弹等） |
 | 波浪理论 | 5-3 结构、三条铁律、调整浪四形态、斐波那契关系 |
 | 五体系对比 | 横向对照表、收敛点、差异、选型建议 |
 | 五体系图层图 | **交互图**：同一段行情，六个图层可自由开关对照 |
@@ -34,8 +34,10 @@ assets/diagrams.js                                         25 张教学示意图
 assets/layers.js                                           五体系图层交互图的图层定义与合成
 assets/vendor/lightweight-charts.standalone.production.js  本地 vendor 的图表引擎
 data/theories.js                                           五个体系的正文内容
+data/wyckoff_book.js                                       《威科夫方法的深度解析》逐章精读正文（由 tests/_gen_wyckoff_book.py 从 DOCX 生成，按 Part→Chapter→Section 分层，术语已归一化）
 data/glossary.js                                           术语库
 tests/smoke.js                                             jsdom 冒烟测试（DOM / 交互 / 路由，无需浏览器）
+tests/_gen_wyckoff_book.py                                 从原著 DOCX 重新生成 data/wyckoff_book.js 的脚本（python-docx 解析扁平 DOCX，按字号+加粗+「第X章」模式分层）
 tests/_charttest.html                                      浏览器测试用的全量挂载页（被 _validate.js 加载）
 tests/_validate.js                                         真实浏览器（puppeteer-core + Chrome）校验全部 25 张图
 tests/_sitevalidate.js                                     真实浏览器校验交互图层图与整站集成

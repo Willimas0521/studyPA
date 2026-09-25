@@ -27,6 +27,7 @@ const origErr = console.error;
 console.error = (...a) => { errors.push('console.error: ' + a.join(' ')); };
 
 const scripts = [
+  'data/wyckoff_book.js',
   'data/theories.js',
   'data/glossary.js',
   'assets/vendor/lightweight-charts.standalone.production.js',
@@ -549,10 +550,10 @@ else fail('概念卡未进搜索索引');
 /* ---------- 资源引用检查 ---------- */
 console.log('\n【资源引用】');
 const htmlSrc = read('index.html');
-['assets/style.css', 'assets/app.js', 'assets/chart.js',
+ ['assets/style.css', 'assets/app.js', 'assets/chart.js',
  'assets/vendor/lightweight-charts.standalone.production.js',
  'assets/diagrams.js', 'assets/layers.js',
- 'data/theories.js', 'data/glossary.js']
+ 'data/wyckoff_book.js', 'data/theories.js', 'data/glossary.js']
   .forEach((f) => {
     if (!htmlSrc.includes(f)) fail('index.html 未引用 ' + f);
     if (!fs.existsSync(path.join(root, f))) fail('文件不存在: ' + f);

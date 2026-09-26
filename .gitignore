@@ -6,3 +6,7 @@ package-lock.json
 # 本地推送凭证（含 GitHub PAT，绝不入库）
 .push_token
 
+# Python 缓存
+__pycache__/
+*.pyc
+

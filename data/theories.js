@@ -1552,6 +1552,16 @@ window.SITE = (function () {
 
   /* -------------------------------------------------------------- 汇总 */
 
+  /* 把 Al Brooks《价格行为交易》三部曲（趋势 / 区间 / 反转）作为价格行为学的
+     原著补充，并入既有「价格行为学」体系。结构与 wyckoff_book2 的并入方式一致：
+     目录追加三本原著的书/部/章，正文追加对应的 HTML 片段。 */
+  if (window.PRICE_ACTION_BOOKS_CHAPTERS) {
+    priceAction.chapters = priceAction.chapters.concat(window.PRICE_ACTION_BOOKS_CHAPTERS);
+  }
+  if (window.PRICE_ACTION_BOOKS_BODY) {
+    priceAction.body = priceAction.body + window.PRICE_ACTION_BOOKS_BODY.join('');
+  }
+
   var theories = [priceAction, ict, smc, wyckoff, elliott];
 
   var pages = [overview].concat(theories, [compare, chartPage, glossary, path]);

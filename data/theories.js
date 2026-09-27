@@ -1238,6 +1238,10 @@ window.SITE = (function () {
       '<div class="diagram" data-diagram="wyckoff-utad"></div>',
       '<p class="muted small">UTAD 是吸筹 Spring 的镜像：同样是假突破，但方向相反、发生在顶部。两者共同的判别钥匙都是<strong>成交量</strong>——真陷阱必然"价不动量先衰"或"创新高却收弱"。</p>',
 
+      '<h3 id="dist-example">真实盘面示例</h3>',
+      '<p>把上面的抽象结构放回真实行情：这是一轮已经走完的 EUR/USD 派发，六个标注就是派发的完整事件顺序。</p>',
+      '<figure class="example-fig"><img loading="lazy" src="assets/example-images/wyckoff-dist-eurusd.png" alt="EUR/USD 派发结构示例图：Preliminary Stop → Exhaustion → Automatic Reaction → UTAD → Test → Fall Through the Ice"><figcaption><b>EUR/USD 派发示例</b>（按事件顺序）：<b>Preliminary Stop</b> 初步停止——上涨首次受阻，在区间上沿留下第一个高点；<b>Exhaustion</b> 力竭——买盘高潮（≈ 本站 BC 买入高潮），本轮最高；<b>Automatic Reaction</b> 自动回落——回落低点界定区间下沿（即"冰面"支撑）；<b>UTAD</b> 派发后上冲——向上越过上沿后迅速跌回，倒出最后的买盘；<b>Test</b> 测试——回抽高点逐级降低，确认卖压占优；<b>Fall Through the Ice</b> 跌破冰面——区间支撑失守，派发完成、转入下跌。与本站术语对照：BC ≈ Exhaustion、AR = Automatic Reaction、SOW ≈ Fall Through the Ice。判别钥匙依旧是量价配合：UTAD 处<b>放量却收弱</b>、随后很快跌回区间内，才是真陷阱。</figcaption></figure>',
+
       '<h2 id="vsa">VSA 量价分析</h2>',
       '<p>Tom Williams 把威科夫的思想发展成 VSA（Volume Spread Analysis），更专注于单根 K 线的量价关系。常用信号包括：</p>',
       '<div class="table-wrap"><table>',

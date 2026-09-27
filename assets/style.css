@@ -539,6 +539,19 @@ a:hover { text-decoration: underline; }
 }
 .book-fig + .book-fig { margin-top: 0; }
 
+/* 真实盘面「示例图」：在合成示意图之外，补一张带标注的实盘案例，配可读图注 */
+.example-fig { margin: 24px 0 8px; text-align: center; }
+.example-fig img {
+  max-width: 100%; height: auto; display: inline-block;
+  border-radius: 10px; border: 1px solid var(--border-2);
+  background: var(--surface); box-shadow: 0 2px 8px rgba(0,0,0,.10);
+}
+.example-fig figcaption {
+  margin: 10px auto 0; max-width: 760px;
+  font-size: 13px; line-height: 1.7; color: var(--text-3); text-align: left;
+}
+.example-fig figcaption b { color: var(--text-2); font-weight: 640; }
+
 /* ---------- 理论页头 ---------- */
 .hero {
   position: relative; overflow: hidden;

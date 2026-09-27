@@ -453,17 +453,35 @@ a:hover { text-decoration: underline; }
 .rail-chev-btn .rail-chev { width: 12px; height: 12px; }
 .rail-chap-head.open .rail-chev { transform: rotate(90deg); }
 
+/* 四级嵌套目录（书→部→章→节）的深层缩进与连接线 */
 .rail-kids {
   display: none;
-  margin: 1px 0 5px 12px; padding-left: 6px;
+  margin: 1px 0 5px 13px; padding-left: 11px;
   border-left: 1px solid var(--border-2);
 }
 .rail-chap-head.open + .rail-kids { display: block; }
+/* 每深一层连接线颜色轻微交替，强化层级感 */
+.rail-kids .rail-kids { border-left-color: var(--border-3); }
+.rail-kids .rail-kids .rail-kids { border-left-color: var(--border-2); }
 .rail-kids .rail-concept { padding: 3px 7px; font-size: 12.3px; }
 .rail-kids .rail-concept .rc-en { font-size: 10px; }
+
+/* 层级视觉区分：书(level0) → 部(level1) → 章(level2) → 节(level-sec) */
+.rail-lv0 > .rail-chap-link,
+.rail-lv0.rail-chap { font-weight: 640; font-size: 13.2px; color: var(--text); }
+.rail-lv1 > .rail-chap-link { font-weight: 600; color: var(--text); }
+.rail-lv1 { background: linear-gradient(90deg, var(--accent-soft), transparent 70%); border-radius: 6px; }
+.rail-lv2 > .rail-chap-link { color: var(--text-2); }
+
 /* 书籍部分下的嵌套子章节（独立章节页入口） */
-.rail-subchap { padding: 3px 7px 3px 12px; font-size: 12.3px; }
+.rail-subchap { padding: 3px 7px 3px 16px; font-size: 12.2px; }
 .rail-subchap .rc-zh { color: var(--text-2); }
+/* 节左侧小连接点，和章明显区分 */
+.rail-lv-sec.rail-subchap { position: relative; }
+.rail-lv-sec.rail-subchap::before {
+  content: ''; position: absolute; left: 6px; top: 50%;
+  width: 7px; height: 1px; background: var(--border-3);
+}
 .rail-subchap:hover { color: var(--text); background: var(--surface); text-decoration: none; }
 .rail-subchap.active { color: var(--accent-text); font-weight: 620; background: var(--accent-soft); }
 

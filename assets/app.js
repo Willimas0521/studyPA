@@ -54,9 +54,18 @@
   function highlight(text, q) {
     var safe = esc(text);
     if (!q) return safe;
-    try {
-      return safe.replace(new RegExp('(' + escRe(esc(q)) + ')', 'gi'), '<mark>$1</mark>');
-    } catch (e) { return safe; }
+  try {
+    return safe.replace(new RegExp('(' + escRe(esc(q)) + ')', 'gi'), '<mark>$1</mark>');
+  } catch (e) { return safe; }
+}
+
+  /* 章节树辅助：节（h4）id 判定 / 章 id 判定 / 统计可独立成页的章节数 */
+  function isSectionId(id) { return !!id && /[-](h|s)\d+$/.test(id); }
+  function isChapterNode(id) { return !!id && /c\d+$/.test(id); }
+  function countChapterPages(nodes) {
+    var n = 0;
+    (nodes || []).forEach(function (c) { if (!isSectionId(c.id)) n++; if (c.kids) n += countChapterPages(c.kids); });
+    return n;
   }
 
   /* ------------------------------------------------------------ 提示块图标 */
@@ -161,19 +170,19 @@
 
     var heads = [];
     Array.prototype.forEach.call(tmp.children, function (n) {
-      if (n.tagName === 'H2' || n.tagName === 'H3') heads.push(n);
+      if (n.tagName === 'H2' || n.tagName === 'H3' || n.tagName === 'H4') heads.push(n);
     });
     if (heads.length <= 1) return { html: p.body || '', toc: '' };
 
     var chapIds = {};
-    (p.chapters || []).forEach(function (c) {
-      chapIds[c.id] = true;
-      (c.kids || []).forEach(function (k) { chapIds[k.id] = true; });
+    (p.chapters || []).forEach(function walk(c) {
+      if (c.id && !isSectionId(c.id)) chapIds[c.id] = true;
+      (c.kids || []).forEach(walk);
     });
 
-    var h2n = 0, h3n = 0;
+    var h2n = 0, h3n = 0, h4n = 0;
     var top = [];
-    var cur = null;
+    var cur = null, curH3 = null;
     heads.forEach(function (h) {
       var label = h.textContent.trim();
       if (h.tagName === 'H2') {
@@ -181,12 +190,18 @@
         var id = h.id || ('h2-' + h2n + '-' + (slugify(label).slice(0, 18) || 'x'));
         h.id = id;
         cur = { id: id, label: label, kids: [], chapter: !!chapIds[id] };
-        top.push(cur);
-      } else {
+        top.push(cur); curH3 = null;
+      } else if (h.tagName === 'H3') {
         h3n++;
         var kid = h.id || ('sec-' + h3n + '-' + (slugify(label).slice(0, 18) || 'x'));
         h.id = kid;
-        if (cur) cur.kids.push({ id: kid, label: label, chapter: !!chapIds[kid] });
+        curH3 = { id: kid, label: label, kids: [], chapter: !!chapIds[kid] };
+        if (cur) cur.kids.push(curH3);
+      } else {
+        h4n++;
+        var sid = h.id || ('sub-' + h4n + '-' + (slugify(label).slice(0, 18) || 'x'));
+        h.id = sid;
+        if (curH3) curH3.kids.push({ id: sid, label: label, chapter: false });
       }
     });
 
@@ -303,9 +318,9 @@
 
   function chapOf(p, chapId) {
     var hit = null;
-    (p.chapters || []).forEach(function (c) {
+    (p.chapters || []).forEach(function walk(c) {
       if (c.id === chapId) { hit = c; return; }
-      (c.kids || []).forEach(function (k) { if (k.id === chapId) hit = k; });
+      (c.kids || []).forEach(walk);
     });
     return hit;
   }
@@ -331,12 +346,12 @@
       '</div></section>';
   }
 
-  /* 扁平化章节（含嵌套 kids），供「上一节 / 下一节」用连续顺序遍历 */
+  /* 扁平化章节（递归展开嵌套 kids），供「上一节 / 下一节」用连续顺序遍历；节（h4）不是独立页，排除 */
   function flatChapters(p) {
     var out = [];
-    (p.chapters || []).forEach(function (c) {
-      out.push(c);
-      (c.kids || []).forEach(function (k) { out.push(k); });
+    (p.chapters || []).forEach(function walk(c) {
+      if (c.id && !isSectionId(c.id)) out.push(c);
+      (c.kids || []).forEach(walk);
     });
     return out;
   }
@@ -559,9 +574,9 @@
   function buildChapIndex() {
     ALL_CHAP_IDS = {};
     SITE.pages.forEach(function (p) {
-      (p.chapters || []).forEach(function (c) {
-        ALL_CHAP_IDS[c.id] = true;
-        (c.kids || []).forEach(function (k) { ALL_CHAP_IDS[k.id] = true; });
+      (p.chapters || []).forEach(function walk(c) {
+        if (c.id && !isSectionId(c.id)) ALL_CHAP_IDS[c.id] = true;
+        (c.kids || []).forEach(walk);
       });
     });
   }
@@ -625,65 +640,100 @@
     return zh.indexOf(q) !== -1 || en.indexOf(q) !== -1;
   }
 
+  /* 目录过滤：保留自身或后代命中的节点；命中父节点时保留其全部子项以便导航 */
+  function filterTree(nodes, q) {
+    if (!q) return nodes;
+    var out = [];
+    (nodes || []).forEach(function (c) {
+      var selfHit = hit(c, q);
+      var kids = filterTree(c.kids, q);
+      if (selfHit || kids.length) {
+        var copy = {}; for (var k in c) copy[k] = c[k];
+        copy.kids = kids.length ? kids : (selfHit ? (c.kids || []) : []);
+        out.push(copy);
+      }
+    });
+    return out;
+  }
+
   function renderRail(r, q) {
     if (!elRailBody) return;
+    /* 计算当前路由所在节点的祖先链，展开其全部祖先分组 */
+    var ancestorOpen = {};
+    (function () {
+      var page = PAGE_BY_ID[r.id];
+      var focus = r.anchor || r.chap;
+      if (!page || !focus) return;
+      function find(nodes, trail) {
+        for (var i = 0; i < nodes.length; i++) {
+          var n = nodes[i], t = trail.concat([n.id]);
+          if (n.id === focus) return t;
+          if (n.kids) { var f = find(n.kids, t); if (f) return f; }
+        }
+        return null;
+      }
+      var path = find(page.chapters || [], []);
+      if (path) path.forEach(function (id) { ancestorOpen[page.id + '#' + id] = true; });
+    })();
+
+    /* 递归渲染任意深度的章节树：书(level0)→部(level1)→章(level2)→节(level-sec) */
+    function nodeHtml(c, parentChapterId, depth, pageId) {
+      depth = depth || 0;
+      var pid = pageId || r.id;
+      var id = c.id, key = r.id + '#' + id, isSec = isSectionId(id);
+      var kids = c.kids, effKids = (kids && kids.length) ? kids : null;
+      /* 始终计算概念：节点（章/部）即使含子章节也要挂载概念卡，不能因有 kids 而丢弃；
+         概念按「所在体系 pageId」查找，使每个体系组都展示自己的概念卡 */
+      var concepts = CONCEPTS_BY_CHAP[pid + '#' + id] || [];
+      var hasConcepts = concepts.length > 0;
+      var lvClass = isSec ? ' rail-lv-sec' : (' rail-lv' + Math.min(depth, 3));
+
+      /* 节（section）链接到 #/page/chapterId#sectionId */
+      if (isSec) {
+        var kon = (parentChapterId && r.chap === parentChapterId && r.anchor === id);
+        return '<a class="rail-chap rail-subchap' + (kon ? ' active' : '') + lvClass + '" href="#/' + esc(r.id) + '/' +
+          esc(parentChapterId) + '#' + esc(id) + '" data-anchor="' + esc(id) + '" title="' + esc(c.label) + '">' +
+          '<span class="rc-zh">' + esc(c.label) + '</span></a>';
+      }
+
+      /* 叶子章节（无子章节、无概念） → 普通链接 */
+      if (!effKids && !hasConcepts) {
+        var on = (id === r.chap && !r.slug);
+        return '<a class="rail-chap' + (on ? ' active' : '') + lvClass + '" href="#/' + esc(r.id) + '/' + esc(id) + '">' +
+          esc(c.label) + '</a>';
+      }
+
+      /* 含子章节 / 概念的节点（书/部/章/含概念章）→ 折叠组，递归子项；
+         概念卡作为子项一并渲染（章下既有小节也有概念时两者都显示） */
+      var childParent = isSectionId(id) ? parentChapterId : id;
+      var open = q ? true : (!!CHAP_OPEN[key] || !!ancestorOpen[key] || (id === r.chap && !r.slug));
+      var kidParts = [];
+      if (hasConcepts) {
+        var kidC = concepts.map(function (k) {
+          var konc = (c.id === r.chap && k.slug === r.slug);
+          return '<a class="rail-chap rail-concept' + (konc ? ' active' : '') + '" href="' + conceptHref(pid, c.id, k.slug) + '"' +
+            ' title="' + esc(k.zh + (k.en ? ' · ' + k.en : '')) + '">' + '<span class="rc-zh">' + esc(k.zh) + '</span>' +
+            (k.en ? '<span class="rc-en">' + esc(k.en) + '</span>' : '') + '</a>';
+        }).join('');
+        kidParts.push('<div class="rail-concepts-group">' + kidC + '</div>');
+      }
+      if (effKids) {
+        kidParts.push(effKids.map(function (k) { return nodeHtml(k, childParent, depth + 1, pid); }).join(''));
+      }
+      var onSelf = (id === r.chap && !r.slug);
+      var cnt = (effKids ? effKids.length : 0) + (hasConcepts ? concepts.length : 0);
+      return '<div class="rail-chap-head' + (open ? ' open' : '') + lvClass + '">' +
+        '<a class="rail-chap-link' + (onSelf ? ' active' : '') + '" href="#/' + esc(r.id) + '/' + esc(id) + '">' + esc(c.label) + '</a>' +
+        (cnt ? '<span class="rail-chap-count">' + cnt + '</span>' : '') +
+        '<button type="button" class="rail-chev-btn" data-chap="' + esc(key) + '" aria-expanded="' + (open ? 'true' : 'false') +
+        '" aria-label="展开"><svg class="rail-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>' +
+        '</div><div class="rail-kids">' + kidParts.join('') + '</div>';
+    }
+
     var html = '';
     OUTLINE.forEach(function (g) {
       var p = g.page;
-      var rows = [];
-
-      g.chapters.forEach(function (c) {
-        var kids = c.kids || (CONCEPTS_BY_CHAP[p.id + '#' + c.id] || []);
-        var isBook = !!c.kids;   /* 书籍部分：kids 是嵌套的子章节 */
-        var chapHit = hit(c, q);
-        var kidsHit = q ? kids.filter(function (k) { return hit(k, q); }) : kids;
-        if (q && !chapHit && !kidsHit.length) return;   /* 自己没中、子项也没中，整节不显示 */
-
-        var on = (p.id === r.id && c.id === r.chap && !r.slug);
-        var href = '#/' + esc(p.id) + '/' + esc(c.id);
-
-        /* 没有子内容的章节仍然是普通链接 */
-        if (!kids.length) {
-          rows.push('<a class="rail-chap' + (on ? ' active' : '') + '" href="' + href + '">' +
-            esc(c.label) + '</a>');
-          return;
-        }
-
-        /* 过滤时只展开命中的子项；纯章节名命中就只留章节本身，不铺开它的全部概念 */
-        var show = kidsHit;
-        var key = p.id + '#' + c.id;
-        var open = q ? show.length > 0 : (on || !!CHAP_OPEN[key]);
-
-        rows.push(
-          '<div class="rail-chap-head' + (open ? ' open' : '') + '">' +
-            '<a class="rail-chap-link' + (on ? ' active' : '') + '" href="' + href + '">' + esc(c.label) + '</a>' +
-            '<span class="rail-chap-count">' + kids.length + '</span>' +
-            '<button type="button" class="rail-chev-btn" data-chap="' + esc(key) + '"' +
-              ' aria-expanded="' + (open ? 'true' : 'false') + '" aria-label="展开子章节">' +
-              '<svg class="rail-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>' +
-            '</button>' +
-          '</div>' +
-          '<div class="rail-kids">' +
-            (isBook
-              ? show.map(function (k) {
-                  var kon = (p.id === r.id && k.id === r.chap && !r.slug);
-                  return '<a class="rail-chap rail-subchap' + (kon ? ' active' : '') + '"' +
-                    ' href="#/' + esc(p.id) + '/' + esc(k.id) + '"' +
-                    ' title="' + esc(k.label) + '"><span class="rc-zh">' + esc(k.label) + '</span></a>';
-                }).join('')
-              : show.map(function (k) {
-                  var kon = (p.id === r.id && c.id === r.chap && k.slug === r.slug);
-                  return '<a class="rail-chap rail-concept' + (kon ? ' active' : '') + '"' +
-                    ' href="' + conceptHref(p.id, c.id, k.slug) + '"' +
-                    ' title="' + esc(k.zh + (k.en ? ' · ' + k.en : '')) + '">' +
-                    '<span class="rc-zh">' + esc(k.zh) + '</span>' +
-                    (k.en ? '<span class="rc-en">' + esc(k.en) + '</span>' : '') +
-                  '</a>';
-                }).join('')) +
-          '</div>'
-        );
-      });
-
+      var rows = filterTree(g.chapters, q).map(function (c) { return nodeHtml(c, null, 0, g.page.id); }).filter(Boolean);
       if (!rows.length) return;
       html += railGroupHTML({
         pageId: p.id,
@@ -741,7 +791,7 @@
       }
       elRailPage.textContent = label;
     }
-    collectSpy(r.id);
+    collectSpy(r.id, r.anchor);
   }
 
   /* --------- 滚动同步：高亮当前所在的小节 / 概念卡 --------- */
@@ -749,15 +799,18 @@
   var spyTargets = [];
   var conceptTargets = [];
 
-  function collectSpy(pageId) {
+  function collectSpy(pageId, anchor) {
     spyTargets = [];
     conceptTargets = [];
     OUTLINE.forEach(function (g) {
       if (g.page.id !== pageId) return;
-      g.chapters.forEach(function (c) {
-        var node = document.getElementById(c.id);
-        if (node) spyTargets.push({ id: c.id, el: node });
-      });
+      (function walk(ns) {
+        ns.forEach(function (c) {
+          var node = document.getElementById(c.id);
+          if (node) spyTargets.push({ id: c.id, el: node });
+          if (c.kids) walk(c.kids);
+        });
+      })(g.chapters);
     });
     CONCEPT_GROUPS.forEach(function (g) {
       if (g.pageId !== pageId) return;
@@ -766,7 +819,8 @@
         if (node) conceptTargets.push({ id: 'c-' + c.idx, el: node });
       });
     });
-    markRailAnchor('', railTab === 'concepts' ? elRailConcepts : elRailBody);
+    /* 直达锚点时立即高亮该节；否则清空由滚动监听（syncSpy）接管 */
+    markRailAnchor(anchor || '', railTab === 'concepts' ? elRailConcepts : elRailBody);
   }
 
   function markRailAnchor(id, root) {
@@ -788,6 +842,12 @@
       var list = isC ? conceptTargets : spyTargets;
       var root = isC ? elRailConcepts : elRailBody;
       if (!list.length || !root) return;
+      var r = currentRoute();
+      /* 直达锚点（点侧栏小节 / 本节目录项进来）：以锚点小节作为当前项，不依赖滚动位置 */
+      if (r.anchor && document.getElementById(r.anchor)) {
+        markRailAnchor(r.anchor, root);
+        return;
+      }
       /* 以顶栏下方 28px 为判定线：最后一个越过该线的标题 / 卡片即当前项 */
       var line = (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--topbar-h')) || 60) + 28;
       var cur = '';
@@ -943,9 +1003,14 @@
       if (r.anchor) {
         var sec = document.getElementById(r.anchor);
         if (sec) {
-          requestAnimationFrame(function () {
-            sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          });
+          /* 章节正文可能含图/字体，初始布局未稳，window 尚不可滚动到目标；
+             先立即标记（collectSpy 已做），再延迟到布局稳定后滚动并同步高亮 */
+          var jump = function () {
+            sec.scrollIntoView({ behavior: 'auto', block: 'start' });
+            setTimeout(syncSpy, 80);
+          };
+          requestAnimationFrame(jump);
+          setTimeout(jump, 500);   /* 兜底：等图/字体加载完再滚一次 */
           return;
         }
       }
@@ -959,10 +1024,13 @@
     if (r.anchor) {
       var target = document.getElementById(r.anchor);
       if (target) {
-        requestAnimationFrame(function () {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        var jump = function () {
+          target.scrollIntoView({ behavior: 'auto', block: 'start' });
           flashTarget(target);
-        });
+          setTimeout(syncSpy, 80);
+        };
+        requestAnimationFrame(jump);
+        setTimeout(jump, 500);
         return;
       }
     }

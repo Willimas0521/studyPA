@@ -346,14 +346,24 @@ else fail('章节树子项 ' + kidTotal + ' ≠ ' + EXPECT_CONCEPTS);
 if (!badKid.length) ok('概念链接全部指向独立页 #/体系/章节/slug');
 else fail('概念链接格式异常: ' + badKid.length + ' → ' + badKid[0]);
 
-/* 书籍章节：两本原著（bk 27 章 + bk2 45 章）各自可独立打开，细纲里嵌套出子章节链接 */
+/* 书籍章节：两本原著（bk 27 章 + bk2 45 章）各自可独立打开，细纲里嵌套出 书→部→章→节 四级 */
 console.log('\n【书籍章节独立页】');
 const wkTheory = SITE.theories.filter((t) => t.id === 'wyckoff')[0];
+/* 含「部（部下还有章）」的才是真实原著书；其余 6 个是概览级单章 */
+const isSecId = (id) => !!id && /[-](h|s)\d+$/.test(id);
+const countSections = (nodes) => {
+  let n = 0;
+  (nodes || []).forEach((c) => { if (isSecId(c.id)) n++; if (c.kids) n += countSections(c.kids); });
+  return n;
+};
+const realBooks = wkTheory.chapters.filter((c) => (c.kids || []).some((p) => p.kids && p.kids.length));
 const bookChaps = [];
-wkTheory.chapters.forEach((c) => (c.kids || []).forEach((k) => bookChaps.push(k)));
-const EXPECT_BOOK_CHAPS = bookChaps.length; // 含两本原著：bk 27 + bk2 45 = 72
-if (EXPECT_BOOK_CHAPS === 72) ok('威科夫原著共 ' + EXPECT_BOOK_CHAPS + ' 章（bk 27 + bk2 45），嵌套在部分下');
-else fail('书籍章节数 ' + EXPECT_BOOK_CHAPS + ' ≠ 72');
+realBooks.forEach((b) => (b.kids || []).forEach((p) => (p.kids || []).forEach((ch) => bookChaps.push(ch))));
+const EXPECT_BOOK_CHAPS = bookChaps.length; // 真实原著章节：bk 45 + bk2 45 = 90
+if (EXPECT_BOOK_CHAPS === 90) ok('威科夫两本原著共 ' + EXPECT_BOOK_CHAPS + ' 章（bk 45 + bk2 45），嵌套在 部→章 下');
+else fail('书籍章节数 ' + EXPECT_BOOK_CHAPS + ' ≠ 90');
+if (realBooks.length === 2) ok('威科夫原著书数 ' + realBooks.length + '（《威科夫方法的深度解析》+《Wyckoff 2.0》）');
+else fail('原著书数异常: ' + realBooks.length);
 
 const probeChap = bookChaps[0];
 go('wyckoff/' + probeChap.id);
@@ -365,15 +375,17 @@ if (cH1 && cH1.textContent.trim() === probeChap.label && cBlocks > 0) {
   fail('书籍章节独立页异常: ' + probeChap.id + ' h1=' + (cH1 && cH1.textContent.trim()) + ' 内容块=' + cBlocks);
 }
 // 任意抽一章（中部）再验证一次
-go('wyckoff/' + bookChaps[13].id);
+const midChap = bookChaps[13];
+go('wyckoff/' + midChap.id);
 const cH1b = doc.getElementById('content').querySelector('h1');
-if (cH1b && cH1b.textContent.trim() === bookChaps[13].label) ok('中部章节 ' + bookChaps[13].id + ' 同样可独立打开');
-else fail('中部章节独立页异常: ' + bookChaps[13].id);
+if (cH1b && cH1b.textContent.trim() === midChap.label) ok('中部章节 ' + midChap.id + ' 同样可独立打开');
+else fail('中部章节独立页异常: ' + midChap.id);
 
 go('wyckoff');
+const EXPECT_SECTIONS = countSections(wkTheory.chapters); // 全部小节（h4）数，应为 236
 const subChapLinks = doc.querySelectorAll('#railBody a.rail-subchap');
-if (subChapLinks.length === EXPECT_BOOK_CHAPS) ok('细纲里嵌套出 ' + subChapLinks.length + ' 条子章节链接（两本原著的部分下）');
-else fail('子章节链接数 ' + subChapLinks.length + ' ≠ ' + EXPECT_BOOK_CHAPS);
+if (subChapLinks.length === EXPECT_SECTIONS) ok('细纲里嵌套出 ' + subChapLinks.length + ' 条小节链接（书→部→章→节 四级目录）');
+else fail('小节链接数 ' + subChapLinks.length + ' ≠ ' + EXPECT_SECTIONS);
 
 /* 展开 / 收起：点章节右侧的小箭头 */
 go('wyckoff');

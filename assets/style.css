@@ -699,6 +699,34 @@ a:hover { text-decoration: underline; }
 .step-title { font-weight: 640; font-size: 14.8px; color: var(--text); margin: 0 0 3px; }
 .step p { margin: 0; font-size: 14.2px; color: var(--text-2); }
 
+/* ---------- 原文折叠区 ---------- */
+details.tscript { margin: 20px 0 26px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface-2); }
+details.tscript > summary {
+  cursor: pointer; list-style: none; padding: 12px 16px;
+  font-size: 14.5px; font-weight: 640; color: var(--text);
+  display: flex; align-items: center; gap: 8px;
+}
+details.tscript > summary::-webkit-details-marker { display: none; }
+details.tscript > summary::before {
+  content: ""; flex: 0 0 auto; width: 0; height: 0;
+  border-left: 5px solid var(--text-3);
+  border-top: 4px solid transparent; border-bottom: 4px solid transparent;
+  transition: transform .18s var(--ease-soft);
+}
+details.tscript[open] > summary::before { transform: rotate(90deg); }
+details.tscript > summary:hover { color: var(--accent-text); }
+.tscript-body {
+  padding: 0 16px 14px; max-height: 480px; overflow-y: auto;
+  font-size: 14px; line-height: 1.8; color: var(--text-2);
+}
+.tscript-body p { margin: 0 0 12px; }
+.tscript-body h4 {
+  font-size: 14px; font-weight: 640; color: var(--text);
+  margin: 18px 0 8px; padding-top: 6px; border-top: 1px solid var(--border);
+}
+.tscript-body h4:first-child { margin-top: 0; border-top: 0; padding-top: 0; }
+.tscript-note { font-weight: 400; font-size: 12.8px; color: var(--text-3); }
+
 /* ---------- 表格 ---------- */
 .table-wrap { overflow-x: auto; margin: 18px 0 24px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
 table { width: 100%; border-collapse: collapse; font-size: 14.2px; }

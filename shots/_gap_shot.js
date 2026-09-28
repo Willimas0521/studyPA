@@ -12,27 +12,28 @@ const URL_BASE = 'file:///' + ROOT.replace(/\\/g, '/') + '/index.html';
     args: ['--allow-file-access-from-files', '--no-sandbox'],
   });
 
-  async function shot(hash, out, expand) {
+  async function shot(hash, out, expand, keyword) {
     const page = await browser.newPage();
     await page.setViewport({ width: 1200, height: 1000 });
     const errs = [];
     page.on('pageerror', e => errs.push(String(e)));
     await page.goto(URL_BASE + hash, { waitUntil: 'networkidle2', timeout: 30000 });
-    await new Promise(r => setTimeout(r, 700));
+    await new Promise(r => setTimeout(r, 900));
 
-    // 滚动定位：折叠态看第 8 节开头，展开态看英文原文区
-    await page.evaluate(() => {
-      const h = Array.from(document.querySelectorAll('#content h3'))
-        .find(x => x.textContent.includes('Brooks 亲述'));
+    // 滚动定位到指定小节；未指定则定位到最后一个 h3
+    await page.evaluate((kw) => {
+      const all = Array.from(document.querySelectorAll('#content h3'));
+      const h = kw ? all.find(x => x.textContent.includes(kw)) : all[all.length - 1];
       if (h) h.scrollIntoView({ block: 'start' });
-    });
-    await new Promise(r => setTimeout(r, 300));
+    }, keyword || null);
+    await new Promise(r => setTimeout(r, 1500));
 
     if (expand) {
       await page.evaluate(() => {
-        const det = document.querySelector('#content details.tscript');
-        if (det) det.setAttribute('open', '');
-        det.scrollIntoView({ block: 'start' });
+        // 展开最后一个（最新一集的）折叠区
+        const all = document.querySelectorAll('#content details.tscript');
+        const det = all[all.length - 1];
+        if (det) { det.setAttribute('open', ''); det.scrollIntoView({ block: 'start' }); }
       });
       await new Promise(r => setTimeout(r, 400));
     }
@@ -60,8 +61,8 @@ const URL_BASE = 'file:///' + ROOT.replace(/\\/g, '/') + '/index.html';
     await page.close();
   }
 
-  await shot('#/price-action/gap', path.join(__dirname, 'gap-brooks-collapsed.png'), false);
-  await shot('#/price-action/gap', path.join(__dirname, 'gap-brooks-expanded.png'), true);
+  await shot('#/price-action/gap', path.join(__dirname, 'gap-brooks-v2-collapsed.png'), false, 'Brooks 亲述（二）');
+  await shot('#/price-action/gap', path.join(__dirname, 'gap-brooks-v2-expanded.png'), true, 'Brooks 亲述（二）');
 
   await browser.close();
 })();

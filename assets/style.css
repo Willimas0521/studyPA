@@ -909,6 +909,29 @@ th.rowhead { text-align: left; background: var(--surface-2); font-weight: 660; c
   .concept-grid, .card-grid { grid-template-columns: 1fr; }
 }
 
+/* ---- 章节内嵌思维导图（inline SVG）---------------------------------------
+   用 class 引 theme 变量，明暗主题自动变色；不依赖任何图片资源。 */
+.mind-fig { margin: 26px 0 10px; text-align: center; }
+.mind-fig svg { width: 100%; max-width: 1180px; height: auto; display: inline-block; }
+.mind-fig figcaption {
+  margin-top: 10px; font-size: 13px; line-height: 1.7; color: var(--text-3);
+}
+.mind-fig text { font-family: var(--font-sans); fill: var(--text); }
+.mind-fig .m-box   { fill: var(--surface); stroke: var(--border-2); stroke-width: 1; }
+.mind-fig .m-box-2 { fill: var(--surface-2); stroke: var(--border-2); stroke-width: 1; }
+.mind-fig .m-box-a { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.5; }
+.mind-fig .m-leaf  { fill: var(--surface); stroke: var(--border); stroke-width: 1; }
+.mind-fig .m-line  { stroke: var(--border-2); stroke-width: 1.5; fill: none; }
+.mind-fig .m-line-a{ stroke: var(--accent); stroke-width: 1.5; fill: none; }
+.mind-fig .m-tip   { fill: var(--border-2); stroke: none; }
+.mind-fig .m-en    { fill: var(--text-3); }
+.mind-fig .m-dim   { fill: var(--text-3); }
+.mind-fig .m-acc   { fill: var(--accent-text); }
+@media (max-width: 860px) {
+  .mind-fig { overflow-x: auto; text-align: left; }
+  .mind-fig svg { min-width: 900px; }
+}
+
 @media print {
   .topbar, .rail, .to-top, .scrim, .cw-layers, .footer .muted { display: none !important; }
   .main { padding: 0; }

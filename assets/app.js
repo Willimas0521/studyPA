@@ -164,9 +164,18 @@
        - h2 为一级条目：若该 h2 同时是独立章节页（p.chapters 命中），则链接到章节独立页，
          否则链接到页内锚点；
        - h3 挂在前一个 h2 之下做二级，统一走页内锚点。 */
+  /* 正文渲染：含 markdown 语法的章节先过 marked 转成 HTML，
+     纯 HTML 章节（嗅探不到 markdown 标记）原样返回，零风险。
+     原有 HTML（SVG、卡片、callout 等）在 marked 中原样透传。 */
+  function mdHtml(raw) {
+    if (!window.marked || !raw) return raw || '';
+    if (!/^\s{0,3}#{1,6}\s|^\s{0,3}[-*+]\s|^\s{0,3}>\s|\*\*[^*]+\*\*/m.test(raw)) return raw;
+    try { return window.marked.parse(raw); } catch (e) { return raw; }
+  }
+
   function pageToc(p) {
     var tmp = document.createElement('div');
-    tmp.innerHTML = p.body || '';
+    tmp.innerHTML = mdHtml(p.body);
 
     var heads = [];
     Array.prototype.forEach.call(tmp.children, function (n) {
@@ -503,7 +512,7 @@
   function collectConcepts() {
     SITE.pages.forEach(function (p) {
       var tmp = document.createElement('div');
-      tmp.innerHTML = p.body || '';
+      tmp.innerHTML = mdHtml(p.body);
 
       /* 顺着文档流扫一遍，记住每张概念卡归属哪个 h2 —— 顺序必须与 renderPage 补 id 的顺序一致 */
       var found = [];
@@ -584,7 +593,7 @@
   function sliceChapters() {
     SITE.pages.forEach(function (p) {
       var tmp = document.createElement('div');
-      tmp.innerHTML = p.body || '';
+      tmp.innerHTML = mdHtml(p.body);
       var cur = null;            /* 当前 h2 */
       var curH3 = null;          /* 当前 h3（若是独立章节页） */
       var buf = {};              /* h2 id -> [node html] */
@@ -1059,7 +1068,7 @@
   function buildIndex() {
     SITE.pages.forEach(function (p) {
       var tmp = document.createElement('div');
-      tmp.innerHTML = p.body;
+      tmp.innerHTML = mdHtml(p.body);
       var nodes = Array.prototype.slice.call(tmp.children);
       var bucket = { heading: p.title, id: '', text: [] };
 

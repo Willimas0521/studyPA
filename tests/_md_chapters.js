@@ -17,21 +17,40 @@ const ROOT = path.resolve(__dirname, '..');
 const FILE = path.join(ROOT, 'data', 'theories.js');
 const src0 = fs.readFileSync(FILE, 'utf8');
 
-const TARGET = process.argv.slice(2);
+const FORCE = process.argv.includes('--force');
+const TARGET = process.argv.slice(2).filter(a => a !== '--force');
 if (!TARGET.length) { console.error('请传入要转换的章节 id'); process.exit(1); }
-const SKIP = new Set(['pressure']); // 已转好
+const SKIP = new Set(FORCE ? [] : ['pressure']); // 已转好
 
-// ---- 1. 定位所有 h2 块 ----
+// ---- 1. 定位 priceAction body 范围（避免命中 ICT/SMC 等同 id 章节）----
+const PA_START = src0.indexOf('var priceAction = {');
+const BODY_START = src0.indexOf('body: [', PA_START);
+if (PA_START === -1 || BODY_START === -1) {
+  console.error('无法定位 priceAction body 范围'); process.exit(1);
+}
+function findPaEnd(s) {
+  // priceAction body 数组的结束行：    ].join(''),
+  // 后面紧跟着 priceAction 对象的结束：  };
+  const idx = s.indexOf('\r\n    ].join(\'\'),\r\n  };', BODY_START);
+  if (idx !== -1) return idx;
+  // 降级：兼容 LF
+  return s.indexOf('\n    ].join(\'\'),\n  };', BODY_START);
+}
+const PA_END0 = findPaEnd(src0);
+if (PA_END0 === -1) { console.error('无法定位 ICT 边界'); process.exit(1); }
+
+// ---- 2. 定位 priceAction 内所有 h2 块 ----
 const h2re = /'<h2 id="([^"]+)">/g;
 const h2s = [];
 let m;
 while ((m = h2re.exec(src0))) {
+  if (m.index < BODY_START || m.index > PA_END0) continue;
   h2s.push({ id: m[1], quoteStart: m.index, elemEnd: src0.indexOf("',", m.index) + 2 });
 }
 // elemEnd 指向该 h2 元素逗号之后（即 body 起始）
 // 每章 body 区间 = [elemEnd_i, quoteStart_{i+1})
 for (let i = 0; i < h2s.length; i++) {
-  h2s[i].bodyEnd = (i + 1 < h2s.length) ? h2s[i + 1].quoteStart : src0.length;
+  h2s[i].bodyEnd = (i + 1 < h2s.length) ? h2s[i + 1].quoteStart : PA_END0;
 }
 
 // ---- 2. 提取数组字符串拼成 HTML ----
@@ -147,12 +166,15 @@ let src = src0;
 let converted = [];
 
 function scanH2(s) {
+  const paEnd = findPaEnd(s);
+  if (paEnd === -1) { console.error('扫描时无法定位 ICT 边界'); process.exit(1); }
   const re = /'<h2 id="([^"]+)">/g;
   const out = []; let m;
   while ((m = re.exec(s))) {
+    if (m.index < BODY_START || m.index > paEnd) continue;
     out.push({ id: m[1], quoteStart: m.index, elemEnd: s.indexOf("',", m.index) + 2 });
   }
-  for (let i = 0; i < out.length; i++) out[i].bodyEnd = (i + 1 < out.length) ? out[i + 1].quoteStart : s.length;
+  for (let i = 0; i < out.length; i++) out[i].bodyEnd = (i + 1 < out.length) ? out[i + 1].quoteStart : paEnd;
   return out;
 }
 
@@ -168,7 +190,9 @@ for (const id of TARGET) {
   const h2str = src.slice(h.quoteStart, h.elemEnd);
   const tm = h2str.match(/<h2 id="[^"]+">([\s\S]*?)<\/h2>/);
   const title = tm ? tm[1] : id;
-  const esc = md.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n');
+  // 前后加空行：避免 marked 把前章列表/HTML 块延续到本章 h2，也避免 h2 与正文粘在一起
+  const wrapped = '\n\n' + md + '\n\n';
+  const esc = wrapped.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n');
   const newChunk =
     `      '<h2 id="${id}">${title}</h2>',\n` +
     `      '${esc}',`;

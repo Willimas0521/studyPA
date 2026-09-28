@@ -28,13 +28,26 @@ const want = checkAll ? PA_IDS : TARGET;
 const cur = fs.readFileSync(FILE, 'utf8');
 const head = execSync(`git show HEAD:data/theories.js`, { cwd: ROOT }).toString();
 
+function priceActionBounds(src) {
+  const paStart = src.indexOf('var priceAction = {');
+  const bodyStart = src.indexOf('body: [', paStart);
+  let paEnd = -1;
+  if (bodyStart !== -1) {
+    paEnd = src.indexOf('\r\n    ].join(\'\'),\r\n  };', bodyStart);
+    if (paEnd === -1) paEnd = src.indexOf('\n    ].join(\'\'),\n  };', bodyStart);
+  }
+  return { bodyStart, paEnd };
+}
+
 function findH2(src) {
+  const { bodyStart, paEnd } = priceActionBounds(src);
   const re = /'<h2 id="([^"]+)">/g;
   const out = []; let m;
   while ((m = re.exec(src))) {
+    if (m.index < bodyStart || m.index > paEnd) continue;
     out.push({ id: m[1], quoteStart: m.index, elemEnd: src.indexOf("',", m.index) + 2 });
   }
-  for (let i = 0; i < out.length; i++) out[i].bodyEnd = (i + 1 < out.length) ? out[i + 1].quoteStart : src.length;
+  for (let i = 0; i < out.length; i++) out[i].bodyEnd = (i + 1 < out.length) ? out[i + 1].quoteStart : paEnd;
   return out;
 }
 function extractStrings(text) {
@@ -97,10 +110,11 @@ for (const id of want) {
   const base = hh ? extractStrings(head.slice(hh.elemEnd, hh.bodyEnd)) : bodyCur;
   const isMd = /^\s*### |^\s*- |\*\*|^\s*# /m.test(bodyCur);
 
-  let rendered;
+  let rendered, baseHtml;
   try { rendered = mdHtml(bodyCur); } catch (e) { console.log(`✗ ${id}: marked 异常 ${e.message}`); failN++; continue; }
+  try { baseHtml = mdHtml(base); } catch (e) { baseHtml = base; }
   const c = countEls(rendered);
-  const b = countEls(base);
+  const b = countEls(baseHtml);
   const txt = textOf(rendered);
 
   const problems = [];

@@ -35,6 +35,7 @@ const scripts = [
   'assets/diagrams.js',
   'assets/layers.js',
   'assets/chart.js',
+  'assets/marked.min.js',
   'assets/app.js'
 ];
 try {

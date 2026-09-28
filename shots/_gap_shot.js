@@ -61,8 +61,8 @@ const URL_BASE = 'file:///' + ROOT.replace(/\\/g, '/') + '/index.html';
     await page.close();
   }
 
-  await shot('#/price-action/gap', path.join(__dirname, 'gap-brooks-v3-collapsed.png'), false, 'Brooks 亲述（三）');
-  await shot('#/price-action/gap', path.join(__dirname, 'gap-brooks-v3-expanded.png'), true, 'Brooks 亲述（三）');
+  await shot('#/price-action/gap', path.join(__dirname, 'gap-brooks-v4-collapsed.png'), false, 'Brooks 亲述（四）');
+  await shot('#/price-action/gap', path.join(__dirname, 'gap-brooks-v4-expanded.png'), true, 'Brooks 亲述（四）');
 
   await browser.close();
 })();

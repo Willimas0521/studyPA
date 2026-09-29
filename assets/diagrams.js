@@ -631,5 +631,90 @@ window.DIAGRAM_SPECS = (function () {
     }
   };
 
+  /* ---------------------------------------------------------------------
+     ICT · 市场结构：BOS 与 MSS
+     --------------------------------------------------------------------- */
+  S['ict-structure'] = {
+    key: 'ict-structure',
+    dw: 900, dh: 384, x0: 60, barW: 44,
+    pTop: 72, pBot: 250, pMin: 92, pMax: 142, amp: 1.8,
+    closes: [100, 112, 104, 118, 110, 126, 118, 132, 122, 116, 104, 110, 100, 106],
+    aria: 'ICT 市场结构示意图：顺趋势破位是 BOS，跌破最近更高低点才是 MSS',
+    draw: function (g) {
+      var N = this.closes.length;
+      g.note(g.dw / 2, 40, 'BOS 与 MSS：同样是破位，方向决定含义', 'var(--d-violet)', 'middle', 12);
+      g.hline(126, 0, N - 1, 'var(--d-violet)', '前高', '5 4');
+      g.hline(118, 0, N - 1, 'var(--d-blue)', '最近更高低点 HL', '5 4');
+      g.ring(g.cx(5), g.cy(126), 'var(--d-violet)', 'HH', g.cy(126) - 14);
+      g.ring(g.cx(6), g.cy(118), 'var(--d-blue)', 'HL', g.cy(118) + 26);
+      g.ring(g.cx(7), g.cy(132), 'var(--up)', 'BOS', g.cy(132) - 14);
+      g.ring(g.cx(10), g.cy(104), 'var(--down)', 'MSS', g.cy(104) + 26);
+      g.arrow(7, 132, 12, 100, 'var(--down)', 2);
+      g.note(g.dw / 2, 376,
+        '上涨里破前高 = BOS（趋势延续）；跌破最近 HL = MSS（主导权易手）。扫荡只是燃料，MSS 才是确认。',
+        'var(--text-3)', 'middle', 10.5);
+    }
+  };
+
+  /* ---------------------------------------------------------------------
+     ICT · 溢价与折价 + OTE
+     --------------------------------------------------------------------- */
+  S['ict-pd-array'] = {
+    key: 'ict-pd-array',
+    dw: 900, dh: 384, x0: 64, barW: 46,
+    pTop: 72, pBot: 250, pMin: 92, pMax: 150, amp: 1.8,
+    closes: [100, 112, 122, 132, 140, 132, 124, 116, 110, 118, 126, 134],
+    aria: 'ICT 溢价与折价示意图：中点以上是溢价区，以下是折价区，62%~79% 回撤为最优入场区间',
+    draw: function (g) {
+      var N = this.closes.length;
+      g.note(g.dw / 2, 40, '溢价区 / 折价区 / OTE：做多只在下半段等', 'var(--d-violet)', 'middle', 12);
+      g.zone(0, N - 1, 120, 142, 'var(--down)', 0.07, '5 4');
+      g.zone(0, N - 1, 98, 120, 'var(--up)', 0.07, '5 4');
+      g.hline(120, 0, N - 1, 'var(--text-3)', '均衡价 CE 50%');
+      g.rect(g.cx(0) - 10, g.cy(115.5), g.cx(N - 1) - g.cx(0) + 20, g.cy(108.5) - g.cy(115.5),
+        'var(--up)', 0.18, 'var(--up)', '4 3', 1.3);
+      g.note(g.cx(0) - 16, (g.cy(115.5) + g.cy(108.5)) / 2 + 3.5, 'OTE', 'var(--up)', 'end', 10.5);
+      g.note(g.cx(N - 1) + 18, g.cy(132), '溢价区 Premium', 'var(--down)', 'start', 10.5);
+      g.note(g.cx(N - 1) + 18, g.cy(108), '折价区 Discount', 'var(--up)', 'start', 10.5);
+      g.ring(g.cx(4), g.cy(140), 'var(--d-violet)', '摆动高点', g.cy(140) - 14);
+      g.ring(g.cx(0), g.cy(100), 'var(--d-violet)', '摆动低点', g.cy(100) + 26);
+      g.ring(g.cx(8), g.cy(110), 'var(--up)', '62%~79% 回踩', g.cy(110) + 26);
+      g.note(g.dw / 2, 376,
+        '先定区间再谈位置：中点以上只找空、中点以下只找多，OTE 是折价区里盈亏比最好的一档。',
+        'var(--text-3)', 'middle', 10.5);
+    }
+  };
+
+  /* ---------------------------------------------------------------------
+     ICT · Power of 3（AMD）
+     --------------------------------------------------------------------- */
+  S['ict-amd'] = {
+    key: 'ict-amd',
+    dw: 900, dh: 400, x0: 60, barW: 46,
+    pTop: 86, pBot: 250, pMin: 102, pMax: 144, amp: 1.5,
+    closes: [120, 122, 118, 121, 119, 122, 116, 110, 112, 118, 124, 130, 136, 132],
+    aria: 'ICT Power of 3 示意图：吸筹、操纵、派发三个阶段',
+    draw: function (g) {
+      g.note(g.dw / 2, 40, 'Power of 3（AMD）：吸筹 → 操纵 → 派发', 'var(--d-violet)', 'middle', 12);
+      var phases = [
+        ['Accumulation 吸筹', 0, 5, 'var(--d-amber)'],
+        ['Manipulation 操纵', 6, 8, 'var(--down)'],
+        ['Distribution 派发', 9, 13, 'var(--up)']
+      ];
+      phases.forEach(function (p) {
+        g.note((g.cx(p[1]) + g.cx(p[2])) / 2, 66, p[0], p[3], 'middle', 11, 700);
+      });
+      g.zone(0, 5, 116, 124, 'var(--d-amber)', 0.10);
+      g.zone(6, 8, 106, 118, 'var(--down)', 0.10);
+      g.zone(9, 13, 116, 140, 'var(--up)', 0.10);
+      g.hline(118, 0, 13, 'var(--d-amber-strong)', '亚洲盘低点', '5 4');
+      g.ring(g.cx(7), g.cy(110), 'var(--down)', 'Judas', g.cy(110) + 28);
+      g.arrow(8, 112, 12, 136, 'var(--up)', 2);
+      g.note(g.dw / 2, 390,
+        '先朝反方向假突破扫掉止损，再奔向当日真正的流动性目标——同一套 AMD 在任意周期上递归成立。',
+        'var(--text-3)', 'middle', 10.5);
+    }
+  };
+
   return S;
 })();

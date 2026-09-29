@@ -9,6 +9,12 @@ const TARGETS = [
   ['#/live', 'live-page.png'],
   ['#/live/read', 'live-read.png'],
   ['#/live/checklist', 'live-checklist.png'],
+  ['#/breakout', 'topic-breakout.png'],
+  ['#/breakout/fail', 'topic-breakout-fail.png'],
+  ['#/breakdown', 'topic-breakdown.png'],
+  ['#/breakdown/speed', 'topic-breakdown-speed.png'],
+  ['#/range', 'topic-range.png'],
+  ['#/range/edges', 'topic-range-edges.png'],
 ];
 
 (async () => {

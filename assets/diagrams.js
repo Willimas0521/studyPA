@@ -179,7 +179,7 @@ window.DIAGRAM_SPECS = (function () {
       g.line(g.cx(6), g.cy(114), g.cx(8), g.cy(120), 'var(--d-blue)', 1.6, '5 4', 0.9);
       g.ring(g.cx(2), g.cy(102), 'var(--d-blue)', 'HL', g.cy(102) + 22);
       g.ring(g.cx(6), g.cy(114), 'var(--d-blue)', 'HL', g.cy(114) + 22);
-      g.arrow(g.cx(0), 98, g.cx(N - 1), 128, 'var(--up)', 2);
+      g.arrow(0, 98, N - 1, 128, 'var(--up)', 2);
       g.note(g.dw / 2, 372, '回撤浅、K 线重叠少、趋势棒多 → 顺势持有，等回踩趋势线进场', 'var(--text-3)', 'middle', 10.5);
     }
   };
@@ -222,7 +222,7 @@ window.DIAGRAM_SPECS = (function () {
       g.line(cx0, g.cy(110), g.cx(4), g.cy(130), 'var(--up)', 1.8, '6 5', 0.9);
       g.ring(g.cx(4), g.cy(130), 'var(--up)', '新高', g.cy(130) - 12);
       g.ring(g.cx(5), g.cy(126), 'var(--d-amber)', '反转棒', g.cy(126) + 24);
-      g.arrow(g.cx(5), 126, g.cx(N - 1), 96, 'var(--down)', 2);
+      g.arrow(5, 126, N - 1, 96, 'var(--down)', 2);
       g.line(cx0, g.cy(96), cxN, g.cy(96), 'var(--down)', 1.6, '6 5', 0.9);
       g.note(cxN - 4, g.cy(96) - 6, '新低 · 始终在场 = 空', 'var(--down)', 'end', 10);
       g.note(g.dw / 2, 372, '没有跟进 K 线，多半只是回调；跟进确认后才切到反向始终在场', 'var(--text-3)', 'middle', 10.5);
@@ -306,7 +306,7 @@ window.DIAGRAM_SPECS = (function () {
       g.note(g.dw / 2, 40, '开盘趋势（Trend from the Open）：开盘即定方向，全天单边', 'var(--up)', 'middle', 12);
       g.dash(cx0 - 14, g.cy(100), cxN + 14, g.cy(100), 'var(--d-neutral)');
       g.note(cx0 - 18, g.cy(100) - 4, '开盘', 'var(--text-3)', 'end', 10);
-      g.arrow(g.cx(0), 100, g.cx(N - 1), 154, 'var(--up)', 2);
+      g.arrow(0, 100, N - 1, 154, 'var(--up)', 2);
       g.ring(g.cx(3), g.cy(118), 'var(--up)', '浅回撤', g.cy(118) - 12);
       g.note(g.dw / 2, 372, '"等回调"是最贵的一种耐心——只能用突破挂单或小仓市价跟进', 'var(--text-3)', 'middle', 10.5);
     }
@@ -327,7 +327,7 @@ window.DIAGRAM_SPECS = (function () {
       g.note(g.dw / 2, 40, '突破后区间（Breakout Then Range）：节奏变慢，策略切回边缘反向', 'var(--d-amber-strong)', 'middle', 12);
       g.line(g.cx(0) - 10, g.cy(122), g.cx(5) + 10, g.cy(122), 'var(--d-neutral)', 1.4, '6 5', 0.85);
       g.line(g.cx(0) - 10, g.cy(108), g.cx(5) + 10, g.cy(108), 'var(--d-neutral)', 1.4, '6 5', 0.85);
-      g.arrow(g.cx(5), 122, g.cx(8), 140, 'var(--up)', 2);
+      g.arrow(5, 122, 8, 140, 'var(--up)', 2);
       g.ring(g.cx(8), g.cy(140), 'var(--up)', '突破', g.cy(140) - 12);
       g.line(g.cx(9) - 8, g.cy(152), cxN + 10, g.cy(152), 'var(--d-cyan)', 1.4, '6 5', 0.85);
       g.line(g.cx(9) - 8, g.cy(144), cxN + 10, g.cy(144), 'var(--d-cyan)', 1.4, '6 5', 0.85);
@@ -376,7 +376,7 @@ window.DIAGRAM_SPECS = (function () {
       var gx0 = g.cx(2) + 18, gx1 = g.cx(3) - 18;
       g.rect(gx0, g.cy(150), gx1 - gx0, g.cy(110) - g.cy(150), 'var(--d-cyan)', 0.10, 'var(--d-cyan)', '4 3', 1.2);
       g.note((gx0 + gx1) / 2, g.cy(150) - 6, '缺口空档', 'var(--d-cyan)', 'middle', 10);
-      g.arrow(g.cx(3), 135, g.cx(N - 1), 120, 'var(--down)', 2);
+      g.arrow(3, 135, N - 1, 120, 'var(--down)', 2);
       g.ring(g.cx(N - 1), g.cy(126), 'var(--down)', '回补', g.cy(126) + 22);
       g.note(g.dw / 2, 372, '别把缺口当成可靠支撑/阻力——回补本身不是信号，只是说明那里是磁铁', 'var(--text-3)', 'middle', 10.5);
     }
@@ -398,7 +398,7 @@ window.DIAGRAM_SPECS = (function () {
       var gx0 = g.cx(5) + 18, gx1 = g.cx(6) - 18;
       g.rect(gx0, g.cy(158), gx1 - gx0, g.cy(108) - g.cy(158), 'var(--up)', 0.10, 'var(--up)', '4 3', 1.2);
       g.ring(g.cx(6), g.cy(152), 'var(--up)', '衰竭跳空', g.cy(152) - 12);
-      g.arrow(g.cx(6), 152, g.cx(N - 1), 120, 'var(--down)', 2);
+      g.arrow(6, 152, N - 1, 120, 'var(--down)', 2);
       g.note(g.dw / 2, 372, '它几乎一定被快速回补——回补是最可靠的转向预警之一', 'var(--text-3)', 'middle', 10.5);
     }
   };
@@ -441,7 +441,7 @@ window.DIAGRAM_SPECS = (function () {
       g.line(cx0, g.cy(100), g.cx(7), g.cy(126), 'var(--d-blue)', 1.8, '6 5', 0.9);
       g.line(cx0, g.cy(122), g.cx(7), g.cy(148), 'var(--d-violet)', 1.8, '6 5', 0.9);
       g.ring(g.cx(7), g.cy(126), 'var(--d-amber)', '实体收在通道外', g.cy(126) - 12);
-      g.arrow(g.cx(7), 126, g.cx(N - 1), 148, 'var(--up)', 2);
+      g.arrow(7, 126, N - 1, 148, 'var(--up)', 2);
       g.note(g.dw / 2, 372, '事先谁也无法确定是哪一种——但每种应对都明确，关键是先识别"收在通道外"', 'var(--text-3)', 'middle', 10.5);
     }
   };
@@ -464,7 +464,7 @@ window.DIAGRAM_SPECS = (function () {
       g.note(cx0 + 4, g.cy(142) - 6, '上沿', 'var(--d-violet)', 'start', 10);
       g.note(cx0 + 4, g.cy(122) + 16, '下沿', 'var(--d-blue)', 'start', 10);
       g.ring(g.cx(5), g.cy(124), 'var(--up)', '向上突破', g.cy(124) - 12);
-      g.arrow(g.cx(5), 124, g.cx(N - 1) + 6, 138, 'var(--up)', 2);
+      g.arrow(5, 124, (N - 1) + 0.15, 138, 'var(--up)', 2);
       g.note(g.dw / 2, 372, '出现在下跌末端，抛压越来越轻，随后多向上突破', 'var(--text-3)', 'middle', 10.5);
     }
   };
@@ -485,7 +485,7 @@ window.DIAGRAM_SPECS = (function () {
       g.line(cx0 - 12, g.cy(S), g.cx(3) + 10, g.cy(S), 'var(--up)', 1.6, '6 5', 0.9);
       g.note(g.cx(3) + 14, g.cy(S) - 4, '支撑', 'var(--up)', 'start', 10);
       g.ring(g.cx(3), g.cy(118), 'var(--up)', '反弹', g.cy(118) - 12);
-      g.arrow(g.cx(3), 118, g.cx(5), 108, 'var(--down)', 2);
+      g.arrow(3, 118, 5, 108, 'var(--down)', 2);
       g.line(g.cx(5), g.cy(S), cxN + 12, g.cy(S), 'var(--down)', 1.6, '6 5', 0.9);
       g.note(cxN + 16, g.cy(S) - 4, '阻力', 'var(--down)', 'start', 10);
       g.ring(g.cx(7), g.cy(114), 'var(--down)', '回踩变阻力', g.cy(114) + 24);
@@ -509,7 +509,7 @@ window.DIAGRAM_SPECS = (function () {
       g.dash(cx0 - 12, g.cy(HI), cxN + 12, g.cy(HI), 'var(--d-neutral)');
       g.note(cxN + 16, g.cy(HI) - 4, '前高 138', 'var(--d-neutral)', 'start', 10);
       g.ring(g.cx(4), g.cy(138), 'var(--d-amber)', '假突破', g.cy(138) - 12);
-      g.arrow(g.cx(4), 138, g.cx(N - 1), 116, 'var(--down)', 2);
+      g.arrow(4, 138, N - 1, 116, 'var(--down)', 2);
       g.note(g.dw / 2, 372, '被套的止损变成反向燃料——这是最干净的反转结构之一', 'var(--text-3)', 'middle', 10.5);
     }
   };
@@ -556,9 +556,9 @@ window.DIAGRAM_SPECS = (function () {
       g.line(cx0 - 12, g.cy(108), g.cx(5) + 10, g.cy(108), 'var(--d-neutral)', 1.4, '6 5', 0.85);
       g.note(cxN + 16, g.cy(122) + 4, '区间上沿 122', 'var(--d-neutral)', 'start', 10);
       g.ring(g.cx(7), g.cy(136), 'var(--up)', 'SOS 强势突破', g.cy(136) - 14);
-      g.arrow(g.cx(7), 136, g.cx(8), 130, 'var(--down)', 1.8);
+      g.arrow(7, 136, 8, 130, 'var(--down)', 1.8);
       g.ring(g.cx(8), g.cy(130), 'var(--d-amber)', 'LPS 回踩', g.cy(130) + 24);
-      g.arrow(g.cx(8), 130, g.cx(N - 1), 146, 'var(--up)', 2);
+      g.arrow(8, 130, N - 1, 146, 'var(--up)', 2);
       g.note(g.dw / 2, 380, 'LPS 相当于 ICT 的溢价回踩 / PA 的突破二次进场——守住前高即确认', 'var(--text-3)', 'middle', 10.5);
     }
   };
@@ -580,7 +580,7 @@ window.DIAGRAM_SPECS = (function () {
       g.line(cx0 - 12, g.cy(120), g.cx(5) + 10, g.cy(120), 'var(--d-neutral)', 1.4, '6 5', 0.85);
       g.note(cxN + 16, g.cy(132) + 4, '区间上沿 132', 'var(--d-neutral)', 'start', 10);
       g.ring(g.cx(6), g.cy(140), 'var(--d-amber)', 'UTAD 假突破', g.cy(140) - 12);
-      g.arrow(g.cx(6), 140, g.cx(N - 1), 104, 'var(--down)', 2);
+      g.arrow(6, 140, N - 1, 104, 'var(--down)', 2);
       g.note(g.dw / 2, 380, '判别点：创新高放量却收低位、随后迅速跌回——那是真派发；收高位站稳才是真突破', 'var(--text-3)', 'middle', 10.5);
     }
   };

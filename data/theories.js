@@ -1836,14 +1836,60 @@ window.SITE = (function () {
     ].join(''),
   };
 
+  var chartLab = {
+    id: 'chart-lab',
+    navGroup: '实盘分析',
+    navLabel: '交互图表实验室',
+    title: '交互图表实验室',
+    en: 'Interactive Chart Lab',
+    eyebrow: '实验室',
+    accent: '#475569',
+    tagline: '把五套体系里的经典结构放进可缩放、可拖拽标注的真实图表引擎——每个价位都能亲手验证。',
+    plainTitle: '交互图表实验室',
+    tags: ['Vela 交互图表', '可缩放', '可拖拽标注', '威科夫模板', '盈亏比计算'],
+    chapters: [
+      { id: 'wyckoff-lab', label: '威科夫实战模板' },
+      { id: 'howto', label: '使用说明' },
+    ],
+    body: [
+      '<p class="lede">这一页的图不是截图，而是跑在 <strong>Vela</strong>（LuxAlgo 开源图表引擎）里的真图表：可以滚轮缩放、拖拽平移，标注可以拖动，position 工具会直接算出盈亏比。<strong>先看静态示意图理解结构，再到这里亲手验证每一个价位。</strong></p>',
+
+      '<h2 id="wyckoff-lab">威科夫实战模板</h2>',
+      '<p>三张图与「威科夫 → 实战操作模板」一章完全同源：同样的 K 线、同样的标注。<strong>区别只在于这里的一切都是活的</strong>——你可以把标注拖到别的位置，看止损差几个点会怎样改变盈亏比。</p>',
+
+      '<h3>1. 模板 A：Spring 做多</h3>',
+      '<div class="vela-lab" data-vela="wyckoff-trade-spring"></div>',
+      '<p class="vela-lab-caption">入场 104 / 止损 95 / 目标 120——拖动 position 工具的任一端点，盈亏比会实时重算。缩小看 Phase B 的缩量震荡，再放大 Spring 那一根。</p>',
+
+      '<h3>2. 模板 B：UTAD 做空</h3>',
+      '<div class="vela-lab" data-vela="wyckoff-trade-utad"></div>',
+      '<p class="vela-lab-caption">UTAD 放量假突破 147 → 跌回区间做空 134，止损 149，目标 116。注意成交量：假突破那根必须明显放量，否则陷阱不成立。</p>',
+
+      '<h3>3. 失败处理：当 Spring 不是 Spring</h3>',
+      '<div class="vela-lab" data-vela="wyckoff-spring-fail"></div>',
+      '<p class="vela-lab-caption">琥珀色区域是「假弹簧区」：跌破后四根棒收不回区间。对照模板 A 体会一件事——<strong>Spring 的命脉是收回的速度，不是跌破的深度。</strong></p>',
+
+      '<h2 id="howto">使用说明</h2>',
+      '<div class="steps">',
+        '<div class="step"><p class="step-title">缩放与平移</p><p>滚轮缩放，按住拖拽平移。先缩到全局看五阶段的节奏，再放大到单根 K 线看实体与影线。</p></div>',
+        '<div class="step"><p class="step-title">拖动标注</p><p>所有标注（线、箭头、文字、仓位工具）都可以拖动。<strong>这是本页的核心用法</strong>：把止损拖宽两个点、把目标拖到区间高度的 0.8 倍，盈亏比怎么变一目了然。</p></div>',
+        '<div class="step"><p class="step-title">读 position 工具</p><p>已经画好的 LONG / SHORT 仓位工具会显示入场、止损、目标和盈亏比，拖动任一端点实时重算。</p></div>',
+        '<div class="step"><p class="step-title">回到静态章</p><p>每个标注的文字解释在「威科夫 → 实战操作模板」；这里负责让你对数字产生肌肉记忆。</p></div>',
+      '</div>',
+      '<div class="callout insight"><div class="callout-body"><p class="callout-title">关于这些 K 线</p><p>三张图的 K 线是按站点示意图同一套确定性规则<strong>合成的演示数据</strong>（不是真实行情），目的是让结构干净可读。实盘里你不会看到这么标准的图形——<strong>结构越标准越要警惕自己在脑补</strong>，这正是要在真实行情里练习标注的原因。</p></div></div>',
+      '<div class="callout tip"><div class="callout-body"><p class="callout-title">建议的学习顺序</p><p>先在「威科夫」体系页读完吸筹五阶段与实战操作模板（静态图 + 文字解释），再回到本页动手。顺序反了容易陷入<strong>只会拖线、不会判断</strong>。</p></div></div>',
+      '<div class="callout warn"><div class="callout-body"><p class="callout-title">技术与署名</p><p>图表由 Vela™（LuxAlgo，Apache-2.0）渲染，按许可要求保留署名水印；首次打开本页会加载约 1MB 的图表引擎，之后走浏览器缓存。若浏览器不支持 WebGL2 / Canvas2D，本页会显示降级提示，静态示意图不受影响。</p></div></div>',
+    ].join(''),
+  };
+
   var theories = [priceAction, ict, smc, wyckoff, elliott];
 
-  var pages = [overview].concat(theories, [live, breakoutPage, breakdownPage, rangePage], [gaps1, gaps2, gaps3, gaps4], [compare, chartPage, glossary, path]);
+  var pages = [overview].concat(theories, [live, breakoutPage, breakdownPage, rangePage, chartLab], [gaps1, gaps2, gaps3, gaps4], [compare, chartPage, glossary, path]);
 
   var nav = [
     { group: '开始', items: ['overview'] },
     { group: '五大体系', items: ['price-action', 'ict', 'smc', 'wyckoff', 'elliott'] },
-    { group: '实盘分析', items: ['live', 'breakout', 'breakdown', 'range'] },
+    { group: '实盘分析', items: ['live', 'breakout', 'breakdown', 'range', 'chart-lab'] },
     { group: 'Al Brooks 课程', items: ['gaps-one', 'gaps-two', 'gaps-three', 'gaps-four'] },
     { group: '对照', items: ['compare', 'chart'] },
     { group: '工具', items: ['glossary', 'path'] },

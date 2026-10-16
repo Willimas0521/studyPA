@@ -306,6 +306,9 @@
       CHART.mountDiagrams(elContent);
       CHART.mountInteractive(elContent);
     }
+
+    /* 交互图表实验室：懒加载 Vela 并挂载 .vela-lab 容器 */
+    if (window.VelaLab) window.VelaLab.mount(elContent);
   }
 
   /* ------------------------------------------------------------ 独立页 */

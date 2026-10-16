@@ -826,6 +826,17 @@ th.rowhead { text-align: left; background: var(--surface-2); font-weight: 660; c
   color: var(--text-3); background: var(--surface-2); border-radius: var(--radius-sm);
 }
 
+/* ---------- Vela 交互图表实验室容器 ---------- */
+.vela-lab {
+  position: relative; width: 100%; height: 460px;
+  margin: 22px 0 28px; border: 1px solid var(--border); border-radius: var(--radius-lg);
+  background: var(--surface); overflow: hidden; box-shadow: var(--shadow-sm);
+}
+.vela-lab-ph {
+  margin: 0; padding: 20px; font-size: 13px; line-height: 1.7; color: var(--text-3);
+}
+.vela-lab-caption { font-size: 12.5px; color: var(--text-3); margin: -18px 0 28px; }
+
 /* SVG 内部 */
 .chart-bg { fill: var(--surface); }
 .grid-line { stroke: var(--border); stroke-width: 1; stroke-dasharray: 3 4; opacity: .8; }

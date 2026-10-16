@@ -176,7 +176,7 @@ const wkPage = SITE.pages.find((p) => p.id === 'wyckoff');
 const wkMnt = doc.createElement('div');
 wkMnt.innerHTML = wkPage.body;
 CHART.mountDiagrams(wkMnt);
-const wkIds = ['wyckoff-schematic', 'wyckoff-spring', 'wyckoff-sos-lps', 'wyckoff-utad', 'wyckoff-vsa', 'wyckoff-cause-effect'];
+const wkIds = ['wyckoff-schematic', 'wyckoff-spring', 'wyckoff-sos-lps', 'wyckoff-utad', 'wyckoff-vsa', 'wyckoff-cause-effect', 'wyckoff-trade-spring', 'wyckoff-trade-utad', 'wyckoff-spring-fail'];
 const wkMissing = wkIds.filter((id) => {
   const d = wkMnt.querySelector('.diagram[data-diagram="' + id + '"]');
   if (!d) return true;                                            // 占位都不在

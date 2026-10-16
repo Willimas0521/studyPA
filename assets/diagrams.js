@@ -716,5 +716,92 @@ window.DIAGRAM_SPECS = (function () {
     }
   };
 
+  /* ---------------------------------------------------------------------
+     威科夫实战 · 模板 A：Spring 做多全流程（入场 / 止损 / 目标）
+     --------------------------------------------------------------------- */
+  S['wyckoff-trade-spring'] = {
+    key: 'wyckoff-trade-spring',
+    dw: 900, dh: 392, x0: 60, barW: 36,
+    pTop: 70, pBot: 256, pMin: 90, pMax: 142, amp: 1.6,
+    volTop: 288, volBottom: 356, volColor: 'var(--d-amber)', volAlpha: 0.5,
+    closes: [110, 104, 106, 102, 105, 101, 104, 100, 96, 103, 106, 104, 106, 111, 116, 121, 126, 123, 129, 135],
+    aria: 'Spring 做多全流程：跌破支撑后快速收回，入场 104、止损 95、目标 120',
+    draw: function (g) {
+      var N = this.closes.length;
+      g.note(g.dw / 2, 42, '模板 A：Spring 做多——入场、止损、目标的完整标注', 'var(--d-amber-strong)', 'middle', 12);
+      g.hline(110, 0, 7, 'var(--d-neutral)', '区间上沿 110', '6 5');
+      g.hline(100, 0, 7, 'var(--d-neutral)', '区间下沿 100', '6 5');
+      g.ring(g.cx(8), g.cy(96), 'var(--d-amber)', 'Spring 假跌破', g.cy(96) + 26);
+      g.ring(g.cx(11), g.cy(104), 'var(--d-amber)', 'Test 缩量回踩', g.cy(104) + 26);
+      g.pin(10, 104, 'var(--up)', '入场 104', 'down', '收回区间确认');
+      g.hline(95, 8, N - 1, 'var(--down)', '止损 95（Spring 低点下方）', '4 4');
+      g.hline(120, 10, N - 1, 'var(--up)', '目标 120 = 上沿 + 区间高度', '4 4');
+      g.ring(g.cx(14), g.cy(111), 'var(--up)', 'SOS', g.cy(111) - 16);
+      g.note(g.cx(17), g.cy(123) + 26, 'LPS 可加', 'var(--up)', 'middle', 9.5);
+      g.arrow(12, 106, 19, 135, 'var(--up)', 2);
+      g.note(g.dw / 2, 380,
+        '入场 104 / 止损 95 / 目标 120——9 点风险换 16 点空间；到目标先减半，其余交给趋势。收回必须快且放量，慢吞吞的收回不算数。',
+        'var(--text-3)', 'middle', 10.5);
+    }
+  };
+
+  /* ---------------------------------------------------------------------
+     威科夫实战 · 模板 B：UTAD 做空全流程（入场 / 止损 / 目标）
+     --------------------------------------------------------------------- */
+  S['wyckoff-trade-utad'] = {
+    key: 'wyckoff-trade-utad',
+    dw: 900, dh: 392, x0: 60, barW: 36,
+    pTop: 70, pBot: 256, pMin: 98, pMax: 152, amp: 1.6,
+    volTop: 288, volBottom: 356, volColor: 'var(--d-amber)', volAlpha: 0.5,
+    closes: [132, 138, 130, 139, 131, 138, 130, 137, 129, 136, 128, 135, 147, 134, 126, 119, 113, 121, 111, 103],
+    aria: 'UTAD 做空全流程：假突破新高放量后跌回区间，入场 134、止损 149、目标 116',
+    draw: function (g) {
+      var N = this.closes.length;
+      g.note(g.dw / 2, 42, '模板 B：UTAD 做空——Spring 的镜像，钥匙同样是成交量', 'var(--d-amber-strong)', 'middle', 12);
+      g.hline(140, 0, 11, 'var(--d-neutral)', '区间上沿 140', '6 5');
+      g.hline(128, 0, 11, 'var(--d-neutral)', '区间下沿（冰面）128', '6 5');
+      g.ring(g.cx(12), g.cy(147), 'var(--d-amber)', 'UTAD 假突破', g.cy(147) - 26);
+      g.line(g.cx(13), g.cy(134), g.cx(13) + 26, g.cy(140), 'var(--down)', 1.6, null, 0.7);
+      g.circle(g.cx(13), g.cy(134), 3.4, 'var(--down)', 'var(--surface)', 1.4);
+      g.note(g.cx(13) + 32, g.cy(140) + 4, '入场 134 · 跌回区间做空', 'var(--down)', 'start', 10.5);
+      g.hline(149, 12, N - 1, 'var(--down)', '止损 149（UTAD 高点上方）', '4 4');
+      g.hline(116, 13, N - 1, 'var(--up)', '目标 116 = 冰面 - 区间高度', '4 4');
+      g.ring(g.cx(14), g.cy(126), 'var(--down)', 'SOW 破冰', g.cy(126) + 26);
+      g.note(g.cx(17), g.cy(121) - 14, 'LPSY 反抽', 'var(--down)', 'middle', 9.5);
+      g.arrow(14, 126, 19, 103, 'var(--down)', 2);
+      g.note(g.dw / 2, 380,
+        '入场 134 / 止损 149 / 目标 116——UTAD 模板的盈亏比不如 Spring，赢在胜率和速度；破冰后每次反抽冰面都是加空位。',
+        'var(--text-3)', 'middle', 10.5);
+    }
+  };
+
+  /* ---------------------------------------------------------------------
+     威科夫实战 · 失败处理：当 Spring 不是 Spring
+     --------------------------------------------------------------------- */
+  S['wyckoff-spring-fail'] = {
+    key: 'wyckoff-spring-fail',
+    dw: 900, dh: 392, x0: 60, barW: 44,
+    pTop: 70, pBot: 256, pMin: 80, pMax: 116, amp: 1.6,
+    volTop: 288, volBottom: 356, volColor: 'var(--d-amber)', volAlpha: 0.5,
+    closes: [112, 106, 109, 104, 107, 103, 106, 102, 97, 99, 98, 101, 99, 96, 92, 86],
+    aria: '失败的 Spring：跌破后收不回区间就是真破位，止损离场，不摊平',
+    draw: function (g) {
+      var N = this.closes.length;
+      g.note(g.dw / 2, 42, '失败处理：当 Spring 不是 Spring——收回失败 = 真破位', 'var(--d-amber-strong)', 'middle', 12);
+      g.hline(110, 0, 7, 'var(--d-neutral)', '区间上沿 110', '6 5');
+      g.hline(102, 0, N - 1, 'var(--d-neutral)', '区间下沿 102', '6 5');
+      g.zone(8, 12, 104, 94, 'var(--d-amber)', 0.10);
+      g.ring(g.cx(8), g.cy(97), 'var(--d-amber)', '跌破支撑', g.cy(97) + 26);
+      g.note((g.cx(9) + g.cx(12)) / 2, g.cy(104) - 8, '反抽四根棒，始终收不回 102', 'var(--d-amber-strong)', 'middle', 10);
+      g.pin(9, 99, 'var(--up)', '若按 Spring 进场 99', 'down', '止损 96', 18);
+      g.hline(96, 8, N - 1, 'var(--down)', '止损 96', '4 4');
+      g.ring(g.cx(13), g.cy(96), 'var(--down)', '确认失败', g.cy(96) + 26);
+      g.arrow(13, 96, 15, 86, 'var(--down)', 2);
+      g.note(g.dw / 2, 380,
+        '真 Spring 的命脉是"快"：跌破后 1~3 根内必须收回区间。收不回就当真破位处理——止损只亏 3 点，不止损从 96 套到 86。',
+        'var(--text-3)', 'middle', 10.5);
+    }
+  };
+
   return S;
 })();

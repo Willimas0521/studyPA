@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vela 试点 · 威科夫 Spring 做多模板</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .demo-wrap { max-width: 980px; margin: 24px auto; padding: 0 16px 48px; }
+  .demo-head h1 { font-size: 20px; margin: 0 0 4px; }
+  .demo-head p { margin: 0 0 16px; color: var(--text-3); font-size: 13px; }
+  #vela-chart { width: 100%; height: 480px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .demo-note { margin-top: 14px; font-size: 12px; color: var(--text-3); }
+  .demo-note code { background: var(--surface-2); padding: 1px 5px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<div class="demo-wrap">
+  <div class="demo-head">
+    <h1>Vela 试点：威科夫 Spring 做多模板</h1>
+    <p>与站点示意图 <code>wyckoff-trade-spring</code> 相同的 20 根 K 线与同一组标注（入场 104 / 止损 95 / 目标 120），改用 Vela 渲染——可缩放、可平移，标注可拖动。</p>
+  </div>
+  <div id="vela-chart"></div>
+  <p class="demo-note">Vela™ by LuxAlgo · Apache-2.0（每张图带 Vela™ 署名水印，可重定位）· 数据为演示合成 OHLCV，无任何网络请求。</p>
+</div>
+
+<script src="assets/vendor/vela.global.min.js"></script>
+<script>
+(function () {
+  /* 与 assets/diagrams.js 的 wyckoff-trade-spring 完全相同的收盘价与合成规则 */
+  var closes = [110, 104, 106, 102, 105, 101, 104, 100, 96, 103, 106, 104, 106, 111, 116, 121, 126, 123, 129, 135];
+  var amp = 1.6;
+  var bars = [];
+  for (var i = 0; i < closes.length; i++) {
+    var c = closes[i], o = (i === 0) ? c : closes[i - 1];
+    bars.push({
+      time: 1735689600000 + i * 3600000, /* 2025-01-01 UTC 起每小时一根 */
+      open: o, close: c,
+      high: Math.max(o, c) + amp * (0.45 + 0.55 * Math.abs(Math.sin(i * 1.7))),
+      low: Math.min(o, c) - amp * (0.45 + 0.55 * Math.abs(Math.cos(i * 1.3)))
+    });
+  }
+  /* 成交量与 autoVolume 同规则：按实体大小归一 */
+  var mx = 0;
+  bars.forEach(function (b) { mx = Math.max(mx, Math.abs(b.c - b.o)); });
+  bars.forEach(function (b, i) {
+    var base = mx ? Math.abs(b.c - b.o) / mx : 0.4;
+    b.volume = Math.round((0.22 + 0.66 * base + 0.12 * Math.abs(Math.sin(i * 2.3))) * 10000);
+  });
+
+  var chart = new window.Vela.Vela('#vela-chart', {
+    data: bars,
+    timeframe: '60',
+    theme: 'dark'
+  });
+  window.__dbgChart = chart;
+
+  function barTime(i) { return bars[i].time; }
+
+  chart.ready().then(function () {
+    /* 区间上下沿 */
+    chart.drawings.add('hline', {
+      anchors: [{ price: 110 }],
+      style: { lineColor: '#94a3b8', lineWidth: 1.4, dash: [6, 5], opacity: 0.9 }
+    });
+    chart.drawings.add('hline', {
+      anchors: [{ price: 100 }],
+      style: { lineColor: '#94a3b8', lineWidth: 1.4, dash: [6, 5], opacity: 0.9 }
+    });
+    /* 止损与目标：向右延伸的水平射线 */
+    chart.drawings.add('hray', {
+      anchors: [{ time: barTime(8), price: 95 }],
+      style: { lineColor: '#22c55e', lineWidth: 1.8, dash: [4, 4] }
+    });
+    chart.drawings.add('hray', {
+      anchors: [{ time: barTime(10), price: 120 }],
+      style: { lineColor: '#d92d20', lineWidth: 1.8, dash: [4, 4] }
+    });
+    /* 上涨箭头 */
+    chart.drawings.add('arrow', {
+      anchors: [{ time: barTime(12), price: 106 }, { time: barTime(19), price: 135 }],
+      style: { lineColor: '#d92d20', lineWidth: 2 }
+    });
+    /* 事件标注 */
+    chart.drawings.add('note', {
+      anchors: [{ time: barTime(8), price: 101.5 }],
+      text: { value: 'Spring 假跌破' },
+      style: { color: '#f59e0b', fillColor: 'rgba(245,158,11,0.12)' }
+    });
+    chart.drawings.add('note', {
+      anchors: [{ time: barTime(11), price: 104 }],
+      text: { value: 'Test 缩量回踩', hAlign: 'right', vAlign: 'middle' },
+      style: { color: '#f59e0b', fillColor: 'rgba(245,158,11,0.12)' }
+    });
+    chart.drawings.add('note', {
+      anchors: [{ time: barTime(14), price: 111 }],
+      text: { value: 'SOS' },
+      style: { color: '#d92d20', fillColor: 'rgba(217,45,32,0.12)' }
+    });
+    chart.drawings.add('note', {
+      anchors: [{ time: barTime(17), price: 123 }],
+      text: { value: 'LPS 可加' },
+      style: { color: '#d92d20', fillColor: 'rgba(217,45,32,0.12)' }
+    });
+    /* 持仓工具：入场 / 止损 / 目标 一步到位 */
+    try {
+      chart.drawings.add('position', {
+        anchors: [{ time: barTime(10), price: 104 }, { time: barTime(19), price: 120 }],
+        options: { direction: 'long', entryPrice: 104, stopLoss: 95, takeProfit: 120 }
+      });
+    } catch (e) {
+      chart.drawings.add('note', {
+        anchors: [{ time: barTime(10), price: 104 }],
+        text: '入场 104 / 止损 95 / 目标 120',
+        style: { color: '#d92d20', fillColor: 'rgba(217,45,32,0.12)' }
+      });
+    }
+  }).catch(function (e) {
+    document.getElementById('vela-chart').innerHTML =
+      '<p style="padding:16px;color:#f87171">Vela 初始化失败: ' + (e && e.message ? e.message : e) + '</p>';
+  });
+})();
+</script>
+</body>
+</html>
